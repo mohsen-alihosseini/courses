@@ -21,3 +21,37 @@ $headings-font-family: "Source Serif 4", Georgia, serif;
   padding-top: 0.75rem;
   margin-top: 2rem;
 }
+
+// Subject cards on the home page
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.subject-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e3e1da;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.subject-card:hover,
+.subject-card:focus-visible { border-color: $primary; color: inherit; }
+.subject-card img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.subject-body { padding: 0.9rem 1rem 1rem; }
+.subject-body h3 { margin: 0 0 0.35rem; font-size: 1.25rem; }
+.subject-body p { margin: 0 0 0.6rem; font-size: 0.95rem; color: #5c6370; }
+.subject-count {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $primary;
+  background: #eef1fb;
+  padding: 0.1rem 0.55rem;
+  border-radius: 99px;
+}

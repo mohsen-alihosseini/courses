@@ -4,7 +4,10 @@ subtitle: "Slide decks and notes, grouped by subject"
 toc: false
 listing:
   id: categories
-  contents: "*/index.qmd"
+  # One line per subject. To add a subject, create its folder (e.g. math/)
+  # with an index.qmd, then add its path here, e.g.  - math/index.qmd
+  contents:
+    - quantum/index.qmd
   type: grid
   grid-columns: 3
   sort: "order"

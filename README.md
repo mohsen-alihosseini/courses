@@ -6,7 +6,7 @@ and published to GitHub Pages.
 ```
 study-courses/
 ├── _quarto.yml                 site settings (title, navbar, theme)
-├── index.qmd                   home page: lists every subject automatically
+├── index.qmd                   home page: one card per subject
 ├── _macros.qmd                 shared LaTeX macros (\ket, \bra, ...)
 ├── theme/
 │   ├── site.scss               look of the normal web pages
@@ -50,9 +50,12 @@ demos are Observable JS cells, which run in the browser.
 2. Copy `quantum/index.qmd` and `quantum/thumbnail.svg` into it, and change the
    `title`, `description` and `order` (position on the home page) and the
    intro text.
+3. In the top-level `index.qmd`, copy the `<a class="subject-card"> ... </a>`
+   block, paste it after the last one, and change the folder name
+   (`math/index.html`, `math/thumbnail.svg`), title, description and course
+   count.
 
-It appears on the home page on the next render. It shows "no matching items"
-until it contains a course.
+Courses inside a subject folder appear on that subject's page automatically.
 
 ## Add a course
 
