@@ -9,7 +9,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-OUT = Path("courses/fundamentals-of-quantum-algorithms/figures")
+OUT = Path("quantum/fundamentals-of-quantum-algorithms/figures")
 INK, MUTED, BLUE, ORANGE = "#1d2433", "#5c6370", "#3b5bdb", "#d9480f"
 
 plt.rcParams.update({
@@ -74,7 +74,7 @@ def strip_doctype(path):
 
 def classical_measurement():
     """A probabilistic state before and after it is observed (basics course, lecture 1)."""
-    out = Path("courses/basics-of-quantum-information/figures")
+    out = Path("quantum/basics-of-quantum-information/figures")
     fig, axes = plt.subplots(1, 2, figsize=(8, 2.8), sharey=True)
     for ax, probs, title in [(axes[0], [0.75, 0.25], "before: (3/4, 1/4)"),
                              (axes[1], [1.0, 0.0], "after seeing 0: |0⟩")]:

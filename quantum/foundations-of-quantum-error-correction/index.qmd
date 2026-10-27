@@ -1,0 +1,56 @@
+---
+title: "Foundations of Quantum Error Correction"
+description: "Repetition and Shor codes, the stabilizer formalism, CSS and toric codes, and fault-tolerant quantum computing up to the threshold theorem."
+image: thumbnail.svg
+order: 3
+categories: [quantum computing, error correction]
+toc: false
+---
+
+[← Quantum](../index.qmd)
+
+Study slides for the fourth course of IBM's *Understanding Quantum Information
+and Computation* series, taught by John Watrous. Quantum states are fragile, so
+large quantum computations need **error correction**: encoding qubits
+redundantly, detecting errors without disturbing the encoded state, and
+computing on encoded data without letting errors spread. The course builds
+this up from the 3-bit repetition code to the threshold theorem.
+
+**Prerequisites:** [Basics of Quantum
+Information](../basics-of-quantum-information/index.qmd) and [General
+Formulation of Quantum
+Information](../general-formulation-of-quantum-information/index.qmd).
+[Original course
+page](https://quantum.cloud.ibm.com/learning/en/courses/foundations-of-quantum-error-correction).
+
+## Lectures
+
+::: {.lesson-table .column-page}
+| | Lecture | What it covers | Original |
+|---|---|---|---|
+| 1 | [Correcting quantum errors](lectures/01-correcting-quantum-errors.qmd) | Repetition codes for bit flips and phase flips; the 9-qubit Shor code; discretization of errors | [video](https://youtu.be/OoQSdcKAIZc) · [slides](https://ibm.box.com/public/static/namkqjmvu2rbldsikb2gb61bwocuu872.pdf) |
+| 2 | [The stabilizer formalism](lectures/02-stabilizer-formalism.qmd) | Pauli operations and observables; syndromes; stabilizer codes (Shor, Steane, 5-qubit); code distance; detecting and correcting errors | [video](https://youtu.be/3ib2JP_LeIU) · [slides](https://ibm.box.com/public/static/umposbds8d27cv8rnpsayyaj1k2aw88o.pdf) |
+| 3 | [Quantum code constructions](lectures/03-quantum-code-constructions.qmd) | Classical linear codes and CSS codes; the toric code; surface, color and other codes | [video](https://youtu.be/9TCIOm8gcVQ) · [slides](https://ibm.box.com/public/static/9gpegrj4bkz31i4qcw1uluhlsjfk42vt.pdf) |
+| 4 | [Fault-tolerant quantum computing](lectures/04-fault-tolerant-quantum-computing.qmd) | Noise models; transversal gates and the Eastin–Knill theorem; magic states; fault-tolerant error correction; the threshold theorem | [video](https://youtu.be/aeaqXh2XXMk) · [slides](https://ibm.box.com/public/static/82vefvfnneiea47ypcis0aj5gal78qka.pdf) |
+:::
+
+## How to study with these slides
+
+1. Watch the lesson video, or read the original lesson.
+2. Go through the deck. Press **S** for speaker notes: they hold the extra
+   steps that do not fit on a slide.
+3. For every code, check by hand that the stabilizer generators commute and
+   work out the syndrome of each single-qubit error. That table *is* the
+   decoder.
+
+The badge exam is linked from the [original course
+page](https://quantum.cloud.ibm.com/learning/en/courses/foundations-of-quantum-error-correction).
+
+::: {.attribution}
+These slides are adapted from *Foundations of Quantum Error Correction* by
+John Watrous, © IBM Corp., licensed under [CC BY-SA
+4.0](https://creativecommons.org/licenses/by-sa/4.0/) (source:
+[Qiskit/documentation](https://github.com/Qiskit/documentation)). The text has
+been condensed and rearranged into slides; the diagrams are the course's own.
+The slides are shared under the same license.
+:::

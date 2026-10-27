@@ -1,0 +1,21 @@
+# Shared settings for every slide deck in this folder.
+author: "Mohsen"
+date-format: long
+format:
+  revealjs:
+    theme: [default, ../../../theme/slides.scss]
+    width: 1280
+    height: 720
+    margin: 0.07
+    slide-number: c/t
+    show-slide-number: all
+    hash-type: title
+    transition: none
+    center: false
+    preview-links: auto
+    menu:
+      side: left
+    html-math-method: mathjax
+    footer: "[General Formulation of Quantum Information](../index.html)"
+    format-links: false
+    fig-align: center

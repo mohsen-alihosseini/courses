@@ -1,0 +1,25 @@
+---
+title: "Quantum"
+description: "Quantum information and computation: IBM's four-course series by John Watrous, from qubits to fault-tolerant quantum computing."
+image: thumbnail.svg
+order: 1
+toc: false
+listing:
+  id: courses
+  contents: "*/index.qmd"
+  type: grid
+  grid-columns: 2
+  sort: "order"
+  fields: [image, title, description, categories]
+  image-height: 160px
+  categories: true
+---
+
+[← All subjects](../index.qmd)
+
+The four courses of IBM's *Understanding Quantum Information and Computation*
+series. They are meant to be taken in this order: the first is the
+foundation for the other three.
+
+::: {#courses}
+:::

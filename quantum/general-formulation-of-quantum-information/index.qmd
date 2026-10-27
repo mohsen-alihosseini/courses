@@ -1,0 +1,54 @@
+---
+title: "General Formulation of Quantum Information"
+description: "Density matrices, quantum channels, general measurements, purifications and fidelity: the full mathematical description of quantum information."
+image: thumbnail.svg
+order: 2
+categories: [quantum computing, quantum information]
+toc: false
+---
+
+[← Quantum](../index.qmd)
+
+Study slides for the third course of IBM's *Understanding Quantum Information
+and Computation* series, taught by John Watrous. The first course described
+quantum information with state vectors, unitaries and projective measurements.
+This course replaces each with its general form: **density matrices** for
+states, **channels** for operations, and **general measurements**, and then
+compares states with **purifications** and **fidelity**.
+
+**Prerequisite:** [Basics of Quantum
+Information](../basics-of-quantum-information/index.qmd), plus comfort with
+eigenvalues and the spectral theorem. [Original course
+page](https://quantum.cloud.ibm.com/learning/en/courses/general-formulation-of-quantum-information).
+
+## Lectures
+
+::: {.lesson-table .column-page}
+| | Lecture | What it covers | Original |
+|---|---|---|---|
+| 1 | [Density matrices](lectures/01-density-matrices.qmd) | Trace and positive semidefinite matrices; mixtures and the completely mixed state; the Bloch sphere; reduced states and the partial trace | [video](https://www.youtube.com/watch?v=CeK9ry8G8HQ) · [slides](https://ibm.box.com/public/static/eoddc2njf8dyays2ju54gn8il5j5pxv9.pdf) |
+| 2 | [Quantum channels](lectures/02-quantum-channels.qmd) | Channels as linear, completely positive, trace-preserving maps; reset, dephasing and depolarizing channels; Stinespring, Kraus and Choi representations | [video](https://www.youtube.com/watch?v=cMl-xIDSmXI) · [slides](https://ibm.box.com/public/static/35dvc00e41kmqmy17cpgmli8zrh04v8k.pdf) |
+| 3 | [General measurements](lectures/03-general-measurements.qmd) | Measurements as matrices and as channels; Naimark's theorem; non-destructive measurements; state discrimination (Helstrom) and tomography | [video](https://www.youtube.com/watch?v=Xi9YTYzQErY) · [slides](https://ibm.box.com/public/static/plp9gokjjpvktdsclrex0pg3q2n8f3op.pdf) |
+| 4 | [Purifications and fidelity](lectures/04-purifications-and-fidelity.qmd) | Purifications and Schmidt decompositions; unitary equivalence of purifications; fidelity, the gentle measurement lemma and Uhlmann's theorem | [video](https://www.youtube.com/watch?v=jemWEdnJTnI) · [slides](https://ibm.box.com/public/static/wt8dkrbjdft267ouym92rg53cimodr4c.pdf) |
+:::
+
+## How to study with these slides
+
+1. Watch the lesson video, or read the original lesson.
+2. Go through the deck. Press **S** for speaker notes: they hold the proof
+   steps that do not fit on a slide.
+3. For each new object (density matrix, channel, measurement), check the
+   examples against the definition on paper: positive semidefinite, trace one,
+   and so on.
+
+The badge exam is linked from the [original course
+page](https://quantum.cloud.ibm.com/learning/en/courses/general-formulation-of-quantum-information).
+
+::: {.attribution}
+These slides are adapted from *General Formulation of Quantum Information* by
+John Watrous, © IBM Corp., licensed under [CC BY-SA
+4.0](https://creativecommons.org/licenses/by-sa/4.0/) (source:
+[Qiskit/documentation](https://github.com/Qiskit/documentation)). The text has
+been condensed and rearranged into slides; the diagrams are the course's own.
+The slides are shared under the same license.
+:::

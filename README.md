@@ -6,19 +6,21 @@ and published to GitHub Pages.
 ```
 study-courses/
 ├── _quarto.yml                 site settings (title, navbar, theme)
-├── index.qmd                   home page: lists every course automatically
+├── index.qmd                   home page: lists every subject automatically
 ├── _macros.qmd                 shared LaTeX macros (\ket, \bra, ...)
 ├── theme/
 │   ├── site.scss               look of the normal web pages
 │   └── slides.scss             look of the slide decks
-├── courses/
-│   └── fundamentals-of-quantum-algorithms/
+├── quantum/                    one folder per subject (category)
+│   ├── index.qmd               subject page: lists its courses automatically
+│   ├── thumbnail.svg           card image on the home page
+│   └── basics-of-quantum-information/      one folder per course
 │       ├── index.qmd           course page (title, description, lecture list)
-│       ├── thumbnail.svg       card image on the home page
+│       ├── thumbnail.svg       card image on the subject page
 │       ├── figures/            images used by the decks
 │       └── lectures/
 │           ├── _metadata.yml   makes every file here a reveal.js deck
-│           ├── 01-quantum-query-algorithms.qmd
+│           ├── 01-single-systems.qmd
 │           └── ...
 └── .github/workflows/publish.yml   builds and publishes on every push
 ```
@@ -42,17 +44,30 @@ demos are Observable JS cells, which run in the browser.
    `https://<your-username>.github.io/study-courses/`.
 4. Replace `YOUR-USERNAME` in `_quarto.yml` with your GitHub username.
 
+## Add a subject (category)
+
+1. Make a folder at the top level, e.g. `math/`.
+2. Copy `quantum/index.qmd` and `quantum/thumbnail.svg` into it, and change the
+   `title`, `description` and `order` (position on the home page) and the
+   intro text.
+
+It appears on the home page on the next render. It shows "no matching items"
+until it contains a course.
+
 ## Add a course
 
-1. Copy `courses/fundamentals-of-quantum-algorithms/` to
-   `courses/<new-course>/`.
-2. Edit `index.qmd` there (title, description, `order:`, the lecture table)
-   and the `footer:` line in `lectures/_metadata.yml`.
-3. Replace the decks in `lectures/`. Each deck starts with a short YAML header
-   (`title`, `subtitle`) and then `{{< include /_macros.qmd >}}`; every
-   `##` heading is a new slide, every `#` heading a section divider.
+1. Copy an existing course folder, e.g. `quantum/basics-of-quantum-information/`,
+   into the subject folder, e.g. `math/linear-algebra/`.
+2. Edit its `index.qmd` (title, description, `order:`, the lecture table) and
+   the `footer:` line in `lectures/_metadata.yml`. Change the back-link at the
+   top of `index.qmd` to the subject's name.
+3. Replace the decks in `lectures/` and the images in `figures/`. Each deck
+   starts with a short YAML header (`title`, `subtitle`) and then
+   `{{< include /_macros.qmd >}}`; every `##` heading is a new slide, every `#`
+   heading a section divider.
 
-The home page picks the new course up on the next render.
+Keep courses exactly two levels deep (`subject/course/`): the theme path in
+`lectures/_metadata.yml` (`../../../theme/slides.scss`) assumes it.
 
 ## Slide syntax cheat sheet
 
@@ -68,9 +83,9 @@ The home page picks the new course up on the next render.
 
 ## License
 
-The two quantum courses are adapted from *Basics of Quantum Information* and
-*Fundamentals of Quantum Algorithms* by John Watrous (© IBM Corp.), licensed
-under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), and are
+The four quantum courses are adapted from *Basics of Quantum Information*,
+*Fundamentals of Quantum Algorithms*, *General Formulation of Quantum
+Information* and *Foundations of Quantum Error Correction* by John Watrous (© IBM Corp.), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), and are
 shared under the same license. The figures in each course's `figures/` folder
 come from that course, except these new ones made by `scripts/make_figures.py`:
 `grover-success.svg`, `query-counts.svg` and `basics-measure-classical.svg`.

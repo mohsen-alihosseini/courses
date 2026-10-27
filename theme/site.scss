@@ -10,6 +10,9 @@ $headings-font-family: "Source Serif 4", Georgia, serif;
 /*-- scss:rules --*/
 .lesson-table td { vertical-align: top; padding: 0.6rem 0.75rem; }
 .lesson-table td:first-child { font-weight: 600; white-space: nowrap; color: $primary; }
+// Keep lecture names and the video · slides links on one line
+.lesson-table td:nth-child(2),
+.lesson-table td:last-child { white-space: nowrap; }
 
 .attribution {
   font-size: 0.875rem;

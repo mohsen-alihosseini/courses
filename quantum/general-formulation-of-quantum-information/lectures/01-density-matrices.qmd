@@ -1,0 +1,254 @@
+---
+title: "Density Matrices"
+subtitle: "General Formulation of Quantum Information · Lecture 1"
+---
+
+# Density matrix basics
+
+## Why a new description?
+
+{{< include /_macros.qmd >}}
+
+State vectors cannot describe:
+
+- **Uncertainty about** which state a system is in ("$\ket0$ or $\ket+$, each with probability ½").
+- **Part of an entangled system**, such as one qubit of an e-bit.
+- **Noisy** processes that are not unitary.
+
+. . .
+
+The **density matrix** handles all three, and contains state vectors as a special case:
+
+$$
+\ket\psi\quad\longrightarrow\quad\rho=\ket\psi\bra\psi .
+$$
+
+## Definition
+
+::: {.box}
+[Density matrix]{.box-title}
+A square complex matrix $\rho$ with
+
+1. **unit trace**: $\operatorname{Tr}(\rho)=1$, and
+2. **positive semidefinite**: $\rho\ge0$.
+:::
+
+- **Trace**: sum of diagonal entries; linear, and $\operatorname{Tr}(AB)=\operatorname{Tr}(BA)$.
+- **Positive semidefinite** (equivalent forms): $\rho=M^\dagger M$ for some $M$; Hermitian with nonnegative eigenvalues; $\bra\psi\rho\ket\psi\ge0$ for every $\ket\psi$.
+
+. . .
+
+For $\rho=\ket\psi\bra\psi$: $\operatorname{Tr}(\rho)=\braket\psi\psi=1$ and $\bra\phi\rho\ket\phi=\abs{\braket\phi\psi}^2\ge0$. ✓
+
+## Reading a density matrix
+
+$$
+\rho=\begin{pmatrix}\tfrac34&\tfrac14\\[1mm]\tfrac14&\tfrac14\end{pmatrix}
+\qquad
+\begin{array}{l}
+\text{diagonal: probabilities of a standard basis measurement}\\[1mm]
+\text{off-diagonal: coherence (needed for interference)}
+\end{array}
+$$
+
+- Standard basis measurement: outcome $a$ with probability $\bra a\rho\ket a$.
+- Unitary $U$: $\rho\mapsto U\rho U^\dagger$.
+- **Global phases disappear**: $e^{i\theta}\ket\psi$ and $\ket\psi$ give the same $\ket\psi\bra\psi$. One representation per physical state.
+
+::: {.aside-note}
+A density matrix is **pure** if $\rho=\ket\psi\bra\psi$, i.e. rank one. Otherwise it is **mixed**.
+:::
+
+# Convex combinations
+
+## Probabilistic selections
+
+Prepare $\rho_0$ with probability $p_0$, …, $\rho_{m-1}$ with probability $p_{m-1}$. The resulting state is the **convex combination**
+
+$$
+\rho=\sum_k p_k\rho_k .
+$$
+
+All measurement statistics are the averages of those for each $\rho_k$, so nothing else is needed.
+
+. . .
+
+$$
+\tfrac12\ket0\bra0+\tfrac12\ket+\bra+=\begin{pmatrix}\tfrac34&\tfrac14\\[1mm]\tfrac14&\tfrac14\end{pmatrix}.
+$$
+
+Different mixtures can give the **same** density matrix, and then they are indistinguishable. Example: $\tfrac12\ket0\bra0+\tfrac12\ket1\bra1=\tfrac12\ket+\bra++\tfrac12\ket-\bra-$.
+
+## The completely mixed state
+
+$$
+\frac{\mathbb I}{n}=\frac1n\sum_{a}\ket a\bra a=\frac1n\sum_{k}\ket{\psi_k}\bra{\psi_k}
+\quad\text{for any orthonormal basis }\{\ket{\psi_k}\}.
+$$
+
+- Every measurement in every basis gives uniformly random outcomes.
+- It represents **total uncertainty**: the quantum analogue of a uniformly random classical state.
+
+. . .
+
+**Classical probabilistic states** are the **diagonal** density matrices:
+
+$$
+\begin{pmatrix}p_0\\\vdots\\p_{n-1}\end{pmatrix}\;\longleftrightarrow\;\sum_a p_a\ket a\bra a .
+$$
+
+## Spectral decomposition
+
+Every density matrix is a mixture of **orthogonal pure states**:
+
+$$
+\rho=\sum_{k=0}^{n-1}\lambda_k\ket{\psi_k}\bra{\psi_k},
+\qquad \lambda_k\ge0,\ \ \sum_k\lambda_k=1 .
+$$
+
+(Spectral theorem; positive semidefinite $\Rightarrow\lambda_k\ge0$; trace one $\Rightarrow\sum\lambda_k=1$.)
+
+. . .
+
+For the example above: eigenvalues $\cos^2(\pi/8)\approx0.854$ and $\sin^2(\pi/8)\approx0.146$, with eigenvectors $\ket{\psi_{\pi/8}}$ and $\ket{\psi_{5\pi/8}}$, where $\ket{\psi_\theta}=\cos\theta\ket0+\sin\theta\ket1$.
+
+# The Bloch sphere
+
+## Qubit states as points
+
+Every qubit density matrix can be written with a vector $(r_x,r_y,r_z)$ of length $\le1$:
+
+$$
+\rho=\frac{\mathbb I+r_x\sigma_x+r_y\sigma_y+r_z\sigma_z}{2}
+=\frac12\begin{pmatrix}1+r_z&r_x-ir_y\\r_x+ir_y&1-r_z\end{pmatrix}.
+$$
+
+:::: {.columns}
+::: {.column width="40%"}
+![](../figures/six-Bloch-sphere-points.avif){width="82%"}
+:::
+::: {.column width="60%"}
+- **Pure states** lie on the surface ($\norm r=1$); mixed states inside.
+- $\ket0,\ket1$: poles. $\ket\pm$: $\pm x$. $\ket{\pm i}$: $\pm y$.
+- Orthogonal states are **antipodal**.
+- The center is $\mathbb I/2$.
+- Eigenvalues of $\rho$: $\tfrac{1\pm\norm r}{2}$.
+:::
+::::
+
+## Mixtures are straight lines
+
+:::: {.columns}
+::: {.column width="40%"}
+![](../figures/Bloch-sphere-zero-plus-average.avif){width="100%"}
+:::
+::: {.column width="60%"}
+The map $\rho\leftrightarrow r$ is **affine**, so a mixture of states is the same mixture of points.
+
+$\tfrac12\ket0\bra0+\tfrac12\ket+\bra+$ is the midpoint of the chord from $\ket0$ to $\ket+$.
+
+The same point is also on the diameter from $\ket{\psi_{\pi/8}}$ to $\ket{\psi_{5\pi/8}}$: its spectral decomposition.
+:::
+::::
+
+## Try it: a qubit density matrix {.scrollable}
+
+```{ojs}
+//| echo: false
+viewof rlen = Inputs.range([0, 1], {step: 0.01, value: 0.71, label: "length ‖r‖"})
+viewof th = Inputs.range([0, 180], {step: 1, value: 45, label: "θ from +z (degrees)"})
+viewof ph = Inputs.range([0, 360], {step: 1, value: 0, label: "φ from +x (degrees)"})
+```
+
+```{ojs}
+//| echo: false
+dm = {
+  const t = th * Math.PI / 180, p = ph * Math.PI / 180;
+  const rx = rlen * Math.sin(t) * Math.cos(p), ry = rlen * Math.sin(t) * Math.sin(p), rz = rlen * Math.cos(t);
+  const f = x => (Math.abs(x) < 5e-4 ? 0 : x).toFixed(3);
+  const c = (re, im) => `${f(re)}${im < 0 ? " − " : " + "}${f(Math.abs(im))}i`;
+  return {rx, ry, rz, f, c, l0: (1 + rlen) / 2, l1: (1 - rlen) / 2, purity: (1 + rlen * rlen) / 2};
+}
+html`<table style="font-size:0.75em;border-collapse:collapse">
+<tr><td style="padding:2px 18px">ρ =</td>
+<td style="border-left:2px solid currentColor;border-right:2px solid currentColor;padding:4px 12px;font-family:monospace">
+${dm.f((1 + dm.rz) / 2)} &nbsp; ${dm.c(dm.rx / 2, -dm.ry / 2)}<br>${dm.c(dm.rx / 2, dm.ry / 2)} &nbsp; ${dm.f((1 - dm.rz) / 2)}</td>
+<td style="padding:2px 18px">eigenvalues ${dm.f(dm.l0)}, ${dm.f(dm.l1)}<br>Tr(ρ²) = ${dm.f(dm.purity)} ${rlen > 0.999 ? "(pure)" : rlen < 0.001 ? "(completely mixed)" : "(mixed)"}</td></tr></table>`
+```
+
+Defaults: the example $\tfrac12\ket0\bra0+\tfrac12\ket+\bra+$ ($\norm r=1/\sqrt2$, $\theta=45^\circ$). Set the length to $1$ for a pure state, $0$ for $\mathbb I/2$.
+
+# Multiple systems
+
+## Product, correlated and entangled states
+
+- **Product state**: $\rho\otimes\sigma$, for independent systems.
+- **Correlated (classical)**: $\tfrac12\ket0\bra0\otimes\ket0\bra0+\tfrac12\ket1\bra1\otimes\ket1\bra1$.
+- **Entangled**: $\ket{\phi^+}\bra{\phi^+}$, which is **not** a mixture of product states.
+
+. . .
+
+::: {.box}
+[Separable vs. entangled]{.box-title}
+A state is **separable** if it is a convex combination of product states $\sum_k p_k\,\rho_k\otimes\sigma_k$. Otherwise it is **entangled**.
+:::
+
+## Reduced states and the partial trace
+
+What is the state of $\mathsf X$ alone, when $(\mathsf X,\mathsf Y)$ is in $\rho$? Average over everything $\mathsf Y$ could do:
+
+$$
+\rho_{\mathsf X}=\operatorname{Tr}_{\mathsf Y}(\rho),
+\qquad
+\operatorname{Tr}_{\mathsf Y}\bigl(A\otimes B\bigr)=\operatorname{Tr}(B)\,A,\ \text{extended linearly.}
+$$
+
+. . .
+
+**An e-bit:**
+
+$$
+\operatorname{Tr}_{\mathsf Y}\bigl(\ket{\phi^+}\bra{\phi^+}\bigr)=\tfrac12\ket0\bra0+\tfrac12\ket1\bra1=\frac{\mathbb I}{2}.
+$$
+
+Each half of an e-bit, on its own, is **completely mixed**: a maximally entangled pure state has maximally mixed parts.
+
+::: {.notes}
+Concretely: $\ket{\phi^+}\bra{\phi^+}=\tfrac12\sum_{a,b}\ket a\bra b\otimes\ket a\bra b$.
+The partial trace keeps $\ket a\bra b\cdot\operatorname{Tr}(\ket a\bra b)$, which is
+zero unless $a=b$. Alternative description: $\operatorname{Tr}_{\mathsf Y}(\rho)=\sum_b(\mathbb I\otimes\bra b)\rho(\mathbb I\otimes\ket b)$.
+:::
+
+## The partial trace for two qubits
+
+Write $\rho$ in $2\times2$ blocks (rows and columns ordered $00,01,10,11$, with $\mathsf X$ first):
+
+$$
+\rho=\begin{pmatrix}A&B\\C&D\end{pmatrix}
+\quad\Longrightarrow\quad
+\operatorname{Tr}_{\mathsf X}(\rho)=A+D,
+\qquad
+\operatorname{Tr}_{\mathsf Y}(\rho)=\begin{pmatrix}\operatorname{Tr}A&\operatorname{Tr}B\\\operatorname{Tr}C&\operatorname{Tr}D\end{pmatrix}.
+$$
+
+. . .
+
+In Qiskit:
+
+```python
+from qiskit.quantum_info import DensityMatrix, partial_trace
+rho = DensityMatrix.from_label("00")          # any 2-qubit state
+partial_trace(rho, [1])                       # trace out qubit 1, keep qubit 0
+```
+
+## Recap
+
+1. A **density matrix** is positive semidefinite with trace one; $\ket\psi\mapsto\ket\psi\bra\psi$ embeds pure states.
+2. **Mixtures** are convex combinations. Different mixtures can give the same $\rho$, and then they cannot be told apart.
+3. $\mathbb I/n$ is **completely mixed**; diagonal density matrices are classical probabilistic states.
+4. Qubit states form the **Bloch ball**: pure on the surface, mixtures along chords.
+5. The **partial trace** gives the state of a subsystem; each half of an e-bit is $\mathbb I/2$.
+
+::: {.aside-note}
+Adapted from *General Formulation of Quantum Information* by John Watrous, © IBM Corp., [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). [Original lesson](https://quantum.cloud.ibm.com/learning/en/courses/general-formulation-of-quantum-information/density-matrices/introduction).
+:::
