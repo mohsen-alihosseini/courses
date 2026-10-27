@@ -1,0 +1,25 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Study Courses"
+  description: "Lecture slides and notes for the courses I study."
+  page-navigation: true
+  navbar:
+    left:
+      - href: index.qmd
+        text: Courses
+    right:
+      - icon: github
+        href: https://github.com/YOUR-USERNAME/study-courses
+        aria-label: Source on GitHub
+  page-footer:
+    center: "Notes by Mohsen · built with [Quarto](https://quarto.org)"
+
+format:
+  html:
+    theme:
+      light: [cosmo, theme/site.scss]
+    toc: true
+    html-math-method: mathjax

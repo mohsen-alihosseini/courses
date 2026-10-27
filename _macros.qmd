@@ -1,0 +1,15 @@
+::: {.hidden}
+$$
+\newcommand{\ket}[1]{\left\lvert #1 \right\rangle}
+\newcommand{\bra}[1]{\left\langle #1 \right\rvert}
+\newcommand{\braket}[2]{\left\langle #1 \middle\vert #2 \right\rangle}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\ZN}{\mathbb{Z}_N}
+\newcommand{\ZNs}{\mathbb{Z}_N^{\ast}}
+\newcommand{\QFT}{\mathrm{QFT}}
+\newcommand{\OR}{\mathrm{OR}}
+\newcommand{\Hn}{H^{\otimes n}}
+\newcommand{\lgn}{\operatorname{lg}}
+$$
+:::

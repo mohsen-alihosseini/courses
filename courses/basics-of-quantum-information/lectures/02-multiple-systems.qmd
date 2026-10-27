@@ -1,0 +1,210 @@
+---
+title: "Multiple Systems"
+subtitle: "Basics of Quantum Information · Lecture 2"
+---
+
+# Classical information
+
+## Two systems as one
+
+{{< include /_macros.qmd >}}
+
+Systems $\mathsf X$ (states $\Sigma$) and $\mathsf Y$ (states $\Gamma$) viewed together form one system $(\mathsf X,\mathsf Y)$ whose classical states are pairs, the **Cartesian product**
+
+$$
+\Sigma\times\Gamma=\{(a,b): a\in\Sigma,\ b\in\Gamma\}, \qquad\text{written } \ket{ab}=\ket a\ket b .
+$$
+
+Two bits have states $00,01,10,11$, ordered **alphabetically** (first system most significant). A probabilistic state is a probability vector over these:
+
+$$
+\tfrac12\ket{00}+\tfrac12\ket{11}\;\longleftrightarrow\;\begin{pmatrix}\tfrac12\\0\\0\\\tfrac12\end{pmatrix}
+\qquad\text{(two perfectly correlated fair bits).}
+$$
+
+## Independence and tensor products
+
+$\mathsf X$ and $\mathsf Y$ are **independent** if $\Pr\bigl((\mathsf X,\mathsf Y)=(a,b)\bigr)=\Pr(\mathsf X=a)\Pr(\mathsf Y=b)$ for all $a,b$. Then the joint vector is a **tensor product**:
+
+$$
+\ket\phi\otimes\ket\psi=\sum_{a,b}\alpha_a\beta_b\ket{ab},
+\qquad
+\begin{pmatrix}\alpha_0\\\alpha_1\end{pmatrix}\otimes\begin{pmatrix}\beta_0\\\beta_1\end{pmatrix}
+=\begin{pmatrix}\alpha_0\beta_0\\\alpha_0\beta_1\\\alpha_1\beta_0\\\alpha_1\beta_1\end{pmatrix}.
+$$
+
+. . .
+
+The correlated state $\tfrac12\ket{00}+\tfrac12\ket{11}$ is **not** a product: that would need $\alpha_0\beta_1=0$ while $\alpha_0\beta_0\ne0$ and $\alpha_1\beta_1\ne0$.
+
+::: {.aside-note}
+The tensor product is **bilinear**: linear in each argument separately. Same rules for three or more systems: $\ket{\phi_1}\otimes\cdots\otimes\ket{\phi_n}$.
+:::
+
+## Measuring one of two systems
+
+Measure only $\mathsf X$ of a probabilistic state $\sum_{a,b}p_{ab}\ket{ab}$:
+
+- Outcome $a$ with the **marginal** probability $\Pr(\mathsf X=a)=\sum_b p_{ab}$.
+- $\mathsf Y$ is then in the **conditional** state $\Pr(\mathsf Y=b\mid\mathsf X=a)=p_{ab}/\Pr(\mathsf X=a)$.
+
+. . .
+
+Example: $\tfrac12\ket{00}+\tfrac1{12}\ket{01}+\tfrac1{12}\ket{10}+\tfrac13\ket{11}$.
+
+$$
+\Pr(\mathsf X=0)=\tfrac12+\tfrac1{12}=\tfrac7{12},\qquad
+\text{then } \mathsf Y \text{ is in } \tfrac67\ket0+\tfrac17\ket1 .
+$$
+
+## Operations on two systems
+
+Any stochastic matrix on $\Sigma\times\Gamma$ is an operation on the pair. A controlled-NOT, for example: if $\mathsf X=1$, flip $\mathsf Y$.
+
+. . .
+
+**Independent operations** $M$ on $\mathsf X$ and $N$ on $\mathsf Y$ act together as the **tensor product of matrices**:
+
+$$
+M\otimes N=\begin{pmatrix}\alpha_{00}N&\alpha_{01}N\\\alpha_{10}N&\alpha_{11}N\end{pmatrix},
+\qquad (M\otimes N)(\ket\phi\otimes\ket\psi)=M\ket\phi\otimes N\ket\psi .
+$$
+
+Doing nothing to $\mathsf Y$ is $M\otimes\mathbb I$. Not every operation on the pair is a tensor product: the controlled-NOT is not.
+
+# Quantum information
+
+## Quantum states of several systems
+
+A quantum state of $(\mathsf X,\mathsf Y)$ is a unit vector indexed by $\Sigma\times\Gamma$. If $\mathsf X$ is in $\ket\phi$ and $\mathsf Y$ in $\ket\psi$ independently, the pair is in $\ket\phi\otimes\ket\psi$ (a **product state**).
+
+$$
+\ket+\otimes\ket0=\tfrac1{\sqrt2}\ket{00}+\tfrac1{\sqrt2}\ket{10},
+\qquad
+\norm{\ket\phi\otimes\ket\psi}=\norm{\ket\phi}\norm{\ket\psi}=1 .
+$$
+
+. . .
+
+A state that is **not** a product state is **entangled**.
+
+::: {.box}
+[Entanglement vs. correlation]{.box-title}
+Classical correlation ($\tfrac12\ket{00}+\tfrac12\ket{11}$ as a probability vector) is not entanglement. Entanglement is a property of quantum state vectors and has no classical counterpart.
+:::
+
+## The Bell states
+
+$$
+\ket{\phi^\pm}=\frac{\ket{00}\pm\ket{11}}{\sqrt2},
+\qquad
+\ket{\psi^\pm}=\frac{\ket{01}\pm\ket{10}}{\sqrt2}.
+$$
+
+- All four are entangled. $\ket{\phi^+}$ is called an **e-bit**: one unit of entanglement.
+- They form an orthonormal basis of the two-qubit space: the **Bell basis**.
+
+Three qubits:
+
+$$
+\text{GHZ: } \frac{\ket{000}+\ket{111}}{\sqrt2},
+\qquad
+\text{W: } \frac{\ket{001}+\ket{010}+\ket{100}}{\sqrt3}.
+$$
+
+## Partial measurements
+
+Write the state grouped by the first system: $\ket\psi=\sum_a\ket a\otimes\ket{\phi_a}$, with unnormalized $\ket{\phi_a}$.
+
+- Measuring $\mathsf X$ gives $a$ with probability $\norm{\ket{\phi_a}}^2$.
+- The state becomes $\ket a\otimes\dfrac{\ket{\phi_a}}{\norm{\ket{\phi_a}}}$: it collapses only as much as the outcome requires.
+
+. . .
+
+Example: $\ket\psi=\tfrac12\ket{00}+\tfrac12\ket{01}+\tfrac1{\sqrt2}\ket{11}=\ket0\otimes\tfrac{\ket0+\ket1}{2}+\ket1\otimes\tfrac{\ket1}{\sqrt2}$.
+
+$$
+\Pr(0)=\tfrac12\;\Rightarrow\;\ket0\ket+,
+\qquad
+\Pr(1)=\tfrac12\;\Rightarrow\;\ket1\ket1 .
+$$
+
+For $\ket{\phi^+}$: outcome $0$ or $1$ with probability ½ each, and then **both** qubits hold that value.
+
+::: {.notes}
+The part of an entangled pair held by one party cannot be described by a
+state vector on its own. That needs density matrices, covered in the third
+course of the series (General formulation of quantum information).
+:::
+
+## Unitary operations on several systems
+
+- **Independent:** $U\otimes V$ is unitary when $U$ and $V$ are. E.g. $H\otimes H$, or $H\otimes\mathbb I$.
+- **Swap:** $\mathrm{SWAP}\ket\phi\ket\psi=\ket\psi\ket\phi$.
+- **Controlled-$U$** (control first): apply $U$ to the target when the control is $1$.
+
+$$
+CU=\ket0\bra0\otimes\mathbb I+\ket1\bra1\otimes U,
+\qquad
+\mathrm{CNOT}=\begin{pmatrix}1&0&0&0\\0&1&0&0\\0&0&0&1\\0&0&1&0\end{pmatrix}.
+$$
+
+. . .
+
+Neither swap nor CNOT is a tensor product of single-qubit unitaries. A controlled-controlled-NOT is the **Toffoli** gate.
+
+## Making an e-bit
+
+$$
+\mathrm{CNOT}\,(H\otimes\mathbb I)\ket{00}
+=\mathrm{CNOT}\,\frac{\ket{00}+\ket{10}}{\sqrt2}
+=\frac{\ket{00}+\ket{11}}{\sqrt2}=\ket{\phi^+}.
+$$
+
+A Hadamard creates a superposition on the control; the CNOT copies each branch onto the target. Lecture 3 draws this as a circuit.
+
+. . .
+
+Changing the input changes the Bell state:
+
+$$
+\ket{00}\mapsto\ket{\phi^+},\quad
+\ket{01}\mapsto\ket{\psi^+},\quad
+\ket{10}\mapsto\ket{\phi^-},\quad
+\ket{11}\mapsto\ket{\psi^-}.
+$$
+
+## In Qiskit
+
+```python
+from qiskit.quantum_info import Statevector, Operator
+from numpy import array, sqrt
+
+zero, one = Statevector.from_label("0"), Statevector.from_label("1")
+psi = zero.tensor(one)                 # |0> ⊗ |1> = |01>
+plus = Statevector.from_label("+")
+minus_i = Statevector.from_label("l")  # |-i>
+phi = plus ^ minus_i                   # ^ is shorthand for tensor
+
+H, Id = Operator.from_label("H"), Operator.from_label("I")
+(H ^ Id)                               # H ⊗ I as a 4x4 matrix
+
+w = Statevector(array([0, 1, 1, 0, 1, 0, 0, 0]) / sqrt(3))   # W state
+result, state = w.measure([0])         # measure only qubit 0
+```
+
+::: {.aside-note}
+Qiskit numbers qubits from the **right**: in the label `"01"`, qubit 0 is the `1`. Tensor products follow the same rule, so `A ^ B` acts with `B` on qubit 0.
+:::
+
+## Recap
+
+1. Classical states of several systems: the **Cartesian product**; probabilistic and quantum states: vectors indexed by it.
+2. **Independence** ⟺ the state is a **tensor product**. Independent operations combine as $M\otimes N$.
+3. Quantum states that are not products are **entangled**: Bell states, GHZ, W.
+4. **Partial measurement:** probability $\norm{\ket{\phi_a}}^2$, then collapse only as far as the outcome requires.
+5. Multi-qubit unitaries: $U\otimes V$, swap, controlled-$U$ (CNOT, Toffoli). $H$ followed by CNOT makes an e-bit.
+
+::: {.aside-note}
+Adapted from *Basics of Quantum Information* by John Watrous, © IBM Corp., [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). [Original lesson](https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/multiple-systems/introduction).
+:::

@@ -1,0 +1,40 @@
+/*-- scss:defaults --*/
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap");
+
+$body-bg: #fbfaf7;
+$body-color: #1d2433;
+$link-color: #3b5bdb;
+$presentation-heading-color: #1d2433;
+$presentation-heading-font: "Source Serif 4", Georgia, serif;
+$presentation-heading-font-weight: 600;
+$font-family-sans-serif: "Source Sans 3", system-ui, sans-serif;
+$presentation-font-size-root: 32px;
+$presentation-h2-font-size: 1.45em;
+$presentation-title-slide-text-align: left;
+
+/*-- scss:rules --*/
+// Boxed statement: problem, definition, theorem
+.box {
+  border-left: 4px solid #3b5bdb;
+  background: #eef1fb;
+  padding: 0.45em 0.8em;
+  margin: 0.4em 0 0.6em;
+  border-radius: 0 6px 6px 0;
+}
+.box > p:first-child { margin-top: 0; }
+.box > p:last-child { margin-bottom: 0; }
+.box .box-title { font-weight: 600; color: #3b5bdb; display: block; }
+
+// Muted side remark
+.aside-note {
+  font-size: 0.75em;
+  color: #5c6370;
+}
+
+// Figures from the course: cap their height so the slide never overflows
+.reveal img { max-height: 430px; }
+.reveal .small-fig img { max-height: 300px; }
+
+.reveal .section h1, .reveal section > h1 { color: #3b5bdb; }
+.reveal .slide-number { color: #5c6370; }
+.reveal .footer { font-size: 0.45em; }

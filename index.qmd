@@ -1,0 +1,28 @@
+---
+title: "Study Courses"
+subtitle: "Slide decks and notes, one course at a time"
+toc: false
+listing:
+  id: courses
+  contents: "courses/*/index.qmd"
+  type: grid
+  grid-columns: 3
+  sort: "order"
+  fields: [image, title, description, categories]
+  image-height: 160px
+  categories: true
+---
+
+Each course has its own page with links to every lecture. The lectures are
+[reveal.js](https://revealjs.com) slide decks: press **F** for full screen,
+**S** for speaker notes, **O** for an overview of all slides, and **Esc** to
+leave either view.
+
+::: {#courses}
+:::
+
+## Adding a course
+
+Make a folder `courses/<course-name>/` with an `index.qmd` (copy an existing
+one) and a `lectures/` folder for the decks. It appears in the list above on
+the next render.

@@ -1,0 +1,50 @@
+---
+title: "Basics of Quantum Information"
+description: "Classical and quantum states, measurements and unitary operations, multiple systems and entanglement, quantum circuits, teleportation, superdense coding and the CHSH game."
+image: thumbnail.svg
+order: 0
+categories: [quantum computing, quantum information]
+toc: false
+---
+
+Study slides for the first course of IBM's *Understanding Quantum Information
+and Computation* series, taught by John Watrous. It builds the mathematical
+model of quantum information from the ground up: what a quantum state is, how
+it is measured and changed, what happens with several systems at once, and what
+entanglement can do.
+
+**Prerequisite:** linear algebra with vectors and matrices (complex numbers
+included). This course is the prerequisite for [Fundamentals of Quantum
+Algorithms](../fundamentals-of-quantum-algorithms/index.qmd). [Original course
+page](https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information).
+
+## Lectures
+
+::: {.lesson-table}
+| | Lecture | What it covers | Original |
+|---|---|---|---|
+| 1 | [Single systems](lectures/01-single-systems.qmd) | Probabilistic states and stochastic matrices; quantum state vectors, standard basis measurements and unitary operations; Dirac notation | [video](https://youtu.be/3-c4xJa7Flk) · [slides](https://ibm.box.com/public/static/95va6f5vqru3mpsv9p5ivwcyxino4rk7.pdf) |
+| 2 | [Multiple systems](lectures/02-multiple-systems.qmd) | Cartesian and tensor products; independence; entangled states (Bell, GHZ, W); partial measurements; swap and controlled operations | [video](https://youtu.be/DfZZS8Spe7U) · [slides](https://ibm.box.com/public/static/86os1t6m7g4ajh36w5x3lo6jcp3j5rrp.pdf) |
+| 3 | [Quantum circuits](lectures/03-quantum-circuits.qmd) | Boolean and quantum circuits; inner products and projective measurements; global phases, no-cloning, and discriminating non-orthogonal states | [video](https://youtu.be/30U2DTfIrOU) · [slides](https://ibm.box.com/public/static/zsd4694uko51kzcohdvbp6ncgl9u9ys3.pdf) |
+| 4 | [Entanglement in action](lectures/04-entanglement-in-action.qmd) | Quantum teleportation, superdense coding, and the CHSH game | [video](https://youtu.be/GSsElSQgMbU) · [slides](https://ibm.box.com/public/static/9a7pjqxfa2d5uucdlhgid625reuw0b2n.pdf) |
+:::
+
+## How to study with these slides
+
+1. Watch the lesson video, or read the original lesson.
+2. Go through the deck. Press **S** for speaker notes: they hold the extra
+   steps that do not fit on a slide.
+3. Redo the calculations on paper, especially the small matrix products. In
+   this course the arithmetic *is* the understanding.
+
+The badge exam is linked from the [original course
+page](https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information).
+
+::: {.attribution}
+These slides are adapted from *Basics of Quantum Information* by John Watrous,
+© IBM Corp., licensed under [CC BY-SA
+4.0](https://creativecommons.org/licenses/by-sa/4.0/) (source:
+[Qiskit/documentation](https://github.com/Qiskit/documentation)). The text has
+been condensed and rearranged into slides; the circuit diagrams and figures are
+the course's own. The slides are shared under the same license.
+:::
