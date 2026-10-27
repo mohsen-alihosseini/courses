@@ -11,5 +11,14 @@ $$
 \newcommand{\OR}{\mathrm{OR}}
 \newcommand{\Hn}{H^{\otimes n}}
 \newcommand{\lgn}{\operatorname{lg}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\vx}{\boldsymbol{x}}
+\newcommand{\vb}{\boldsymbol{b}}
+\newcommand{\vv}{\boldsymbol{v}}
+\newcommand{\vzero}{\boldsymbol{0}}
+\newcommand{\rk}{\operatorname{rk}}
+\newcommand{\Img}{\operatorname{Im}}
+\newcommand{\Ker}{\operatorname{ker}}
+\newcommand{\spn}{\operatorname{span}}
 $$
 :::

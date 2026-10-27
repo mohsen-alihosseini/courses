@@ -88,9 +88,49 @@ def classical_measurement():
     strip_doctype(out / "basics-measure-classical.svg")
 
 
+def label_for(a, b, c):
+    """Readable equation label such as 'x₁ − x₂ = 1'."""
+    def term(coef, name, first):
+        sign = "" if first else (" − " if coef < 0 else " + ")
+        if first and coef < 0:
+            sign = "−"
+        mag = abs(coef)
+        return f"{sign}{'' if mag == 1 else mag}{name}"
+    return f"{term(a, 'x₁', True)}{term(b, 'x₂', False)} = {c}"
+
+
+def three_systems():
+    """Row picture of 2x2 linear systems: one, none, infinitely many solutions (MML course, ch. 2)."""
+    out = Path("math/mathematics-for-machine-learning/figures")
+    out.mkdir(parents=True, exist_ok=True)
+    x = np.linspace(-1, 4, 50)
+    cases = [
+        ("one solution", [(1, 1, 3), (1, -1, 1)], (2, 1)),
+        ("no solution", [(1, 1, 3), (1, 1, 1)], None),
+        ("infinitely many", [(1, 1, 3), (2, 2, 6)], None),
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(10, 3.2), sharey=True)
+    for ax, (title, eqs, sol) in zip(axes, cases):
+        for (a, b, c), color, ls, lw in zip(eqs, [BLUE, ORANGE], ["-", "--"], [2.5, 2]):
+            ax.plot(x, (c - a * x) / b, color=color, ls=ls, lw=lw,
+                    label=label_for(a, b, c))
+        if sol:
+            ax.plot(*sol, "o", color=INK, ms=7)
+            ax.annotate(f"({sol[0]}, {sol[1]})", sol, xytext=(8, -14), textcoords="offset points", color=INK)
+        ax.set_title(title, color=INK, loc="left", fontsize=13)
+        ax.set_xlim(-1, 4); ax.set_ylim(-1, 4)
+        ax.set_xlabel("x₁")
+        ax.legend(frameon=False, fontsize=10, loc="upper right")
+    axes[0].set_ylabel("x₂")
+    fig.tight_layout()
+    fig.savefig(out / "three-systems.svg")
+    strip_doctype(out / "three-systems.svg")
+
+
 if __name__ == "__main__":
     grover_success()
     query_counts()
     for name in ("grover-success.svg", "query-counts.svg"):
         strip_doctype(OUT / name)
     classical_measurement()
+    three_systems()

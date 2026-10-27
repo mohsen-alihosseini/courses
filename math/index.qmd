@@ -1,6 +1,6 @@
 ---
 title: "Math"
-description: "Mathematics courses: slide decks and notes."
+description: "Mathematics for machine learning, chapter by chapter: linear algebra, calculus, probability, optimization."
 image: thumbnail.svg
 order: 2
 toc: false
@@ -17,8 +17,7 @@ listing:
 
 [← All subjects](../index.qmd)
 
-Mathematics courses. Each course folder placed inside `math/` appears below
-automatically.
+Mathematics courses, starting with the foundations of machine learning.
 
 ::: {#courses}
 :::

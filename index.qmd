@@ -31,8 +31,8 @@ leave either view.
     <img src="math/thumbnail.svg" alt="">
     <div class="subject-body">
       <h3>Math</h3>
-      <p>Mathematics courses: slide decks and notes.</p>
-      <span class="subject-count">coming soon</span>
+      <p>Mathematics for machine learning, chapter by chapter: linear algebra, calculus, probability, optimization.</p>
+      <span class="subject-count">1 course</span>
     </div>
   </a>
 

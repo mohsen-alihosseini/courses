@@ -1,0 +1,69 @@
+---
+title: "Mathematics for Machine Learning"
+description: "Chapter-by-chapter study slides for the book by Deisenroth, Faisal and Ong: linear algebra, geometry, matrix decompositions, calculus, probability and optimization, then the core ML models."
+image: thumbnail.svg
+order: 1
+categories: [linear algebra, calculus, probability, machine learning]
+toc: false
+---
+
+[← Math](../index.qmd)
+
+Study slides that follow the book *Mathematics for Machine Learning* by Marc
+Peter Deisenroth, A. Aldo Faisal and Cheng Soon Ong (Cambridge University
+Press, 2020), one deck per chapter. The book is free to read at
+[mml-book.github.io](https://mml-book.github.io/).
+
+**Why this book.** Machine learning papers assume four pieces of mathematics:
+linear algebra, analytic geometry, vector calculus and probability, plus
+optimization to put them to work. Part I builds those foundations; Part II
+uses them to derive four central models from scratch. (This is the book's
+Chapter 1 in one paragraph.)
+
+::: {.callout-note appearance="simple"}
+These slides are my own study notes: they follow the book's chapter and
+section order, but the explanations, examples and figures are written
+independently. They are not a substitute for the book. Read the matching
+sections alongside each deck.
+:::
+
+## Part I: Mathematical foundations
+
+::: {.lesson-table .column-page}
+| | Chapter | What it covers | Book |
+|---|---|---|---|
+| 2 | [Linear algebra](lectures/02-linear-algebra.qmd) | Linear systems and Gaussian elimination; matrices and inverses; vector spaces, independence, basis and rank; linear and affine maps | §2.1–2.8 |
+| 3 | Analytic geometry | Norms, inner products, angles and orthogonality; orthonormal bases; projections; rotations | §3.1–3.9 |
+| 4 | Matrix decompositions | Determinant and trace; eigenvalues; Cholesky; eigendecomposition; SVD; low-rank approximation | §4.1–4.7 |
+| 5 | Vector calculus | Partial derivatives and gradients; Jacobians; gradients of matrices; backpropagation; Taylor series | §5.1–5.8 |
+| 6 | Probability and distributions | Probability spaces; sum and product rules, Bayes; mean and covariance; the Gaussian; exponential family; change of variables | §6.1–6.7 |
+| 7 | Continuous optimization | Gradient descent; Lagrange multipliers; convex optimization and duality | §7.1–7.3 |
+:::
+
+## Part II: Central machine learning problems
+
+::: {.lesson-table .column-page}
+| | Chapter | What it covers | Book |
+|---|---|---|---|
+| 8 | When models meet data | Empirical risk minimization; maximum likelihood and MAP; graphical models; model selection | §8.1–8.6 |
+| 9 | Linear regression | Least squares and maximum likelihood; Bayesian linear regression; regression as projection | §9.1–9.4 |
+| 10 | Principal component analysis | Maximum-variance and projection views; computing PCA; the latent-variable view | §10.1–10.7 |
+| 11 | Gaussian mixture models | Mixture densities; maximum likelihood; the EM algorithm | §11.1–11.4 |
+| 12 | Support vector machines | Separating hyperplanes; primal and dual SVM; kernels | §12.1–12.5 |
+:::
+
+Chapters without a link are not written yet; they are added one at a time.
+
+## How to study with these slides
+
+1. Read the chapter in the book.
+2. Go through the deck. Press **S** for speaker notes, which hold extra steps.
+3. Redo the worked examples by hand, then check them in Python with NumPy.
+
+::: {.attribution}
+Based on the structure of *Mathematics for Machine Learning* by M. P.
+Deisenroth, A. A. Faisal and C. S. Ong, Cambridge University Press, 2020
+([mml-book.com](https://mml-book.com)). The book's free PDF is licensed for
+personal use only, so no text or figures from it are reproduced here; all slide
+content is original.
+:::
