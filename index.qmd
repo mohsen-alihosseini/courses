@@ -27,5 +27,14 @@ leave either view.
     </div>
   </a>
 
+  <a class="subject-card" href="math/index.html">
+    <img src="math/thumbnail.svg" alt="">
+    <div class="subject-body">
+      <h3>Math</h3>
+      <p>Mathematics courses: slide decks and notes.</p>
+      <span class="subject-count">coming soon</span>
+    </div>
+  </a>
+
 </div>
 ```
