@@ -2,17 +2,6 @@
 title: "Study Courses"
 subtitle: "Slide decks and notes, grouped by subject"
 toc: false
-listing:
-  id: categories
-  # One line per subject. To add a subject, create its folder (e.g. math/)
-  # with an index.qmd, then add its path here, e.g.  - math/index.qmd
-  contents:
-    - quantum/index.qmd
-  type: grid
-  grid-columns: 3
-  sort: "order"
-  fields: [image, title, description]
-  image-height: 160px
 ---
 
 Pick a subject to see its courses. Every lecture is a
@@ -20,5 +9,23 @@ Pick a subject to see its courses. Every lecture is a
 **S** for speaker notes, **O** for an overview of all slides, and **Esc** to
 leave either view.
 
-::: {#categories}
-:::
+<!--
+  One card per subject. To add a subject (e.g. math/), copy the whole
+  <a class="subject-card"> ... </a> block below, paste it after the last one,
+  and change the folder name, title, description and course count.
+-->
+
+```{=html}
+<div class="subject-grid">
+
+  <a class="subject-card" href="quantum/index.html">
+    <img src="quantum/thumbnail.svg" alt="">
+    <div class="subject-body">
+      <h3>Quantum</h3>
+      <p>Quantum information and computation: IBM's four-course series by John Watrous, from qubits to fault-tolerant quantum computing.</p>
+      <span class="subject-count">4 courses</span>
+    </div>
+  </a>
+
+</div>
+```
