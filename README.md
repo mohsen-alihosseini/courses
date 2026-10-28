@@ -1,4 +1,5 @@
 # Study Courses
+**live view on** : [https://mohsen-alihosseini.github.io/courses/](https://mohsen-alihosseini.github.io/courses/)
 
 My course notes as reveal.js slide decks, built with [Quarto](https://quarto.org)
 and published to GitHub Pages.
