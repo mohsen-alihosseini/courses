@@ -126,6 +126,112 @@ def three_systems():
     fig.savefig(out / "three-systems.svg")
     strip_doctype(out / "three-systems.svg")
 
+MML = Path("math/mathematics-for-machine-learning/figures")
+
+
+def unit_balls():
+    """Unit balls of the 1-, 2- and max-norm (MML ch. 3)."""
+    t = np.linspace(0, 2 * np.pi, 400)
+    fig, axes = plt.subplots(1, 3, figsize=(9, 3.1))
+    shapes = [
+        ("‖x‖₁ = |x₁| + |x₂| = 1", np.array([[1, 0], [0, 1], [-1, 0], [0, -1], [1, 0]]).T),
+        ("‖x‖₂ = √(x₁² + x₂²) = 1", np.vstack([np.cos(t), np.sin(t)])),
+        ("‖x‖∞ = max(|x₁|, |x₂|) = 1", np.array([[1, 1], [-1, 1], [-1, -1], [1, -1], [1, 1]]).T),
+    ]
+    for ax, (title, pts) in zip(axes, shapes):
+        ax.fill(pts[0], pts[1], color=BLUE, alpha=0.12)
+        ax.plot(pts[0], pts[1], color=BLUE, lw=2.2)
+        ax.axhline(0, color=MUTED, lw=0.8); ax.axvline(0, color=MUTED, lw=0.8)
+        ax.set_xlim(-1.4, 1.4); ax.set_ylim(-1.4, 1.4); ax.set_aspect("equal")
+        ax.set_xticks([-1, 0, 1]); ax.set_yticks([-1, 0, 1])
+        ax.set_title(title, color=INK, fontsize=11.5)
+    fig.tight_layout()
+    fig.savefig(MML / "unit-balls.svg"); strip_doctype(MML / "unit-balls.svg")
+
+
+def low_rank():
+    """Rank-k approximations of a synthetic 'image' via the SVD (MML ch. 4)."""
+    n = 120
+    yy, xx = np.mgrid[0:n, 0:n] / n
+    img = (np.sin(6 * xx) * np.cos(4 * yy) + 0.8 * np.exp(-((xx - 0.6) ** 2 + (yy - 0.35) ** 2) / 0.01)
+           + 0.6 * ((xx - 0.3) ** 2 + (yy - 0.7) ** 2 < 0.02) + 0.3 * (xx > yy))
+    U, s, Vt = np.linalg.svd(img)
+    ks = [1, 3, 10, n]
+    fig, axes = plt.subplots(1, 4, figsize=(10, 2.9))
+    for ax, k in zip(axes, ks):
+        approx = (U[:, :k] * s[:k]) @ Vt[:k]
+        ax.imshow(approx, cmap="Blues", vmin=img.min(), vmax=img.max())
+        err = np.linalg.norm(img - approx) / np.linalg.norm(img)
+        ax.set_title(f"rank {k}" + ("" if k == n else f" · error {err:.0%}") if k != n else f"original (rank {np.linalg.matrix_rank(img)})",
+                     color=INK, fontsize=11)
+        ax.set_xticks([]); ax.set_yticks([])
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+    fig.tight_layout()
+    fig.savefig(MML / "low-rank.svg"); strip_doctype(MML / "low-rank.svg")
+
+
+def gradient_field():
+    """Contours of f(x, y) = x² + 3y² with gradient arrows (MML ch. 5)."""
+    xs = np.linspace(-2, 2, 200)
+    X, Y = np.meshgrid(xs, xs)
+    F = X ** 2 + 3 * Y ** 2
+    fig, ax = plt.subplots(figsize=(5.2, 4.4))
+    ax.contour(X, Y, F, levels=[0.25, 1, 2, 4, 7, 10], colors=MUTED, linewidths=1)
+    g = np.linspace(-1.5, 1.5, 7)
+    GX, GY = np.meshgrid(g, g)
+    ax.quiver(GX, GY, 2 * GX, 6 * GY, color=BLUE, angles="xy", scale_units="xy", scale=14, width=0.006)
+    ax.plot(0, 0, "o", color=ORANGE, ms=7)
+    ax.set_aspect("equal"); ax.set_xlabel("x"); ax.set_ylabel("y")
+    ax.set_title("f(x, y) = x² + 3y²", color=INK, fontsize=12, loc="left")
+    ax.set_xlim(-2, 2); ax.set_ylim(-2, 2)
+    fig.tight_layout()
+    fig.savefig(MML / "gradient-field.svg"); strip_doctype(MML / "gradient-field.svg")
+
+
+def gaussian_conditional():
+    """Bivariate Gaussian, its marginal of x₁ and the conditional p(x₁ | x₂ = 3) (MML ch. 6)."""
+    mu = np.array([1.0, 2.0]); S = np.array([[2.0, 1.0], [1.0, 2.0]])
+    xs = np.linspace(-3, 5, 300); ys = np.linspace(-2, 6, 300)
+    X, Y = np.meshgrid(xs, ys)
+    P = np.dstack([X - mu[0], Y - mu[1]])
+    Si = np.linalg.inv(S)
+    Z = np.exp(-0.5 * np.einsum("...i,ij,...j", P, Si, P))
+    fig, axes = plt.subplots(1, 2, figsize=(9.5, 3.8), gridspec_kw={"width_ratios": [1, 1.25]})
+    ax = axes[0]
+    ax.contour(X, Y, Z, levels=[0.05, 0.2, 0.45, 0.75], colors=BLUE, linewidths=1.4)
+    ax.axhline(3, color=ORANGE, ls="--", lw=1.5)
+    ax.text(-2.8, 3.15, "x₂ = 3", color=ORANGE)
+    ax.plot(*mu, "o", color=INK, ms=5)
+    ax.set_xlabel("x₁"); ax.set_ylabel("x₂"); ax.set_aspect("equal")
+    ax.set_title("joint p(x₁, x₂)", color=INK, loc="left", fontsize=12)
+    ax = axes[1]
+    pdf = lambda x, m, v: np.exp(-(x - m) ** 2 / (2 * v)) / np.sqrt(2 * np.pi * v)
+    ax.plot(xs, pdf(xs, 1.0, 2.0), color=BLUE, lw=2, label="marginal p(x₁) = N(1, 2)")
+    ax.plot(xs, pdf(xs, 1.5, 1.5), color=ORANGE, lw=2, ls="--", label="conditional p(x₁ | x₂ = 3) = N(1.5, 1.5)")
+    ax.set_xlabel("x₁"); ax.set_yticks([]); ax.legend(frameon=False, fontsize=10, loc="upper left")
+    ax.set_ylim(0, 0.55)
+    fig.tight_layout()
+    fig.savefig(MML / "gaussian-conditional.svg"); strip_doctype(MML / "gaussian-conditional.svg")
+
+
+def convexity():
+    """A convex and a non-convex function with a chord (MML ch. 7)."""
+    x = np.linspace(-2, 2, 300)
+    fig, axes = plt.subplots(1, 2, figsize=(9, 3.2))
+    f1 = lambda t: 0.5 * t ** 2 + 0.3 * t
+    f2 = lambda t: 0.25 * t ** 4 - t ** 2 + 0.3 * t
+    for ax, f, title in [(axes[0], f1, "convex: the graph stays below every chord"), (axes[1], f2, "not convex: the graph rises above this chord")]:
+        ax.plot(x, f(x), color=BLUE, lw=2.2)
+        a, b = (-1.6, 1.5) if f is f1 else (-1.45, 1.35)
+        ax.plot([a, b], [f(a), f(b)], color=ORANGE, lw=2, ls="--")
+        ax.plot([a, b], [f(a), f(b)], "o", color=ORANGE, ms=6)
+        ax.set_title(title, color=INK, loc="left", fontsize=12)
+        ax.set_yticks([]); ax.set_xlabel("x")
+    fig.tight_layout()
+    fig.savefig(MML / "convexity.svg"); strip_doctype(MML / "convexity.svg")
+
+
 
 if __name__ == "__main__":
     grover_success()
@@ -134,3 +240,5 @@ if __name__ == "__main__":
         strip_doctype(OUT / name)
     classical_measurement()
     three_systems()
+    for make in (unit_balls, low_rank, gradient_field, gaussian_conditional, convexity):
+        make()

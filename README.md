@@ -17,7 +17,7 @@ Home (index.qmd)
 │   ├── General Formulation of Quantum Information 4 decks
 │   └── Foundations of Quantum Error Correction .. 4 decks
 └── Math (math/)
-    └── Mathematics for Machine Learning ......... chapter 2 so far
+    └── Mathematics for Machine Learning ......... chapters 2–7 (Part I)
 ```
 
 ## Folder structure
@@ -56,11 +56,17 @@ study-courses/
 │   ├── thumbnail.svg
 │   └── mathematics-for-machine-learning/
 │       ├── index.qmd           lists all 12 book chapters; written ones are linked
-│       ├── thumbnail.svg
+│       ├── book_cover.jpg      the book's cover
+│       ├── cover-card.jpg      card image made from it (wide format)
 │       ├── figures/
 │       └── lectures/
 │           ├── _metadata.yml
-│           └── 02-linear-algebra.qmd
+│           ├── 02-linear-algebra.qmd
+│           ├── 03-analytic-geometry.qmd
+│           ├── 04-matrix-decompositions.qmd
+│           ├── 05-vector-calculus.qmd
+│           ├── 06-probability-and-distributions.qmd
+│           └── 07-continuous-optimization.qmd
 └── .github/workflows/publish.yml   builds and publishes on every push
 ```
 
@@ -151,4 +157,6 @@ Machine Learning* by M. P. Deisenroth, A. A. Faisal and C. S. Ong (Cambridge
 University Press, 2020; free to read at
 [mml-book.github.io](https://mml-book.github.io/)). The book's PDF is licensed
 for personal use only, so no text, figures, examples or exercises from it are
-reproduced here: all explanations, examples and figures are original.
+reproduced here: all explanations, examples and figures are original. The
+cover image (`book_cover.jpg`, `cover-card.jpg`) is © Cambridge University
+Press and is shown only to identify the book.
