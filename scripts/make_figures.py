@@ -1,4 +1,4 @@
-"""Regenerate the two new figures of the quantum-algorithms course.
+"""Regenerate the figures made for this site (quantum and math courses).
 
 Run from the project root:  python scripts/make_figures.py
 Needs numpy and matplotlib. The site build itself does not run this.
@@ -233,6 +233,144 @@ def convexity():
 
 
 
+def overfitting():
+    """Polynomial fits of increasing degree, and training vs test error (MML ch. 8)."""
+    rng = np.random.default_rng(3)
+    x = np.linspace(0, 1, 10); y = np.sin(2 * np.pi * x) + 0.25 * rng.standard_normal(10)
+    xt = rng.uniform(0, 1, 200); yt = np.sin(2 * np.pi * xt) + 0.25 * rng.standard_normal(200)
+    P = np.polynomial.Polynomial
+    fig, axes = plt.subplots(1, 2, figsize=(10, 3.6))
+    ax = axes[0]; xs = np.linspace(0, 1, 300)
+    for deg, c, ls in [(1, MUTED, ":"), (3, BLUE, "-"), (9, ORANGE, "--")]:
+        ax.plot(xs, P.fit(x, y, deg)(xs), color=c, ls=ls, lw=2, label=f"degree {deg}")
+    ax.plot(x, y, "o", color=INK, ms=6)
+    ax.set_ylim(-1.8, 1.8); ax.set_xlabel("x"); ax.set_ylabel("y")
+    ax.legend(frameon=False, fontsize=10, loc="lower left")
+    ax.set_title("10 training points", color=INK, loc="left", fontsize=12)
+    ax = axes[1]; degs = range(10)
+    rmse = lambda d, a, b: np.sqrt(np.mean((P.fit(x, y, d)(a) - b) ** 2))
+    ax.plot(degs, [rmse(d, x, y) for d in degs], "o-", color=BLUE, label="training error")
+    ax.plot(degs, [rmse(d, xt, yt) for d in degs], "s--", color=ORANGE, label="test error")
+    ax.set_ylim(0, 1.0); ax.set_xlabel("polynomial degree"); ax.set_ylabel("RMSE")
+    ax.legend(frameon=False, fontsize=10)
+    ax.set_title("more flexible is not always better", color=INK, loc="left", fontsize=12)
+    fig.tight_layout()
+    fig.savefig(MML / "overfitting.svg"); strip_doctype(MML / "overfitting.svg")
+
+
+def bayes_regression():
+    """Posterior predictive of Bayesian linear regression on four points (MML ch. 9)."""
+    X = np.array([[1, 0], [1, 1], [1, 2], [1, 3]], float); y = np.array([1, 3, 2, 5], float)
+    S = np.linalg.inv(X.T @ X + np.eye(2)); m = S @ X.T @ y          # prior N(0, I), noise variance 1
+    xs = np.linspace(-1, 5, 200); F = np.column_stack([np.ones_like(xs), xs])
+    mean = F @ m; sd = np.sqrt(np.einsum("ij,jk,ik->i", F, S, F) + 1)
+    rng = np.random.default_rng(1)
+    fig, ax = plt.subplots(figsize=(6.4, 3.8))
+    ax.fill_between(xs, mean - 2 * sd, mean + 2 * sd, color=BLUE, alpha=0.12, lw=0, label="±2 std (predictive)")
+    for i, th in enumerate(rng.multivariate_normal(m, S, 6)):
+        ax.plot(xs, F @ th, color=MUTED, lw=0.9, alpha=0.8, label="posterior samples" if i == 0 else None)
+    ax.plot(xs, mean, color=BLUE, lw=2.2, label="posterior mean")
+    ax.plot(X[:, 1], y, "o", color=ORANGE, ms=7, zorder=5, label="data")
+    ax.set_xlabel("x"); ax.set_ylabel("y"); ax.set_ylim(-4, 11)
+    ax.legend(frameon=False, fontsize=9.5, loc="upper left")
+    fig.tight_layout()
+    fig.savefig(MML / "bayes-regression.svg"); strip_doctype(MML / "bayes-regression.svg")
+
+
+def pca_figure():
+    """Principal axes of 2D data and the projection onto the first one (MML ch. 10)."""
+    rng = np.random.default_rng(7)
+    X = rng.multivariate_normal([0, 0], [[2.5, 2], [2, 2.5]], 150)
+    X = X - X.mean(0)
+    lam, U = np.linalg.eigh(np.cov(X.T, bias=True)); lam, U = lam[::-1], U[:, ::-1]
+    fig, axes = plt.subplots(1, 2, figsize=(9.6, 4.2))
+    for ax in axes:
+        ax.set_aspect("equal"); ax.set_xlim(-5, 5); ax.set_ylim(-4.2, 4.2)
+        ax.set_xlabel("x₁"); ax.set_ylabel("x₂")
+    ax = axes[0]
+    ax.plot(*X.T, "o", color=BLUE, ms=3.5, alpha=0.55)
+    for l, u, c, name in [(lam[0], U[:, 0], ORANGE, "PC 1"), (lam[1], U[:, 1], INK, "PC 2")]:
+        v = 2 * np.sqrt(l) * u * np.sign(u[0])
+        ax.annotate("", xy=v, xytext=(0, 0), arrowprops=dict(arrowstyle="-|>", color=c, lw=2.2))
+        ax.text(*(v * (1.12 if name == "PC 1" else 1.45)), name, color=c, fontsize=11, ha="center", va="center")
+    ax.set_title(f"variance along PC 1: {lam[0] / lam.sum():.0%}", color=INK, loc="left", fontsize=12)
+    ax = axes[1]
+    u = U[:, 0]; Z = (X @ u)[:, None] * u
+    ax.plot([-6 * u[0], 6 * u[0]], [-6 * u[1], 6 * u[1]], color=ORANGE, lw=1.5)
+    for a, b in zip(X[:40], Z[:40]):
+        ax.plot([a[0], b[0]], [a[1], b[1]], color=MUTED, lw=0.8)
+    ax.plot(*X[:40].T, "o", color=BLUE, ms=4)
+    ax.plot(*Z[:40].T, "o", color=ORANGE, ms=4)
+    ax.set_title("project onto PC 1 (40 points shown)", color=INK, loc="left", fontsize=12)
+    fig.tight_layout()
+    fig.savefig(MML / "pca.svg"); strip_doctype(MML / "pca.svg")
+
+
+def em_1d(x, mu, var, pi, iters):
+    """Plain EM for a 1D Gaussian mixture; returns parameters and log-likelihood history."""
+    mu, var, pi = (np.array(a, float) for a in (mu, var, pi)); ll = []
+    for _ in range(iters):
+        dens = pi * np.exp(-(x[:, None] - mu) ** 2 / (2 * var)) / np.sqrt(2 * np.pi * var)
+        ll.append(np.log(dens.sum(1)).sum())
+        r = dens / dens.sum(1, keepdims=True); Nk = r.sum(0)
+        mu = (r * x[:, None]).sum(0) / Nk
+        var = (r * (x[:, None] - mu) ** 2).sum(0) / Nk
+        pi = Nk / len(x)
+    return mu, var, pi, ll
+
+
+def gmm_figure():
+    """EM fit of a two-component mixture to 1D data (MML ch. 11)."""
+    rng = np.random.default_rng(11)
+    x = np.concatenate([rng.normal(-2, 0.6, 120), rng.normal(2, 1.0, 180)])
+    mu, var, pi, ll = em_1d(x, [-0.5, 0.5], [4, 4], [0.5, 0.5], 40)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 3.6), gridspec_kw={"width_ratios": [1.4, 1]})
+    ax = axes[0]; xs = np.linspace(-5, 6, 400)
+    ax.hist(x, bins=35, density=True, histtype="step", color=MUTED, lw=1)
+    comp = pi * np.exp(-(xs[:, None] - mu) ** 2 / (2 * var)) / np.sqrt(2 * np.pi * var)
+    ax.fill_between(xs, comp[:, 0], color=BLUE, alpha=0.35, lw=0, label="component 1 × π₁")
+    ax.fill_between(xs, comp[:, 1], color=ORANGE, alpha=0.35, lw=0, label="component 2 × π₂")
+    ax.plot(xs, comp.sum(1), color=INK, lw=2.2, label="mixture")
+    ax.set_yticks([]); ax.set_xlabel("x"); ax.legend(frameon=False, fontsize=9.5, loc="upper left")
+    ax.set_ylim(0, 0.42)
+    ax.set_title("300 points, two-component fit", color=INK, loc="left", fontsize=12)
+    ax = axes[1]
+    ax.plot(range(1, len(ll) + 1), ll, "o-", color=BLUE, ms=3.5)
+    ax.set_xlabel("EM iteration"); ax.set_ylabel("log-likelihood")
+    ax.set_title("never decreases", color=INK, loc="left", fontsize=12)
+    fig.tight_layout()
+    fig.savefig(MML / "gmm.svg"); strip_doctype(MML / "gmm.svg")
+
+
+def svm_figure():
+    """Maximum-margin line for a small data set, and a circular boundary from a feature map (MML ch. 12)."""
+    pos = np.array([[1, 1], [2, 3], [3, 1]]); neg = np.array([[-1, -1], [-2, -1], [-1, -3]])
+    fig, axes = plt.subplots(1, 2, figsize=(9.6, 4.2))
+    ax = axes[0]; t = np.linspace(-4, 4, 2)
+    ax.fill_between(t, -t - 2, -t + 2, color=BLUE, alpha=0.08, lw=0)
+    ax.plot(t, -t, color=INK, lw=2, label="w·x + b = 0")
+    for c in (-2, 2):
+        ax.plot(t, -t + c, color=MUTED, lw=1.2, ls="--")
+    ax.plot(*pos.T, "o", color=ORANGE, ms=8, label="y = +1")
+    ax.plot(*neg.T, "s", color=BLUE, ms=8, label="y = −1")
+    for p in ([1, 1], [-1, -1]):
+        ax.plot(*p, "o", ms=17, mfc="none", mec=INK, mew=1.4)
+    ax.annotate("", xy=(1, 1), xytext=(0, 0), arrowprops=dict(arrowstyle="<->", color=INK, lw=1.2))
+    ax.text(0.15, 0.75, "√2", color=INK, fontsize=12)
+    ax.set_aspect("equal"); ax.set_xlim(-3.5, 3.8); ax.set_ylim(-3.6, 3.6)
+    ax.legend(frameon=False, fontsize=9.5, loc="lower left")
+    ax.set_title("maximum margin; circled: support vectors", color=INK, loc="left", fontsize=12)
+    ax = axes[1]; rng = np.random.default_rng(5)
+    r = np.concatenate([rng.uniform(0, 1, 40), rng.uniform(1.6, 2.4, 60)])
+    a = rng.uniform(0, 2 * np.pi, 100); P = np.column_stack([r * np.cos(a), r * np.sin(a)])
+    ax.plot(*P[:40].T, "s", color=BLUE, ms=5); ax.plot(*P[40:].T, "o", color=ORANGE, ms=5)
+    s = np.linspace(0, 2 * np.pi, 200); ax.plot(1.3 * np.cos(s), 1.3 * np.sin(s), color=INK, lw=2)
+    ax.set_aspect("equal"); ax.set_xlim(-2.8, 2.8); ax.set_ylim(-2.8, 2.8)
+    ax.set_title("linear in (x₁², x₂²) = a circle here", color=INK, loc="left", fontsize=12)
+    fig.tight_layout()
+    fig.savefig(MML / "svm.svg"); strip_doctype(MML / "svm.svg")
+
+
 if __name__ == "__main__":
     grover_success()
     query_counts()
@@ -240,5 +378,6 @@ if __name__ == "__main__":
         strip_doctype(OUT / name)
     classical_measurement()
     three_systems()
-    for make in (unit_balls, low_rank, gradient_field, gaussian_conditional, convexity):
+    for make in (unit_balls, low_rank, gradient_field, gaussian_conditional, convexity,
+                 overfitting, bayes_regression, pca_figure, gmm_figure, svm_figure):
         make()

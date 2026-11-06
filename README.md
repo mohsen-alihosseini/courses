@@ -17,7 +17,7 @@ Home (index.qmd)
 │   ├── General Formulation of Quantum Information 4 decks
 │   └── Foundations of Quantum Error Correction .. 4 decks
 └── Math (math/)
-    └── Mathematics for Machine Learning ......... chapters 2–7 (Part I)
+    └── Mathematics for Machine Learning ......... chapters 2–12 (complete)
 ```
 
 ## Folder structure
@@ -66,7 +66,12 @@ study-courses/
 │           ├── 04-matrix-decompositions.qmd
 │           ├── 05-vector-calculus.qmd
 │           ├── 06-probability-and-distributions.qmd
-│           └── 07-continuous-optimization.qmd
+│           ├── 07-continuous-optimization.qmd
+│           ├── 08-when-models-meet-data.qmd
+│           ├── 09-linear-regression.qmd
+│           ├── 10-principal-component-analysis.qmd
+│           ├── 11-gaussian-mixture-models.qmd
+│           └── 12-support-vector-machines.qmd
 └── .github/workflows/publish.yml   builds and publishes on every push
 ```
 

@@ -45,14 +45,14 @@ sections alongside each deck.
 ::: {.lesson-table .column-page}
 | | Chapter | What it covers | Book |
 |---|---|---|---|
-| 8 | When models meet data | Empirical risk minimization; maximum likelihood and MAP; graphical models; model selection | §8.1–8.6 |
-| 9 | Linear regression | Least squares and maximum likelihood; Bayesian linear regression; regression as projection | §9.1–9.4 |
-| 10 | Principal component analysis | Maximum-variance and projection views; computing PCA; the latent-variable view | §10.1–10.7 |
-| 11 | Gaussian mixture models | Mixture densities; maximum likelihood; the EM algorithm | §11.1–11.4 |
-| 12 | Support vector machines | Separating hyperplanes; primal and dual SVM; kernels | §12.1–12.5 |
+| 8 | [When models meet data](lectures/08-when-models-meet-data.qmd) | Empirical risk minimization; maximum likelihood and MAP; graphical models; model selection | §8.1–8.6 |
+| 9 | [Linear regression](lectures/09-linear-regression.qmd) | Least squares and maximum likelihood; Bayesian linear regression; regression as projection | §9.1–9.4 |
+| 10 | [Principal component analysis](lectures/10-principal-component-analysis.qmd) | Maximum-variance and projection views; computing PCA; the latent-variable view | §10.1–10.7 |
+| 11 | [Gaussian mixture models](lectures/11-gaussian-mixture-models.qmd) | Mixture densities; maximum likelihood; the EM algorithm | §11.1–11.4 |
+| 12 | [Support vector machines](lectures/12-support-vector-machines.qmd) | Separating hyperplanes; primal and dual SVM; kernels | §12.1–12.5 |
 :::
 
-Chapters without a link are not written yet; they are added one at a time.
+All chapters from 2 to 12 are written. Chapter 1 of the book is a short introduction and has no slides.
 
 ## How to study with these slides
 
