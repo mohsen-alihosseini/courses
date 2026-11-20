@@ -22,6 +22,12 @@ subtitle: "Chapter 2 · Section 6 · The full initial access sequence"
 This is the whole of Chapter 2 in order. Sections 1–3 covered steps 1–2, Sections 4–5 covered step 5. This section adds the system-information and RRC parts and, most importantly, how to use the sequence for troubleshooting.
 :::
 
+## The whole journey in one picture {#journey}
+
+![](../figures/access-flow.svg){width="96%"}
+
+Yellow steps use the SSB, blue steps use broadcast control and data, orange is the first uplink, green is dedicated signalling with the core network.
+
 # Intermediate · how it works
 
 ## What the MIB tells the UE {#mib-fields}
@@ -79,6 +85,25 @@ TS 38.213 §13, Tables 13-1 to 13-11
 CORESET#0 also defines the initial DL BWP until SIB1 provides initialDownlinkBWP: its RB span is the initial BWP. The 24-RB CORESET#0 at 30 kHz is 8.64 MHz wide, so an n78 cell's idle-mode traffic (SIB1, paging, Msg2/4) is confined to under 9 MHz of the 100 MHz carrier. This matters for idle-mode interference and for the RF test of receiver blocking during access.
 :::
 
+## Placing CORESET#0 {#coreset0-place}
+
+![](../figures/coreset0-placement.svg){width="88%"}
+
+- The CORESET#0 offset is counted **from the SSB**, because the UE does not know Point A yet.
+- Example (30 kHz, 20 MHz carrier): index 10 → 48 RBs, 1 symbol, offset 12 RBs; with offsetToPointA = 12 RBs (at 30 kHz) CORESET#0 starts at Point A.
+- The whole CORESET#0 must fit inside the carrier: an SSB too close to the band edge makes some indices invalid.
+
+## How SIB1 is delivered {#sib1}
+
+- PDCCH with DCI 1_0, CRC scrambled with **SI-RNTI** (0xFFFF), in Type0-PDCCH occasions: slot $n_0=(O\cdot 2^{\mu}+\lfloor iM\rfloor)\bmod N_{slot}$ and the next slot, for SSB index $i$.
+- Aggregation levels 4, 8, 16 with 4, 2, 1 candidates: 7 blind decodes per occasion.
+- PDSCH uses a **default** time-domain table (TS 38.214) because no RRC configuration exists yet; no HARQ feedback; SIB1 repeats within a 160 ms period.
+- SIB1 carries cell selection thresholds, PLMN/TAC/cell ID, `servingCellConfigCommon` (offsetToPointA, carrier bandwidth, RACH, TDD pattern) and the scheduling of other SIBs (some on demand).
+
+::: {.notes}
+From ShareTechnote's Type0-PDCCH CSS and cell search pages. Example: μ = 1, O = 0, M = 1/2 gives n0 = 0, 1, 2, 3 for SSB indices 0, 2, 4, 6.
+:::
+
 # Advanced · expert depth
 
 ## Decomposing random access failures {#ra-tree}
@@ -118,6 +143,21 @@ ShareTechnote's RACH page lists the RRC parameters with their spec references (p
 Never start from parameters. Find the first step that fails, then the cause is usually in that step's own configuration or radio condition.
 :::
 
+## After RACH: RRC and NAS in order {#rrc-nas}
+
+::: {.compact}
+| # | Message | Direction | Failure usually means |
+|---|---|---|---|
+| 1 | RRCSetupRequest (Msg3) | UE → gNB | UL coverage, Msg3 power |
+| 2 | RRCSetup (SRB1) | gNB → UE | DL quality at edge, timers |
+| 3 | RRCSetupComplete + Registration Request | UE → gNB → AMF | UL on PUSCH, core reachability |
+| 4 | Authentication, NAS Security Mode | AMF ↔ UE | subscription / USIM / core |
+| 5 | AS SecurityModeCommand / Complete | gNB ↔ UE | configuration mismatch |
+| 6 | UECapabilityEnquiry / Information | gNB ↔ UE | large capability messages at the edge |
+| 7 | RRCReconfiguration (DRB, measurements) | gNB → UE | config errors, BWP/TDD mismatch |
+| 8 | PDU Session Establishment | UE ↔ SMF | DNN, QoS, IP allocation |
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -146,6 +186,11 @@ Answers in the speaker notes.
 - [ShareTechnote · Cell search](https://www.sharetechnote.com/html/5G/5G_CellSearch.html){target="_blank"}
 - [ShareTechnote · MIB / SIB](https://sharetechnote.com/html/5G/5G_Mib_Sib.html){target="_blank"}
 - [ShareTechnote · Cell selection criterion](https://www.sharetechnote.com/html/5G/5G_CellSelectionCriterion.html){target="_blank"}
+- [ShareTechnote · Type 0 PDCCH common search space](https://www.sharetechnote.com/html/5G/5G_CommonSearchSpace_Type0_PDCCH.html){target="_blank"}
+- [ShareTechnote · Registration](https://www.sharetechnote.com/html/5G/5G_Registration.html){target="_blank"}
+- [ShareTechnote · Security mode setup](https://www.sharetechnote.com/html/5G/5G_SecurityModeSetup.html){target="_blank"}
+- [ShareTechnote · PDU session establishment](https://www.sharetechnote.com/html/5G/5G_PDUSessionEstablishment.html){target="_blank"}
+- [ShareTechnote · UE capability](https://www.sharetechnote.com/html/5G/5G_UE_Capability.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

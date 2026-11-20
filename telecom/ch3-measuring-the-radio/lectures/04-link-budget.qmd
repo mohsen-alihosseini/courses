@@ -49,6 +49,14 @@ Every line is an assumption. Change one (for example the wall type) and the cell
 - 3.6 MHz of bandwidth (10 RBs at 30 kHz) → noise −108.4 dBm before the receiver noise figure.
 - In free space, doubling the distance costs 6 dB. In a city without line of sight it costs about 12 dB: walls and streets eat the signal.
 
+## The budget as a waterfall {#lb-waterfall}
+
+![](../figures/lb-waterfall.svg){width="88%"}
+
+- Income: transmit power, antenna gain, and the receiver's sensitivity (how weak a signal it can still use).
+- Costs: body loss, margins for shadowing, walls and interference.
+- What is left is the **maximum allowed path loss** (MAPL).
+
 # Intermediate · how it works
 
 ## Uplink budget, 3.5 GHz, indoor UE {#ul-budget}
@@ -71,6 +79,25 @@ Invert UMa NLOS at 3.5 GHz: $119.9=13.54+39.08\lg d+10.88\Rightarrow d\approx 27
 ::: {.notes}
 8.3 m is the mean of min(U(0,25), U(0,25)), the indoor-distance model in TR 38.901. 1.28σ gives 90 % location probability at the edge; area reliability is higher (around 95–97 % depending on σ/n). Each assumption here is a lever and must be stated when comparing vendors' budgets.
 :::
+
+## Sensitivity step by step {#sensitivity}
+
+$$
+S = -174 + 10\lg B + NF + \text{SINR}_{req}\quad[\text{dBm}]
+$$
+
+::: {.compact}
+| Term | Example (UL, 10 PRB at 30 kHz) | Meaning |
+|---|---|---|
+| thermal noise density | −174 dBm/Hz | kT at 290 K |
+| bandwidth | 10·lg(3.6 MHz) = +65.6 dB | only the PRBs used |
+| noise figure | +3 dB | gNB receiver |
+| required SINR | −3 dB | low MCS with HARQ |
+| **sensitivity** | **−108.4 dBm** |  |
+:::
+
+- Halving the PRBs improves sensitivity by 3 dB, but halves the data rate.
+- Required SINR depends on MCS, BLER target and HARQ: state it, it is the most arguable line.
 
 # Advanced · expert depth
 
@@ -166,6 +193,35 @@ TR 38.901 §7.4.3, Tables 7.4.3-1/2
 The low-loss model is a parallel combination: 30 % of the wall is glass (weak loss) and dominates the result, which is why 'low-loss' is only 12.7 dB at 3.5 GHz despite 19 dB of concrete loss. In high-loss, the 70 % IRR glass and 30 % concrete are both lossy, so there is no weak path. σ_P = 4.4 dB (low-loss) and 6.5 dB (high-loss).
 :::
 
+## Same budget, three bands {#uma-bands}
+
+![](../figures/uma-bands.svg){width="82%"}
+
+- Path loss grows with 20·lg f: from 700 MHz to 3.5 GHz +14 dB, to 28 GHz +32 dB.
+- In TR 38.901 UMa NLOS, distance enters with about 39·lg d: every **+10 dB** of budget gives only about **1.8×** the radius.
+
+## Walls: the biggest unknown {#o2i-chart}
+
+![](../figures/o2i-loss.svg){width="80%"}
+
+- Low-loss building (standard glass): 10–18 dB. High-loss (energy-saving coated glass, concrete): 18–38 dB.
+- Coated (IRR) glass costs about 23 dB already at low frequency: **modern offices are hard to serve from outside at any band**.
+- Add an indoor part (0.5 dB/m in TR 38.901) and the body loss.
+
+## Margins: what probability do you want? {#margins}
+
+::: {.compact}
+| Edge coverage probability | Margin (σ = 6 dB) | Margin (σ = 8 dB) |
+|---|---|---|
+| 50 % | 0 dB | 0 dB |
+| 75 % | 4.0 dB | 5.4 dB |
+| 90 % | 7.7 dB | 10.3 dB |
+| 95 % | 9.9 dB | 13.2 dB |
+:::
+
+- Margin = z × σ (z = 1.28 for 90 %, 1.645 for 95 %). The **area** probability is higher than the edge probability.
+- Indoor users see larger σ (more variation between rooms and buildings): one more reason indoor budgets are pessimistic.
+
 # Practice
 
 ## Exercises {#ex}
@@ -190,6 +246,10 @@ Answers in the speaker notes.
 - **3GPP** TR 38.901 §7.4.1 (path loss), §7.4.3 (O2I)
 - **3GPP** TS 38.101-1 §6.2
 - [ShareTechnote · Power control](https://www.sharetechnote.com/html/5G/5G_PowerControl.html){target="_blank"}
+- [ShareTechnote · Propagation model (TR 38.901)](https://www.sharetechnote.com/html/5G/5G_PropagationModel.html){target="_blank"}
+- [ShareTechnote · EIRP](https://www.sharetechnote.com/html/5G/5G_EIRP.html){target="_blank"}
+- [ShareTechnote · Power class](https://www.sharetechnote.com/html/5G/5G_PowerClass.html){target="_blank"}
+- [ShareTechnote · Coverage enhancement](https://www.sharetechnote.com/html/5G/5G_CE.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

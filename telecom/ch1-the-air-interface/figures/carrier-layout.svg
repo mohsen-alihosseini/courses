@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="630.365385pt" height="218.014125pt" viewBox="0 0 630.365385 218.014125" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-20T22:21:04.872899</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 218.014125 
+L 630.365385 218.014125 
+L 630.365385 0 
+L 0 0 
+L 0 218.014125 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 21.169231 199.726125 
+L 611.361538 199.726125 
+L 611.361538 172.006125 
+L 21.169231 172.006125 
+z
+" clip-path="url(#p97fade9de3)" style="fill: #ffffff; stroke: #5c6370; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 26.185865 160.918125 
+L 606.226865 160.918125 
+L 606.226865 127.654125 
+L 26.185865 127.654125 
+z
+" clip-path="url(#p97fade9de3)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 21.169231 160.918125 
+L 26.185865 160.918125 
+L 26.185865 127.654125 
+L 21.169231 127.654125 
+z
+" clip-path="url(#p97fade9de3)" style="fill: #fdf1e8; stroke: #c2410c; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 606.226865 160.918125 
+L 611.361538 160.918125 
+L 611.361538 127.654125 
+L 606.226865 127.654125 
+z
+" clip-path="url(#p97fade9de3)" style="fill: #fdf1e8; stroke: #c2410c; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 198.226923 116.566125 
+L 345.775 116.566125 
+L 345.775 88.846125 
+L 198.226923 88.846125 
+z
+" clip-path="url(#p97fade9de3)" style="fill: #d1fae5; stroke: #0f766e; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 280.853846 77.758125 
+L 323.347692 77.758125 
+L 323.347692 50.038125 
+L 280.853846 50.038125 
+z
+" clip-path="url(#p97fade9de3)" style="fill: #fde68a; stroke: #b45309; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #5c6370" x="316.265385" y="188.464172" transform="rotate(-0 316.265385 188.464172)">channel bandwidth 100 MHz</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #1d2433" x="316.265385" y="146.884172" transform="rotate(-0 316.265385 146.884172)">transmission bandwidth: 273 RBs × 360 kHz = 98.28 MHz</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #c2410c" transform="translate(11.890625 109.735937)">guard</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #c2410c" transform="translate(7.2 119.338125)">845 kHz</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #c2410c" x="609.000769" y="119.338125" transform="rotate(-0 609.000769 119.338125)">guard</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0f766e" x="272.000962" y="105.304172" transform="rotate(-0 272.000962 105.304172)">active BWP</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="302.100769" y="66.495781" transform="rotate(-0 302.100769 66.495781)">SSB</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 114.472467 61.47752 
+Q 70.99331 110.449772 28.25644 158.585957 
+" style="fill: none; stroke: #1d2433; stroke-linecap: round"/>
+    <path d="M 32.407732 156.922596 
+L 28.25644 158.585957 
+L 29.416527 154.266907 
+" style="fill: none; stroke: #1d2433; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d2433" x="50.678846" y="55.582125" transform="rotate(-0 50.678846 55.582125)">Point A (CRB 0, subcarrier 0)</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 405.414148 43.875184 
+Q 344.097621 60.554529 283.859927 76.94041 
+" style="fill: none; stroke: #1d2433; stroke-linecap: round"/>
+    <path d="M 288.244639 77.820354 
+L 283.859927 76.94041 
+L 287.194709 73.960606 
+" style="fill: none; stroke: #1d2433; stroke-linecap: round"/>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d2433" x="375.284615" y="38.950125" transform="rotate(-0 375.284615 38.950125)">offsetToPointA + k_SSB</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d2433" x="9.365385" y="16.318125" transform="rotate(-0 9.365385 16.318125)">Carrier layout: guard bands, Point A, BWP and SSB (not to scale vertically)</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p97fade9de3">
+   <rect x="9.365385" y="22.318125" width="613.8" height="188.496"/>
+  </clipPath>
+ </defs>
+</svg>

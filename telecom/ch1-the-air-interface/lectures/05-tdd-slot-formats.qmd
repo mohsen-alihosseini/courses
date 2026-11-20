@@ -39,6 +39,14 @@ Count the symbols in DDDSU with a 10 : 2 : 2 special slot:
 - The guard symbols give the signal time to travel before the phones start transmitting.
 - Neighbouring networks must use the same pattern. Section 6 explains why.
 
+## Patterns side by side {#patterns}
+
+![](../figures/tdd-patterns.svg){width="88%"}
+
+- **DDDSU** and **DDDDDDDSUU** are the common macro patterns: about three quarters of the time for downlink.
+- **UL-heavy** patterns (DSUUU) suit uploads, video surveillance or factories, but must not sit next to a DL-heavy network.
+- Shorter periods give the uplink more frequent chances, which lowers uplink latency.
+
 # Intermediate · how it works
 
 ## tdd-UL-DL-ConfigurationCommon {#tdd-common}
@@ -111,6 +119,36 @@ TS 38.213 §11.1.1 · TS 38.212 §7.3.1.3.1
 ShareTechnote's Slot Format Combination page walks through an RRC configuration example with SlotFormatCombinationsPerCell and the positionInDCI field. In public macro networks, SFI is almost never used: national regulators and operator agreements fix a common frame structure per band.
 :::
 
+## Three layers of TDD configuration {#three-layers}
+
+::: {.compact}
+| Layer | Scope | Signalled by | Can change |
+|---|---|---|---|
+| Common | whole cell | SIB1 `tdd-UL-DL-ConfigurationCommon` | sets D, F, U per period |
+| Dedicated | one UE | RRC `tdd-UL-DL-ConfigurationDedicated` | only symbols left F |
+| Dynamic SFI | group of UEs | DCI 2_0 (SFI-RNTI) | only symbols still F |
+:::
+
+- The flexible region can only **shrink** as you go down the layers: nothing turns D or U back into F.
+- Two common patterns can combine; their total period P + P2 must divide 20 ms.
+- If a UE expects SFI but misses it, dynamically scheduled data still works, but configured UL (SRS, PUCCH, configured PUSCH, PRACH) is cancelled unless allowed.
+
+::: {.notes}
+Summarized from ShareTechnote's slot configuration page. Example check: DDDSU (2.5 ms) + DDSUU (2.5 ms) = 5 ms, which divides 20 ms.
+:::
+
+## The self-contained slot inside a TDD pattern {#selfcontained}
+
+- A special slot with DL symbols at the start and UL symbols at the end can carry **DCI → PDSCH → gap → HARQ ACK** in one slot.
+- This needs K0 = 0 (data in the same slot as its DCI) and K1 = 0 (ACK in the same slot as the data).
+- The gNB knows within one slot whether to retransmit: the basis of very low latency.
+- Cost: the guard gap and the UL symbols are taken from downlink capacity.
+
+::: {.box .field}
+[In commercial macro TDD]{.box-title}
+ACKs usually go in the next UL slot (K1 = 1–4 slots), because macro patterns like DDDSU put most UL in one slot. Self-contained operation is more common in private and URLLC networks.
+:::
+
 # Advanced · expert depth
 
 ## The guard period sets the maximum cell range {#gp-range}
@@ -141,6 +179,21 @@ TS 38.211 §4.3.1 · TS 38.133 §7.1
 ShareTechnote's tdd-UL-DL-ConfigurationCommon page quotes the 6-symbol / 32.1 km figure. Practical note: the UE's own Rx→Tx transition time (a few µs, specified in the UE RF and RRM requirements) comes off the same budget, so the real range is slightly below the table. Rural TDD cells beyond ~10 km need a longer special-slot GP, which costs DL capacity; that is a real planning trade-off.
 :::
 
+## Guard period vs cell radius, for both spacings {#gp-chart}
+
+![](../figures/gp-radius.svg){width="76%"}
+
+- 2 GP symbols reach ≈ 21 km at 15 kHz but only ≈ 11 km at 30 kHz: wider spacing means shorter symbols, so more symbols are needed for the same distance.
+- Every extra GP symbol is taken from DL (or UL) capacity: about 1.4 % of a DDDSU period at 30 kHz.
+
+## Choosing a pattern in practice {#choose-pattern}
+
+1. **Neighbours first**: in a shared band, the national or operator-agreed pattern is not a free choice (Section 6).
+2. **Traffic ratio**: typical mobile traffic is 5–10× more DL than UL, which favours 3:1 or 4:1 DL:UL patterns.
+3. **Uplink latency and coverage**: more frequent U slots shorten HARQ and scheduling delays; more U symbols help the uplink budget.
+4. **LTE coexistence**: next to LTE TDD (for example configuration 2, DSUDD), NR patterns and frame offsets are chosen so that DL and UL directions line up.
+5. **Cell range**: the special-slot split (for example 10:2:2 or 6:4:4) sets the guard period, so very large rural cells may need a different special slot.
+
 # Practice
 
 ## Exercises {#ex}
@@ -167,6 +220,10 @@ Answers in the speaker notes.
 - **3GPP** TS 38.211 §4.3.1
 - [ShareTechnote · tdd-UL-DL-ConfigurationCommon](https://www.sharetechnote.com/html/5G/5G_tdd_UL_DL_configurationCommon.html){target="_blank"}
 - [ShareTechnote · Slot format combination](https://sharetechnote.com/html/5G/5G_SlotFormatCombination.html){target="_blank"}
+- [ShareTechnote · Slot configuration](https://www.sharetechnote.com/html/5G/5G_SlotConfiguration.html){target="_blank"}
+- [ShareTechnote · TDD dedicated configuration](https://www.sharetechnote.com/html/5G/5G_tdd_UL_DL_ConfigDedicated.html){target="_blank"}
+- [ShareTechnote · Self-contained slot](https://www.sharetechnote.com/html/5G/5G_SelfContainedSlot.html){target="_blank"}
+- [ShareTechnote · Resource allocation in time (K0, K1, K2)](https://www.sharetechnote.com/html/5G/5G_ResourceAllocation.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

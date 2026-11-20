@@ -35,6 +35,12 @@ subtitle: "Chapter 4 · Section 6 · What's next for RF engineers"
 Master the fundamentals of this course and every new release becomes an extension, not a restart.
 :::
 
+## The release timeline {#roadmap}
+
+![](../figures/roadmap.svg){width="94%"}
+
+Each release adds features but keeps the base: a Rel-15 phone still works on a Rel-19 network. Dates are approximate; check 3GPP's release plan for current freeze dates.
+
 # Intermediate · how it works
 
 ## What 5G-Advanced changes for RF engineers {#outlook}
@@ -59,6 +65,14 @@ The fundamentals of this course (CP and Doppler, sync, link budget, beam gain, l
 ShareTechnote has pages on AI/ML beam management that describe the Set A (observed) and Set B (predicted) framework from the Rel-18 study and Rel-19 RRC parameters. Release timing changes; check 3GPP's release planning page for the current freeze dates.
 :::
 
+## Sub-band full duplex (SBFD) {#sbfd}
+
+![](../figures/sbfd-layout.svg){width="90%"}
+
+- In some "downlink" slots, the gNB receives uplink in a **sub-band in the middle** of the carrier, with guard bands on both sides. The UE stays half-duplex.
+- Gains: more uplink opportunities → lower latency and better uplink coverage in TDD.
+- RF challenge: the gNB transmits at full power a few MHz away from its own receiver. It needs about **100 dB+** of isolation (antenna separation, RF filtering, digital cancellation) and must handle **cross-link interference** from neighbours.
+
 # Advanced · expert depth
 
 ## Course map: one number per section {#course-map}
@@ -71,6 +85,30 @@ ShareTechnote has pages on AI/ML beam management that describe the Set A (observ
 | 3 · Measuring the radio | RSRP = per RE; RSRQ ≤ −10.8 dB at full load; UL ends where RSRP still looks good; ≈ 39 dB/decade urban NLOS |
 | 4 · Beams and hardware | EIRP = P~PA~ + 20·lg N + G~e~; HPBW ≈ 101.5°/N; +20·lg N phase noise; PAPR ≈ 12 dB; EVM adds in RSS |
 :::
+
+## AI/ML in the air interface {#ai-ml}
+
+- **Beam prediction**: measure only a subset of beams (Set B) and predict the best beam in the full set (Set A), in space or ahead in time. Fewer measurements, faster beam changes.
+- **CSI compression and prediction**: a UE-side encoder and gNB-side decoder replace codebooks (two-sided model), or the UE predicts future CSI for moving users.
+- **Positioning**: direct ML positioning from channel measurements, useful in heavy NLOS (factories).
+- Rel-19 adds RRC support for **data collection, model monitoring and fallback**: the network must be able to check that a model still works.
+
+::: {.box .field}
+[For RF engineers]{.box-title}
+Models are trained on radio data. Drive tests, beam measurements and good labelling become inputs to the network, not only reports about it.
+:::
+
+## Energy saving and the upper mid-band {#energy-fr3}
+
+**Network energy saving (Rel-18)**
+
+- Switch off **spatial elements** (fewer active TRX at night) and **reduce power** dynamically; cell DTX/DRX; SSB-less SCells.
+- The PA dominates base-station energy: efficiency at **low load** now matters as much as at full load.
+
+**Upper mid-band, 7–24 GHz (6G candidate)**
+
+- Wider channels than FR1 with better coverage than mmWave. Arrays with **several hundred elements** in the same panel size as today's 64T.
+- New coexistence problems (satellite, radar, fixed links) and new path-loss and penetration measurements are needed.
 
 # Practice
 
@@ -97,6 +135,12 @@ Open questions: discuss them in the comments of the series, or with your team.
 - **3GPP** TS 38.300 (overall description)
 - [ShareTechnote · Beam management](https://www.sharetechnote.com/html/5G/5G_Phy_BeamManagement.html){target="_blank"}
 - [ShareTechnote · CSI framework](https://www.sharetechnote.com/html/5G/5G_CSI_Framework.html){target="_blank"}
+- [ShareTechnote · Release 19](https://www.sharetechnote.com/html/5G/5G_Release19.html){target="_blank"}
+- [ShareTechnote · Release 18](https://www.sharetechnote.com/html/5G/5G_Release18.html){target="_blank"}
+- [ShareTechnote · AI/ML](https://www.sharetechnote.com/html/5G/5G_AI_ML.html){target="_blank"}
+- [ShareTechnote · SBFD](https://www.sharetechnote.com/html/5G/5G_SBFD.html){target="_blank"}
+- [ShareTechnote · Network energy saving](https://www.sharetechnote.com/html/5G/5G_EnergyEfficiency_Network.html){target="_blank"}
+- [ShareTechnote · NTN](https://www.sharetechnote.com/html/5G/5G_NTN.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

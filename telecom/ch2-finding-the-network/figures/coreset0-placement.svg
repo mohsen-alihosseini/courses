@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="628.2pt" height="190.294125pt" viewBox="0 0 628.2 190.294125" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-20T22:26:55.267173</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 190.294125 
+L 628.2 190.294125 
+L 628.2 0 
+L 0 0 
+L 0 190.294125 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 87.698361 145.015599 
+L 600.87541 145.015599 
+L 600.87541 123.860862 
+L 87.698361 123.860862 
+z
+" clip-path="url(#p551ec025ef)" style="fill: #ffffff; stroke: #5c6370; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 87.698361 111.16802 
+L 570.688525 111.16802 
+L 570.688525 85.782336 
+L 87.698361 85.782336 
+z
+" clip-path="url(#p551ec025ef)" style="fill: #d1fae5; stroke: #0f766e; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 208.445902 73.089493 
+L 409.691803 73.089493 
+L 409.691803 47.703809 
+L 208.445902 47.703809 
+z
+" clip-path="url(#p551ec025ef)" style="fill: #fde68a; stroke: #b45309; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #5c6370" x="344.286885" y="137.036277" transform="rotate(-0 344.286885 137.036277)">carrier: 51 RBs at 30 kHz (20 MHz)</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #1d2433" x="329.193443" y="101.073225" transform="rotate(-0 329.193443 101.073225)">CORESET#0: 48 RBs, 1 symbol (index 10)</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="309.068852" y="62.994308" transform="rotate(-0 309.068852 62.994308)">SSB: 20 RBs</text>
+   </g>
+   <g id="patch_5">
+    <path d="M 205.326955 41.357388 
+Q 148.070048 41.357388 90.813141 41.357388 
+" style="fill: none; stroke: #1d2433; stroke-linecap: round"/>
+    <path d="M 200.526955 38.957388 
+L 205.326955 41.357388 
+L 200.526955 43.757388 
+" style="fill: none; stroke: #1d2433; stroke-linecap: round"/>
+    <path d="M 95.613141 43.757388 
+L 90.813141 41.357388 
+L 95.613141 38.957388 
+" style="fill: none; stroke: #1d2433; stroke-linecap: round"/>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="148.072131" y="35.010967" transform="rotate(-0 148.072131 35.010967)">offset 12 RBs</text>
+   </g>
+   <g id="patch_6">
+    <path d="M 73.778953 163.436615 
+Q 80.136309 155.023257 85.819638 147.50191 
+" style="fill: none; stroke: #000000; stroke-linecap: round"/>
+    <path d="M 81.812481 149.487533 
+L 85.819638 147.50191 
+L 85.003841 151.899009 
+" style="fill: none; stroke: #000000; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="27.32459" y="174.63223" transform="rotate(-0 27.32459 174.63223)">Point A = CRB 0</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d2433" x="7.2" y="16.318125" transform="rotate(-0 7.2 16.318125)">CORESET#0 is placed relative to the SSB (example: offsetToPointA 12 RBs at 30 kHz)</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p551ec025ef">
+   <rect x="7.2" y="22.318125" width="613.8" height="160.776"/>
+  </clipPath>
+ </defs>
+</svg>

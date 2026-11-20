@@ -34,6 +34,14 @@ Multiply the CP length by the speed of light: that is the largest extra path an 
 
 Wider subcarrier spacing = shorter symbols = shorter CP. This is the price of the shorter slots from Section 1.
 
+## Seeing it in time {#cp-in-time}
+
+![](../figures/cp-echo.svg){width="92%"}
+
+- The receiver opens its FFT window after the CP. Any echo that ends before the window starts is harmless.
+- The 1.5 µs echo stays inside the 2.34 µs CP: it only changes the phase, which the equalizer fixes.
+- The 4 µs echo reaches past the CP: part of symbol 1 leaks into the window of symbol 2.
+
 # Intermediate · how it works
 
 ## Why the CP turns the channel into one tap per subcarrier {#circular}
@@ -113,6 +121,34 @@ TR 38.901 Table 7.5-6 (f<sub>c</sub> in GHz, f<sub>c</sub> = 6 used below 6 GHz 
 ::: {.notes}
 −15 dB point for an exponential PDP: P(τ) ∝ exp(−τ/σ), so τ_−15dB = 15/(10·log10 e)·σ = 3.45σ. Students should compute this themselves. The log-normal spread around the median (σ_lgDS ≈ 0.39 for UMa NLOS) means the 90th percentile is about 10^(1.28·0.39) ≈ 3.2 × the median: ≈ 1.2 µs RMS, ≈ 4 µs at −15 dB. That tail is where 30 kHz starts to hurt in large macro cells.
 :::
+
+## Power-delay profile and RMS delay spread {#pdp}
+
+A channel is described by its **power-delay profile**: the power $P_i$ arriving at each delay $\tau_i$.
+
+$$
+\bar\tau=\frac{\sum_i P_i\tau_i}{\sum_i P_i},\qquad
+\sigma_\tau=\sqrt{\frac{\sum_i P_i\tau_i^2}{\sum_i P_i}-\bar\tau^{\,2}}
+$$
+
+::: {.box}
+[Worked example: three taps]{.box-title}
+0 dB at 0 µs, −3 dB at 0.5 µs, −10 dB at 2 µs → linear 1, 0.50, 0.10.\
+$\bar\tau = 0.28\ \mu s$, $\sigma_\tau \approx 0.50\ \mu s$, $B_c\approx 1/(5\sigma_\tau)\approx 400$ kHz.\
+Maximum excess delay 2 µs: still inside the 2.34 µs CP at 30 kHz, but with little margin.
+:::
+
+::: {.notes}
+Mean: (0.501·0.5 + 0.1·2)/1.601 = 0.281 µs. Second moment: (0.501·0.25 + 0.1·4)/1.601 = 0.328 µs². σ = sqrt(0.328 − 0.079) = 0.499 µs. This is the quantity channel sounders and scanners report; drive-test tools often show the RMS value, so remember to translate it to a maximum excess delay before comparing with the CP.
+:::
+
+## Delay profiles against the CP {#pdp-chart}
+
+![](../figures/pdp-vs-cp.svg){width="80%"}
+
+- A median urban NLOS channel (blue) drops 15 dB within about 1.3 µs: comfortably inside the 30 kHz CP.
+- The worst 10 % (orange) is still at −15 dB after 4 µs: beyond the 30 kHz CP, inside the 15 kHz one.
+- At 120 kHz the CP covers only the first 0.6 µs: mmWave relies on narrow beams to cut the long tail.
 
 # Advanced · expert depth
 
@@ -216,6 +252,25 @@ TS 38.211 §7.4.1.1.2 · TS 38.214 §5.1.6.1.1 (TRS)
 T_coh ≈ 0.423/fd is the 50%-correlation definition. Some texts use 9/(16π fd) = 0.179/fd; be consistent within one analysis. Additional DMRS costs 1 symbol each (≈ 7 % of a slot), so enabling pos3 on a stationary cluster wastes capacity. Many networks leave pos1 as default and switch to pos2/3 only on HST or motorway cells.
 :::
 
+## Extended CP: the rarely used option {#ecp}
+
+- Defined only for **60 kHz**: CP = $512\kappa\,2^{-2}T_c = 4.17\ \mu s$, 12 symbols per slot instead of 14.
+- Overhead rises from about 6.6 % to 20 %: one sixth of the time is spent on CP.
+- Intended for very large delay spreads at 60 kHz (for example broadcast-type or wide-area mmWave scenarios).
+- There is no extended CP at 15 or 30 kHz: if a FR1 cell needs a longer CP, the answer is a smaller SCS.
+
+## Field checklist: is it delay spread? {#ds-checklist}
+
+1. **Pattern**: good RSRP, SINR capped at 15–20 dB, high BLER at high MCS, only in certain areas (coast, lakes, valleys, open plains with distant hills).
+2. **Not load**: the ceiling stays when neighbour cells are blanked or at night.
+3. **Not interference**: no strong neighbour PCI within 10 dB.
+4. **Geometry**: a large reflector 0.5–2 km behind or beside the UE path (extra path > CP × c).
+5. **Fix**: downtilt or azimuth change to stop illuminating the reflector; at the planning stage, a smaller SCS or a smaller cell.
+
+::: {.notes}
+A channel scanner with delay-spread measurement (CIR) confirms it directly: look for taps beyond the CP with power within 10–15 dB of the main path.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -243,6 +298,10 @@ Answers in the speaker notes.
 - [ShareTechnote · Frame structure](https://www.sharetechnote.com/html/5G/5G_FrameStructure.html){target="_blank"}
 - [ShareTechnote · Reference signals (incl. PT-RS)](https://www.sharetechnote.com/html/5G/5G_Phy_ReferenceSignal.html){target="_blank"}
 - [ShareTechnote · DL resource grid simulator](http://sharetechnote.com/html/WebProgramming/Websim_ResourceGridDl5G.html){target="_blank"}
+- [ShareTechnote · Propagation model](https://www.sharetechnote.com/html/5G/5G_PropagationModel.html){target="_blank"}
+- [ShareTechnote · Waveform](https://www.sharetechnote.com/html/5G/5G_Waveform.html){target="_blank"}
+- [ShareTechnote · Resource grid](https://www.sharetechnote.com/html/5G/5G_ResourceGrid.html){target="_blank"}
+- [ShareTechnote · Field test](https://www.sharetechnote.com/html/5G/5G_FieldTest.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

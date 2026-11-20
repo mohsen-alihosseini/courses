@@ -56,6 +56,31 @@ TS 38.321 §5.1.1–5.1.5 · TS 38.331 RACH-ConfigGeneric
 A UE that sent its preamble in occasion (s=0, t=19, f=1) on the normal UL looks for RA-RNTI = 1 + 0 + 14·19 + 1120·1 = 1387. Two UEs that chose different preambles in the same occasion share the RA-RNTI and read the same RAR PDU; each finds its own RAPID inside.
 :::
 
+## Four steps or two {#four-two}
+
+![](../figures/ra-4step-2step.svg){width="90%"}
+
+## 2-step RACH in detail (Rel-16) {#two-step}
+
+- **MsgA** = preamble + PUSCH (for example RRC Setup Request), the PUSCH a configured number of slots after the preamble.
+- **MsgB** comes on PDSCH addressed by a MsgB-RNTI: contention ID, timing advance, C-RNTI, HARQ timing, TPC.
+- The UE chooses 2-step only if RSRP ≥ `msgA-RSRP-Threshold`: good-signal UEs get the shortcut, weak UEs use 4-step.
+
+::: {.columns}
+::: {.column}
+**Gains**
+
+- half the round trips: lower latency
+- fewer transmissions: less UE power, fewer LBT attempts in unlicensed bands
+:::
+::: {.column}
+**Costs**
+
+- MsgA PUSCH is sent **without timing advance**: harder to decode in larger cells
+- PUSCH occasions are shared: collisions are possible even with different preambles
+:::
+:::
+
 # Advanced · expert depth
 
 ## From prach-ConfigurationIndex to occasions {#ro-config}
@@ -142,6 +167,24 @@ TS 38.211 §6.3.3.1 (restricted sets)
 fd for 190 km/h at 3.5 GHz: 52.8 m/s · 3.5e9/3e8 = 616 Hz, about half of Δf_RA. Once the frequency offset approaches Δf_RA/2, the correlation peak at the shifted position becomes comparable to the true one. Restricted sets are defined only for L = 839.
 :::
 
+## Power ramping in numbers {#ramping}
+
+![](../figures/prach-ramping.svg){width="80%"}
+
+- Each failed attempt adds `powerRampingStep` until P~CMAX~. After that, further attempts add only interference.
+- A large step reaches the cap quickly but overshoots for UEs that would have succeeded one step later.
+
+## Contention-free random access {#cfra}
+
+- The gNB reserves a **dedicated preamble** for one UE: no collision, no contention resolution, so Msg3/Msg4 are not needed.
+- Used for **handover** (to the target cell), **beam failure recovery**, and **PDCCH order** (the gNB asks a connected UE to re-acquire timing).
+- Dedicated preambles can be tied to a specific SSB or CSI-RS beam in the target cell, so the UE accesses on the right beam immediately.
+
+::: {.box .field}
+[KPI tip]{.box-title}
+Count contention-based and contention-free RACH separately. A drop in CFRA success points to handover or beam-recovery problems, not to idle-mode access.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -169,6 +212,10 @@ Answers in the speaker notes.
 - [ShareTechnote · RACH](https://www.sharetechnote.com/html/5G/5G_RACH.html){target="_blank"}
 - [ShareTechnote · Power control](https://www.sharetechnote.com/html/5G/5G_PowerControl.html){target="_blank"}
 - [ShareTechnote · SA initial attach](https://www.sharetechnote.com/html/5G/5G_CallProcess_InitialAttach.html){target="_blank"}
+- [ShareTechnote · 2-step RACH](https://www.sharetechnote.com/html/5G/5G_RACH_2step.html){target="_blank"}
+- [ShareTechnote · Two types of RACH procedure](https://www.sharetechnote.com/html/db/html/FAQ_5G_RACH_TwoTypeOfRachProcedure.html){target="_blank"}
+- [ShareTechnote · Matlab 5G: PRACH FR2](https://www.sharetechnote.com/html/lte_toolbox/Matlab_LteToolbox_5G_PRACH_FR2_120.html){target="_blank"}
+- [ShareTechnote · RNTI](https://www.sharetechnote.com/html/5G/5G_RNTI.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

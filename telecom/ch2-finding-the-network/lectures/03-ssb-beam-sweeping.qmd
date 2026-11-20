@@ -59,6 +59,14 @@ TS 38.213 §4.1
 Worked example for n78 Case C, unpaired, Lmax 8: first symbols 2, 8, 16, 22, 30, 36, 44, 50 → slots 0–3 of the half-frame at 30 kHz, two SSBs per slot at symbols 2–5 and 8–11. All 8 SSBs are sent within 2 ms, leaving 3 ms of the half-frame free. With a 20 ms period, SSB overhead on those slots is high but on the carrier as a whole it is about (8·4 symbols · 20 RBs)/(40 slots·14 symbols·273 RBs) ≈ 0.4 %.
 :::
 
+## The burst in slots {#burst-slots}
+
+![](../figures/ssb-burst-cases.svg){width="94%"}
+
+- Both 30 kHz patterns place 8 SSBs in the first four slots (2 ms) of the half-frame.
+- Case B packs pairs back to back; Case C spreads them out, leaving room for control symbols around each SSB.
+- The remaining 3 ms of the half-frame are free for data.
+
 # Advanced · expert depth
 
 ## Periodicity, SMTC and measurement windows {#smtc}
@@ -100,6 +108,32 @@ ShareTechnote's measurement examples show smtc1 { periodicityAndOffset sf20: 0, 
 Calculation: n78 Case C 8 SSBs × 4 symbols = 32 symbols per 20 ms; 20 ms at 30 kHz = 40 slots × 14 = 560 symbols → 5.7 %; resource share 32·20/(560·273) ≈ 0.42 %. FR2: 64 × 4 = 256 symbols; 160 slots × 14 = 2240 → 11.4 %; 256·20/(2240·264) ≈ 0.87 %.
 :::
 
+## Beam ↔ RACH occasion {#beam-ro}
+
+![](../figures/ssb-to-ro.svg){width="92%"}
+
+- Each RACH occasion belongs to one SSB (or a group). The UE uses the occasion of its best SSB.
+- The gNB listens in each occasion with the receive beam matching that SSB: the preamble gets beamforming gain, and its position reveals the UE's best beam.
+
+## ssb-PositionsInBurst in practice {#positions}
+
+::: {.compact}
+| Format | Bits | Used for |
+|---|---|---|
+| shortBitmap | 4 | L~max~ = 4 (FR1 low band) |
+| mediumBitmap | 8 | L~max~ = 8 (FR1 above 3 GHz) |
+| longBitmap | 64 | L~max~ = 64 (FR2), in dedicated config |
+| inOneGroup + groupPresence | 8 + 8 | L~max~ = 64 in SIB1 (compact form) |
+:::
+
+- The **left-most bit is SSB index 0**. Example `11110000`: only beams 0–3 are sent.
+- Every SSB that is sent needs a RACH occasion mapping and is swept in CORESET#0/SIB1: unused beams should be switched off, not just left weak.
+- Neighbour cells must not assume your pattern: SMTC windows have to cover all transmitted SSBs.
+
+::: {.notes}
+ShareTechnote's SS block page explains the bitmap encodings with examples from LTE-anchored (NSA) and SA configurations.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -126,6 +160,8 @@ Answers in the speaker notes.
 - **3GPP** TS 38.133 §9
 - [ShareTechnote · SS block](https://www.sharetechnote.com/html/5G/5G_SS_Block.html){target="_blank"}
 - [ShareTechnote · Synchronization (SSB cases)](https://www.sharetechnote.com/html/5G/5G_Phy_Synchronization.html){target="_blank"}
+- [ShareTechnote · Beam management](https://www.sharetechnote.com/html/5G/5G_Phy_BeamManagement.html){target="_blank"}
+- [ShareTechnote · Matlab 5G: SS/PBCH block](https://www.sharetechnote.com/html/lte_toolbox/Matlab_LteToolbox_5G_SS_PBCH.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

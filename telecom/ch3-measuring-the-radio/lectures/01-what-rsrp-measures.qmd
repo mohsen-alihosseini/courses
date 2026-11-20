@@ -46,6 +46,14 @@ RSRP shows coverage. It contains no noise and no interference, so it says nothin
 - The phone can report from −156 to −31 dBm in 1 dB steps.
 - In mmWave, the SSB is beamformed, so RSRP is a **per-beam** value.
 
+## From analyzer power to RSRP {#rsrp-offset}
+
+![](../figures/rsrp-offset.svg){width="78%"}
+
+- The wider the carrier, the more subcarriers share the power, and the lower RSRP is for the same total power.
+- A 100 MHz carrier at 30 kHz: RSRP sits about **35 dB** below the total. A 20 MHz LTE-like carrier: about 31 dB.
+- So a "−95 dBm" RSRP on a 100 MHz cell is the same received power as about −60 dBm total.
+
 # Intermediate · how it works
 
 ## SS-RSRP, SS-RSRQ, SS-SINR {#definitions}
@@ -74,6 +82,36 @@ TS 38.215 §5.1.1–5.1.6 · TS 38.133 §10.1
 
 ::: {.notes}
 ShareTechnote's power-definition page lists the full family: SS-, CSI- and SRS-RSRP, SS- and CSI-RSRQ, SS- and CSI-SINR. Its CA example decodes a2-Threshold rsrp 16 as about −141 dBm, consistent with −157 + 16. Teams that compare UE logs with gNB counters must agree on whether they use the reported index or the dBm value.
+:::
+
+## How the UE measures it {#how-measured}
+
+- Only the **SSS** REs (optionally plus PBCH DMRS) are used: the linear average power per RE, in watts, then converted to dBm.
+- Only REs with the **same SSB index and the same PCI** are combined, so each beam has its own RSRP. Different beams are never averaged into one RSRP sample.
+- The UE measures only inside the **SMTC** window that the network configures, except for L1 beam reports.
+- FR1 reference point: the antenna connector. FR2: the combined signal of one receiver branch. With receive diversity, the reported value may not be lower than any single branch.
+
+::: {.notes}
+Summarized from ShareTechnote's RSRP page (TS 38.215 §5.1.1). CSI-RSRP exists only in RRC_CONNECTED; idle and inactive UEs only have SS-RSRP.
+:::
+
+## Reported numbers: index vs dBm {#rsrp-index}
+
+::: {.compact}
+| Report | Range | Step | Where |
+|---|---|---|---|
+| L3 RSRP (RRC MeasurementReport) | −156 … −31 dBm, RSRP_0 … RSRP_127 | 1 dB | events, handover |
+| L1 RSRP (CSI report) | −140 … −44 dBm | 1 dB | beam management |
+| L1 differential | 0 … −30 dB from the strongest beam | 2 dB | multi-beam reports |
+:::
+
+- Quick conversion: **RSRP_N ≈ N − 157 dBm**. RSRP_70 means −87 … −86 dBm.
+- A differential L1 value means nothing without the absolute value of the strongest beam in the same report.
+- RSRP_127 is used as "infinity" in thresholds, not as a measurement.
+
+::: {.box .field}
+[Practice]{.box-title}
+When the gNB counter says "RSRP 70" and the drive-test tool says "−87 dBm", they agree. Make sure every report states which one it uses.
 :::
 
 # Advanced · expert depth
@@ -112,6 +150,49 @@ TS 38.304 §5.2.3.2, §5.2.4 · TS 38.331 SIB1, SIB2–SIB4
 ShareTechnote's cell selection criterion page goes through every term and where the UE gets it: only Qrxlevmeas (RSRP) and Qqualmeas (RSRQ) come from the air. Setting q-RxLevMin too low makes UEs camp where they cannot complete RACH (UL-limited, Section 3); setting it too high creates artificial coverage holes in idle mode.
 :::
 
+## Cell RSRP from beam RSRPs {#cell-from-beams}
+
+With several SSB beams, the UE builds one **cell** value for mobility:
+
+- If `nrofSS-BlocksToAverage` is not set, or no beam passes `absThreshSS-BlocksConsolidation`: cell value = **best beam**.
+- Otherwise: linear average of up to *N* best beams **above the threshold**.
+
+::: {.columns}
+::: {.column}
+**Best beam only**
+
+- reacts quickly to beam changes
+- favours cells with narrow, strong beams
+:::
+::: {.column}
+**Average of N beams**
+
+- smoother, fewer ping-pongs
+- penalises a cell where only one beam reaches the UE
+:::
+:::
+
+::: {.notes}
+TS 38.331 §5.5.3.3 (derivation of cell measurement results). ShareTechnote's power definition page shows these fields in MeasObjectNR. Both the serving and neighbour cells must use the same rule, otherwise A3 compares unlike quantities.
+:::
+
+## Worked S-criterion with power compensation {#s-example}
+
+SIB1: `q-RxLevMin = −62` (→ −124 dBm), `q-QualMin = −18` dB, `p-Max = 26` dBm. UE: power class 3 (23 dBm).
+
+::: {.compact}
+| Term | Value |
+|---|---|
+| Qrxlevmeas (RSRP) | −110 dBm |
+| Qrxlevmin | −124 dBm |
+| Pcompensation = max(26 − 23, 0) | 3 dB |
+| **Srxlev** = −110 + 124 − 3 | **+11 dB** ✓ |
+| Qqualmeas (RSRQ) | −16 dB |
+| **Squal** = −16 + 18 | **+2 dB** ✓ |
+:::
+
+If the RSRQ drops to −20 dB, Squal = −2 dB and the cell is not suitable, even with good RSRP. A cell planned for 26 dBm UEs asks a 23 dBm UE for 3 dB more downlink.
+
 # Practice
 
 ## Exercises {#ex}
@@ -139,6 +220,8 @@ Answers in the speaker notes.
 - [ShareTechnote · RSRP / RSRQ / SINR definitions](https://www.sharetechnote.com/html/5G/5G_PowerDefinition.html){target="_blank"}
 - [ShareTechnote · Measurement report](https://www.sharetechnote.com/html/5G/5G_MeasurementReport.html){target="_blank"}
 - [ShareTechnote · Cell selection criterion](https://www.sharetechnote.com/html/5G/5G_CellSelectionCriterion.html){target="_blank"}
+- [ShareTechnote · RSRP (reporting range, L1/L3)](https://www.sharetechnote.com/html/5G/5G_RSRP.html){target="_blank"}
+- [ShareTechnote · Cell selection](https://www.sharetechnote.com/html/5G/5G_Cell_Selection.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

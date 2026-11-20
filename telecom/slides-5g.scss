@@ -34,3 +34,6 @@
 .kpi > p { margin: 0; }
 .kpi .kpi-val { display: block; font: 600 1.15em "JetBrains Mono", ui-monospace, monospace; color: #3b5bdb; }
 .kpi .kpi-label { display: block; font-size: 0.72em; color: #5c6370; }
+
+// Long reference lists run in two columns
+.refs ul { columns: 2; column-gap: 1.5em; }

@@ -126,6 +126,24 @@ TS 38.213 §4.2 · TS 38.321 §5.2, §6.1.3.4
 TA as a geolocation tool: the RAR TA gives distance with ~39 m granularity at 30 kHz, but multipath (the first detected path is not always the direct path) biases it long in NLOS. Many vendors export TA distributions per cell: a long tail beyond the planned radius is the classic overshooting indicator.
 :::
 
+## Keeping the timing right after access {#ta-maintenance}
+
+- **TA command MAC CE** (LCID 61): a 6-bit relative correction, sent whenever the gNB measures drift on PUSCH, PUCCH or SRS.
+- **timeAlignmentTimer**: if no TA command arrives before it expires, the UE considers itself out of sync and must do random access again before transmitting.
+- **Timing advance groups (TAGs)**: carriers from the same site share one TA; a remote radio at a different distance needs its own TAG.
+- The new TA applies a few slots after it is received, so the gNB measures, commands and sees the effect with a delay.
+
+## TA as a free measurement {#ta-measurement}
+
+- The RAR timing advance gives every UE's distance with about **39 m** granularity at 30 kHz (78 m at 15 kHz).
+- A TA **distribution per cell** is one of the best overshoot indicators: a tail far beyond the planned radius means the cell is serving users it should not.
+- In NLOS the first detected path is not always the direct one, so TA distances read slightly long.
+
+::: {.box .field}
+[Practice]{.box-title}
+Plot TA bins per cell next to the inter-site distance. Cells whose 95th-percentile TA exceeds about 70 % of the distance to the next site are uptilt or overshoot candidates.
+:::
+
 # Advanced · expert depth
 
 ## Zadoff-Chu roots and cyclic shifts {#zc}
@@ -158,6 +176,24 @@ TS 38.211 §6.3.3.1, Table 6.3.3.1-5
 The unrestricted N_CS values for L = 839 are 0, 13, 15, 18, 22, 26, 32, 38, 46, 59, 76, 93, 119, 167, 279, 419. With 838 usable logical roots and 6 per cell, there are ~139 distinct root groups: root planning is a reuse problem like PCI planning. Neighbours sharing a root and N_CS produce 'ghost' preambles: the gNB detects a neighbour cell's UE.
 :::
 
+## Range costs root sequences {#ncs-chart}
+
+![](../figures/ncs-roots.svg){width="82%"}
+
+- Below about 2 km one root sequence is enough for 64 preambles; at 25 km each cell needs 22.
+- With 838 usable roots, large cells leave few distinct root groups: neighbouring rural cells may be forced to share.
+
+## Root sequence planning {#root-plan}
+
+1. From the cell radius, pick the PRACH format and `zeroCorrelationZoneConfig` (N~CS~).
+2. Compute roots per cell: $\lceil 64/\lfloor 839/N_{CS}\rfloor\rceil$ (long preamble).
+3. Assign each cell a starting `prach-RootSequenceIndex` so that neighbours do not overlap, like a PCI reuse plan.
+4. Check for **ghost preambles** after changes: detections without Msg3 often mean a neighbour shares roots.
+
+::: {.notes}
+Example: N_CS = 76 → 11 preambles per root → 6 roots. Assign root indices 0, 6, 12, … to neighbouring cells so their sets do not overlap; reuse after the distance where preambles from the other cell cannot reach.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -185,6 +221,8 @@ Answers in the speaker notes.
 - [ShareTechnote · Timing advance](https://www.sharetechnote.com/html/5G/5G_TimingAdvance.html){target="_blank"}
 - [ShareTechnote · UL timing](https://www.sharetechnote.com/html/5G/5G_UL_Timing.html){target="_blank"}
 - [ShareTechnote · RACH](https://www.sharetechnote.com/html/5G/5G_RACH.html){target="_blank"}
+- [ShareTechnote · MAC CE overview](https://www.sharetechnote.com/html/5G/5G_MAC_CE.html){target="_blank"}
+- [ShareTechnote · Carrier aggregation (TAGs)](https://www.sharetechnote.com/html/5G/5G_CarrrierAggregation.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

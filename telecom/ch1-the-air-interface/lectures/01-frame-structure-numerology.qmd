@@ -51,6 +51,16 @@ Subcarrier spacing (SCS) doubles at each step, and the slot gets half as long:
 
 Shorter slots let the scheduler react faster: that is where 5G's lower latency comes from.
 
+## Why not one spacing for everything? {#why-several}
+
+Different bands have different problems, so 5G lets each one pick its spacing:
+
+- **Low bands** have little spectrum. Narrow spacing (15 kHz) packs many subcarriers into it and gives long symbols with long cyclic prefixes: good against long echoes in big cells.
+- **Very narrow spacing** breaks down when phones move fast: Doppler shifts the subcarriers into each other.
+- **mmWave** has huge spectrum, fast-varying channels and noisy oscillators. Wide spacing (120 kHz) tolerates Doppler and phase noise and gives very short slots.
+
+One family of spacings, all multiples of 15 kHz, lets one standard serve all of these, from 600 MHz to 71 GHz.
+
 # Intermediate · how it works
 
 ## Frame, subframe, slot {#frame-structure}
@@ -112,6 +122,36 @@ TS 38.211 §4.1
 ::: {.notes}
 Point out that κ = 64 makes LTE and NR timing commensurate: one LTE Ts is exactly 64 Tc. This is what lets DSS and EN-DC share timing references without fractional offsets. Rel-17 extends Δf to 960 kHz for FR2-2, but Tc is unchanged; the 480/960 kHz numerologies use the same integer formulas with larger μ.
 :::
+
+## The full numerology ladder {#ladder}
+
+::: {.compact}
+| μ | SCS | RB width | Slots / subframe | Slots / frame | Data | SSB |
+|---|---|---|---|---|---|---|
+| 0 | 15 kHz | 180 kHz | 1 | 10 | ✓ | ✓ |
+| 1 | 30 kHz | 360 kHz | 2 | 20 | ✓ | ✓ |
+| 2 | 60 kHz | 720 kHz | 4 | 40 | ✓ | – |
+| 3 | 120 kHz | 1.44 MHz | 8 | 80 | ✓ | ✓ |
+| 4 | 240 kHz | 2.88 MHz | 16 | 160 | – | ✓ |
+| 5 | 480 kHz | 5.76 MHz | 32 | 320 | ✓ | ✓ |
+| 6 | 960 kHz | 11.52 MHz | 64 | 640 | ✓ | ✓ |
+:::
+
+- A carrier holds at most 275 RBs at any numerology: a higher μ buys **bandwidth**, not more blocks.
+- 480 and 960 kHz were added in Rel-17 for FR2-2 (52.6–71 GHz).
+- PRACH also uses 1.25 and 5 kHz (long preambles), outside this ladder.
+
+::: {.notes}
+Source summary: ShareTechnote's numerology page, which quotes TS 38.300 Table 5.1-1 for the per-channel support (data excludes μ = 4, sync excludes μ = 2). Point out the asymmetry: 240 kHz exists only for the SSB, 60 kHz only for data.
+:::
+
+## What half a millisecond looks like {#half-ms}
+
+![](../figures/symbol-timeline.svg){width="92%"}
+
+- At 15 kHz, 0.5 ms holds 7 symbols. At 30 kHz, it holds 14: one full slot.
+- Each symbol has its cyclic prefix in front (orange). The first symbol of every 0.5 ms gets a slightly longer one.
+- The CP share of time stays the same (about 6.6 %) at every numerology: everything scales together.
 
 # Advanced · expert depth
 
@@ -223,6 +263,41 @@ In practice: 30 kHz for FR1 TDD mid-band (100 MHz needs ≥ 30 kHz), 15 kHz for 
 The FFT constraint: NR caps the number of RBs at 275 per carrier (3300 subcarriers), so 100 MHz cannot be done at 15 kHz (it would need 6600 subcarriers). That is why n78 100 MHz carriers are always 30 kHz, independent of the delay-spread argument.
 :::
 
+## Faster than a slot: self-contained slots and mini-slots {#minislot}
+
+::: {.columns}
+::: {.column}
+**Self-contained slot**
+
+- DCI, PDSCH, a short gap and the HARQ ACK on PUCCH all inside **one slot** (K0 = 0, K1 = 0).
+- The gNB learns at once whether data arrived and can retransmit in the next slot.
+- Not a separate feature: it appears when the TDD pattern gives UL symbols at the end of the slot and the timing offsets are zero.
+:::
+::: {.column}
+**Mini-slots (mapping type B)**
+
+- A transmission can start at **any symbol**, not only at the slot boundary.
+- PDSCH type B lengths of 2, 4 or 7 symbols in Rel-15 (more options later); PUSCH type B can be 1–14 symbols.
+- Used for low latency (URLLC) and for unlicensed access, where the channel must be grabbed immediately.
+:::
+:::
+
+::: {.notes}
+ShareTechnote's self-contained slot page stresses that it is an outcome of K0 = 0, K1 = 0 and the TDD pattern, not a configuration flag; the guard gap is overhead, so such a slot carries less data than a full DL slot. Mapping types A and B are described on the PDSCH/PUSCH mapping type page.
+:::
+
+## Mixed numerology on one carrier {#mixed}
+
+- Numerology is set **per bandwidth part**, so one cell can run, say, a 15 kHz BWP and a 30 kHz BWP side by side.
+- Subcarriers of different spacings are **not orthogonal** to each other: a few guard subcarriers are needed between BWPs of different numerology.
+- $k_0^{\mu}$ in the OFDM signal formula aligns the grids of different numerologies to the same Point A.
+- The SSB can have a different SCS than the data BWP: for example a 30 kHz SSB with a 15 kHz DSS carrier, or a 120 kHz SSB with a 60 kHz FR2 BWP.
+
+::: {.box .field}
+[Where you meet it]{.box-title}
+DSS (sharing a carrier with LTE at 15 kHz) and FR2 cells with mixed SSB/data spacing. Check the SCS of SSB, CORESET#0 and each BWP separately in the logs: they need not be equal.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -252,6 +327,11 @@ Answers in the speaker notes (press **S**).
 - [ShareTechnote · Numerology](https://sharetechnote.com/html/5G/5G_Phy_Numerology.html){target="_blank"}
 - [ShareTechnote · Physical-layer timing unit](https://sharetechnote.com/html/5G/5G_Phy_TimingUnit.html){target="_blank"}
 - [ShareTechnote · UL timing](https://www.sharetechnote.com/html/5G/5G_UL_Timing.html){target="_blank"}
+- [ShareTechnote · Self-contained slot](https://www.sharetechnote.com/html/5G/5G_SelfContainedSlot.html){target="_blank"}
+- [ShareTechnote · Mini slot](https://www.sharetechnote.com/html/5G/5G_MiniSlot.html){target="_blank"}
+- [ShareTechnote · PDSCH/PUSCH mapping type](https://www.sharetechnote.com/html/5G/5G_PDSCH_PUSCH_MappingType.html){target="_blank"}
+- [ShareTechnote · FR2-2: 52.6–71 GHz](https://www.sharetechnote.com/html/5G/5G_FR2_2.html){target="_blank"}
+- [ShareTechnote · DSS (dynamic spectrum sharing)](https://www.sharetechnote.com/html/5G/5G_DSS.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

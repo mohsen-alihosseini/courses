@@ -56,6 +56,21 @@ $$
 This is the most common misreading in NR benchmarking. Ask students: two networks show the same SS-SINR distribution, one with aligned SSBs and one with offset SSBs. Which delivers better throughput at 30 % load? The offset one's SS-SINR already looks like low-load SINR; the aligned one's SS-SINR looks like full load, so at 30 % load its PDSCH SINR is better than its SS-SINR suggests.
 :::
 
+## SINR between two sites {#sinr-two}
+
+![](../figures/sinr-two-cells.svg){width="96%"}
+
+- RSRP of the serving cell falls smoothly; SINR falls much faster because the neighbour **rises** at the same time.
+- At the cell border, SINR ≈ 0 dB when the neighbour is fully loaded; a lightly loaded neighbour leaves several dB more.
+
+## Why RSRQ moves with load {#rsrq-load}
+
+![](../figures/rsrq-load.svg){width="80%"}
+
+- RSRQ = N × RSRP / RSSI. RSSI counts **all** power in the measured symbols, including your own cell's traffic.
+- More traffic in your own cell → higher RSSI → **lower RSRQ**, although nothing is wrong with the radio.
+- So RSRQ alone cannot separate "busy" from "interfered": always check SINR next to it.
+
 # Advanced · expert depth
 
 ## Worked example: predicting SINR from RSRPs {#sinr-calc}
@@ -104,6 +119,35 @@ Three cells within 5 dB is the textbook definition of pilot pollution: no domina
 Calculation: P1 + P2 = 10^(−8.8) + 10^(−9.0) = 1.585e-9 + 1.0e-9 = 2.585e-9 mW → −85.9 dBm. At η = 1: SINR = −85 − (−85.9) = 0.9 dB (noise is negligible). At η = 0.3: I = −91.1 dBm → 6.1 dB. Noise only: −85 + 122.2 = 37.2 dB. The same location spans 1 dB to 37 dB of SINR depending only on neighbour activity, which is why SINR maps must state the load (or SSB alignment) they were measured under.
 :::
 
+## SS-SINR vs traffic SINR {#ss-vs-traffic}
+
+- SS-SINR is measured on the SSS. If **neighbour SSBs are time-aligned** (synchronised TDD network), SSS collides with SSS at **full power every time**, even when the neighbours carry no traffic.
+- Traffic SINR (from CSI-RS, or from the CQI the UE reports) sees the neighbours' **actual load**.
+- Result: in a lightly loaded network, SS-SINR looks worse than the SINR the user really gets.
+
+::: {.box .field}
+[Practice]{.box-title}
+Use SS-SINR as a **worst case** (all neighbours at 100 % load). For throughput estimates, use CQI or CSI-RS SINR from the same log.
+:::
+
+::: {.notes}
+ShareTechnote notes that in NR SINR became a formal measurement reported in RRC (SS-SINR, CSI-SINR), unlike LTE where it was a chipset value. Range −23 … 40 dB, 0.5 dB steps.
+:::
+
+## Pilot pollution: too many cells, none dominant {#pilot-pollution}
+
+A common working definition: **more than 3 cells within 6 dB** of the best server, all with usable RSRP.
+
+- Symptoms: good RSRP, poor SINR, frequent A3 events and ping-pong, low rank.
+- Causes: high sites, uptilted antennas, open water or hills that let distant cells in.
+- Fixes, in order: **downtilt** the intruders → adjust azimuth → reduce SSB / reference power → as a last resort, remove the cell from neighbour lists.
+
+$$
+\text{SINR}_{\max}\approx -10\lg\Big(\sum_{n} 10^{(R_n-R_s)/10}\Big)
+$$
+
+Three neighbours at −3 dB relative to the server already cap SINR at about −1.8 dB.
+
 # Practice
 
 ## Exercises {#ex}
@@ -129,6 +173,7 @@ Answers in the speaker notes.
 - **3GPP** TS 38.133 §10.1
 - [ShareTechnote · RSRP / RSRQ / SINR definitions](https://www.sharetechnote.com/html/5G/5G_PowerDefinition.html){target="_blank"}
 - [ShareTechnote · Measurement report](https://www.sharetechnote.com/html/5G/5G_MeasurementReport.html){target="_blank"}
+- [ShareTechnote · Field test example](https://www.sharetechnote.com/html/5G/5G_FieldTest.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

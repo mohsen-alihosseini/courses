@@ -33,6 +33,13 @@ More chains = more gain and more simultaneous beams, but more weight, power and 
 
 A typical 64T64R panel drives about 192 antenna elements: each chain feeds a small vertical group of elements.
 
+## Gain and beamwidth in two charts {#gain-charts}
+
+![](../figures/array-gain.svg){width="94%"}
+
+- Each doubling of elements: **+6 dB EIRP** if every element has its own PA, +3 dB if the total power stays the same.
+- And the beam gets **half as wide**: 8 elements in a row ≈ 13°, 32 elements ≈ 3°.
+
 # Intermediate · how it works
 
 ## What 64T64R buys: gain and EIRP {#eirp}
@@ -67,6 +74,21 @@ TS 38.104 §6.2 (BS output power), §9 (radiated requirements, OTA)
 EIRP limits for AAS base stations are specified as OTA requirements (TS 38.104 radiated part, TS 38.141-2 for conformance). In the field, EMF compliance often caps the actual EIRP below the hardware maximum, using statistical power-limiting features. That affects both coverage (Chapter 3, Section 4) and the SSB/traffic-beam gain gap.
 :::
 
+## What is inside a 64T64R AAU {#aau-inside}
+
+::: {.compact}
+| Item | Typical value | Why it matters |
+|---|---|---|
+| Antenna elements | 192 (e.g. 12 rows × 8 columns × 2 polarisations) | sets the aperture and gain |
+| TRX chains | 64 | how many independent signals can be shaped |
+| Sub-array | 3 vertical elements per TRX | fixed vertical gain, limited vertical steering |
+| Total power | 200–320 W | shared by all PAs |
+| Bandwidth | 100–200 MHz instantaneous | one carrier or several in n77/n78 |
+| Weight | 25–45 kg | mast load, installation cost |
+:::
+
+- **64T64R** = 64 transmit and 64 receive chains, not 64 antennas. More elements than chains means some gain is fixed (analogue) and only the rest is steerable.
+
 # Advanced · expert depth
 
 ## 32T or 64T? A quantitative look {#t32-t64}
@@ -84,6 +106,33 @@ $$
 ::: {.box .field}
 [Decision rule]{.box-title}
 Choose 64T where traffic is high, users are spread over angles and heights (high-rise), and the uplink is the limit. Elsewhere, 32T or 8T saves weight, power and cost.
+:::
+
+## SU-MIMO vs MU-MIMO {#su-mu}
+
+::: {.columns}
+::: {.column}
+**SU-MIMO**
+
+- one user, up to 4 layers (DL) in today's phones
+- limited by the **UE's** antennas and the channel rank
+- gives peak rate to one user
+:::
+::: {.column}
+**MU-MIMO**
+
+- several users on the **same RBs**, each in its own beam
+- 64T: up to 16 (sometimes 24–32) DL layers in total
+- gives **cell capacity**, if users are separated in angle
+:::
+:::
+
+- MU-MIMO needs accurate channel knowledge: **SRS reciprocity** in TDD or **Type II CSI** (Section 3).
+- Pairing fails when users are close in angle, CSI is old (moving users) or the scheduler has too few active users to choose from.
+
+::: {.box .field}
+[KPI tip]{.box-title}
+Track "average paired layers per TTI" at busy hour. Values near 1 mean the 64T hardware is working as an expensive 8T.
 :::
 
 # Practice
@@ -111,6 +160,10 @@ Answers in the speaker notes.
 - **3GPP** TS 38.214 §5.2 (CSI)
 - [ShareTechnote · CSI-RS](https://www.sharetechnote.com/html/5G/5G_CSI_RS.html){target="_blank"}
 - [ShareTechnote · CSI-RS codebook](https://mail.sharetechnote.com/html/5G/5G_CSI_RS_Codebook.html){target="_blank"}
+- [ShareTechnote · Massive MIMO](https://www.sharetechnote.com/html/5G/5G_MassiveMIMO_Definition.html){target="_blank"}
+- [ShareTechnote · EIRP](https://www.sharetechnote.com/html/5G/5G_EIRP.html){target="_blank"}
+- [ShareTechnote · SRS](https://www.sharetechnote.com/html/5G/5G_SRS.html){target="_blank"}
+- [ShareTechnote · MIMO overview](https://www.sharetechnote.com/html/5G/5G_MIMO.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

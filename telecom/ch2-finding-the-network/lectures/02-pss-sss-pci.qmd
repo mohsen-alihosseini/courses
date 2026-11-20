@@ -82,6 +82,14 @@ TS 38.211 §7.4.2.2–7.4.2.3
 A ZC sequence with frequency offset produces a correlation peak shifted in time (the ambiguity between timing and CFO), which can mislead initial timing. m-sequences have a sharp autocorrelation that degrades gracefully with CFO. ShareTechnote's PSS page compares the NR m-sequence with the LTE ZC PSS and includes a PCI ↔ PSS/SSS converter.
 :::
 
+## Why the PSS is easy to find {#pss-easy}
+
+![](../figures/pss-correlation.svg){width="86%"}
+
+- The PSS is a length-127 m-sequence of ±1 values. The 3 cell groups use the same sequence, cyclically shifted by 0, 43 or 86.
+- Correlating against the 3 candidates gives one sharp peak, even at negative SNR: the peak's position is the symbol timing, the winning candidate is N~ID~^(2)^.
+- Only 3 hypotheses keeps the most expensive search (before any timing is known) small.
+
 # Advanced · expert depth
 
 ## PCI planning rules for NR {#pci-plan}
@@ -112,6 +120,32 @@ TS 38.211 §7.4.1.4, §7.4.2, §6.4.1.1.1.2
 A simple same-site scheme: give the three sectors of a site PCIs 3k, 3k+1, 3k+2 (different mod 3), and check mod 4 is also different between adjacent sectors of neighbouring sites. Note that NR has no always-on CRS, so the LTE-era mod-6 CRS shift rule does not exist in NR.
 :::
 
+## The PCI is used everywhere {#pci-everywhere}
+
+::: {.compact}
+| Where the PCI enters | How |
+|---|---|
+| PSS / SSS | N~ID~^(2)^ = PCI mod 3, N~ID~^(1)^ = ⌊PCI/3⌋ |
+| PBCH DMRS | subcarrier shift = PCI mod 4, scrambling init |
+| PBCH scrambling | initialised with the PCI |
+| CORESET#0 | REG-bundle interleaver shift = PCI |
+| PDCCH / PDSCH scrambling | default ID = PCI unless RRC configures another |
+| PUSCH DMRS (transform precoding) | base-sequence group from the ID, default PCI (mod 30) |
+:::
+
+A PCI clash therefore does not only confuse cell search: it makes reference signals, scrambling and control channels of two cells overlap.
+
+## Planning and repairing PCIs automatically {#pci-son}
+
+- **ANR** (automatic neighbour relations): UEs report unknown PCIs; the gNB asks for the global cell ID (CGI) and adds the neighbour.
+- **PCI conflict detection**: two neighbours reporting the same PCI with different cell IDs reveal a **confusion**; a UE reporting its serving PCI as a neighbour reveals a **collision**.
+- **SON PCI allocation** then proposes a new PCI that satisfies the rules (collision, confusion, mod 3, mod 4) within a reuse distance.
+
+::: {.box .field}
+[Practice]{.box-title}
+Run a PCI audit after every cluster expansion: new sites are the usual source of confusion, because old neighbours were planned without them.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -139,6 +173,10 @@ Answers in the speaker notes.
 - [ShareTechnote · PSS](https://sharetechnote.com/html/5G/5G_PSS.html){target="_blank"}
 - [ShareTechnote · SSS](https://sharetechnote.com/html/5G/5G_SSS.html){target="_blank"}
 - [ShareTechnote · Cell search](https://www.sharetechnote.com/html/5G/5G_CellSearch.html){target="_blank"}
+- [ShareTechnote · Pseudo-random sequence](https://www.sharetechnote.com/html/5G/5G_Phy_PseudoRandomSequence.html){target="_blank"}
+- [ShareTechnote · SON (self-organizing network)](https://www.sharetechnote.com/html/5G/5G_SON.html){target="_blank"}
+- [ShareTechnote · Handover](https://www.sharetechnote.com/html/5G/5G_Handover.html){target="_blank"}
+- [ShareTechnote · PBCH DMRS](https://www.sharetechnote.com/html/5G/5G_PBCH_DMRS.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

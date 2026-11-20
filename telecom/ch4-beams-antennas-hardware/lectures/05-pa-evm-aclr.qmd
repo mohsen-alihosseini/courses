@@ -34,6 +34,13 @@ Linearity and efficiency fight each other. Modern radios use clever signal proce
 
 Leakage: base station ACLR ≥ 45 dB (FR1); phone ACLR ≥ 30 dB. Higher modulation needs a cleaner transmitter, and the radio's own EVM becomes the limit before the channel does.
 
+## Compression in two pictures {#pa-pics}
+
+![](../figures/pa-regrowth.svg){width="96%"}
+
+- Left: the PA is linear at average power, but OFDM peaks are about 10 dB higher and get squeezed.
+- Right: the squeezed peaks create power **outside** the channel. Its ratio to the wanted power is the ACLR.
+
 # Intermediate · how it works
 
 ## EVM and ACLR limits {#evm-aclr}
@@ -82,6 +89,13 @@ Leakage: base station ACLR ≥ 45 dB (FR1); phone ACLR ≥ 30 dB. Higher modulat
 EVM adds in RMS because the contributions are independent. This explains why 1024QAM in FR1 is mainly a small-cell / high-SINR feature: the radio's own EVM floor, not the channel, becomes the limit. The 2 dB/dB ACLR slope follows from IM3 rising at 3 dB/dB while the carrier rises at 1 dB/dB.
 :::
 
+## PAPR: OFDM vs DFT-s-OFDM {#papr-ccdf}
+
+![](../figures/papr-ccdf.svg){width="80%"}
+
+- Uplink transform precoding lowers PAPR by 2–4 dB (QPSK). The UE can run its PA closer to saturation: more power at the cell edge.
+- Price: single layer only, and contiguous allocation. NR lets the gNB switch per UE.
+
 # Advanced · expert depth
 
 ## PAPR, back-off and DPD {#papr}
@@ -116,6 +130,26 @@ For $N=3276$ (100 MHz at 30 kHz): PAPR ≈ 12.4 dB at $10^{-4}$. Oversampled rea
 Derivation of the 12.4 dB: set 1 − (1 − e^{−γ})^N = 1e-4 → e^{−γ} ≈ 1e-4/3276 = 3.05e-8 → γ = 17.3 (linear) → 12.4 dB. This is why a radio rated for 200 W average needs PA headroom far beyond 200 W without CFR and DPD.
 :::
 
+## EVM budget of a transmitter {#evm-budget}
+
+EVM contributions add as powers:
+
+$$
+\text{EVM}_{tot}=\sqrt{\textstyle\sum_i \text{EVM}_i^2}
+$$
+
+::: {.compact}
+| Contributor | Typical EVM | Note |
+|---|---|---|
+| PA after DPD | 1.5–2.5 % | depends on back-off |
+| CFR (clipping) | 1–2 % | deliberate, trades with PA efficiency |
+| Phase noise | 0.5–1 % (FR1), 2–4 % (FR2) | after CPE correction |
+| I/Q imbalance, DAC | 0.5–1 % | calibration |
+| **Total** | **≈ 3 %** (FR1) | limit for 256QAM: 3.5 % |
+:::
+
+256QAM leaves little room: one weak block (old DPD coefficients, temperature drift) pushes the whole radio over the limit.
+
 # Practice
 
 ## Exercises {#ex}
@@ -140,6 +174,9 @@ Answers in the speaker notes.
 - **3GPP** TS 38.104 §6.5.2 (EVM), §6.6.3 (ACLR)
 - **3GPP** TS 38.101-1 §6.4 (UE EVM), §6.5.2.4 (UE ACLR)
 - [ShareTechnote · Reference signals (incl. PT-RS)](https://www.sharetechnote.com/html/5G/5G_Phy_ReferenceSignal.html){target="_blank"}
+- [ShareTechnote · EIRP / OTA requirements](https://www.sharetechnote.com/html/5G/5G_EIRP.html){target="_blank"}
+- [ShareTechnote · Power class](https://www.sharetechnote.com/html/5G/5G_PowerClass.html){target="_blank"}
+- [ShareTechnote · Transform precoding (DFT-s-OFDM)](https://www.sharetechnote.com/html/5G/5G_Phy_Candidate_DFTsOFDM.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

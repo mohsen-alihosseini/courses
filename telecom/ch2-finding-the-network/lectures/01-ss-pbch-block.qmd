@@ -111,6 +111,19 @@ TS 38.211 §7.4.1.4 · TS 38.212 §7.1 · TS 38.331 MIB
 This is a subtle and elegant design: the SSB index (beam ID) is carried in the reference signal, not in the data, so a UE can know which beam it is on from DMRS detection alone. For Lmax = 64, only the 3 LSBs fit into DMRS; the 3 MSBs go into the PBCH payload, which is why FR2 UEs need to decode PBCH to know the full beam index.
 :::
 
+## PBCH: how 24 bits become 432 symbols {#pbch-chain}
+
+![](../figures/pbch-chain.svg){width="96%"}
+
+- The SSB has **576** REs that can carry PBCH (240 in symbol 1, 96 in symbol 2, 240 in symbol 3). DMRS takes one in four: **144** REs, leaving **432** for data.
+- QPSK only, heavily coded (about 56 information bits in 864 coded bits): a cell-edge UE must decode it without any prior knowledge.
+- Two scramblings: one tied to the cell ID and SFN, one per SSB index, so neighbouring cells and beams look different.
+- The 24-bit CRC also tells the UE which hypothesis (timing, SSB index) was the right one.
+
+::: {.notes}
+Numbers from ShareTechnote's PBCH page (576 PBCH-capable REs, 144 DMRS, 432 data REs, E = 864 bits after rate matching). The MIB content repeats over 80 ms, so a UE can soft-combine several SSBs of the same beam before decoding.
+:::
+
 # Advanced · expert depth
 
 ## SSB power, pathloss and the beam-gain trap {#ssb-power}
@@ -143,6 +156,38 @@ TS 38.213 §7.1.1, §7.4 · TS 38.331 ServingCellConfigCommonSIB
 Vendors handle this differently: some include the SSB beam gain in ss-PBCH-BlockPower (it is then an EIRP-like value per RE), some do not. Check your vendor's definition before tuning preambleReceivedTargetPower. ShareTechnote's power-control example shows ss-PBCH-BlockPower = 8 with preambleReceivedTargetPower −110 and powerRampingStep dB4 in a lab RACH trace.
 :::
 
+## Finding the SSB in a receiver: the DSP view {#ssb-dsp}
+
+1. **PSS search**: correlate the incoming samples with the 3 PSS references over at least one SSB period (20 ms). The best peak gives symbol timing, N~ID~^(2)^ and a coarse frequency offset.
+2. **Refine timing**, cut out the 4 SSB symbols and take their FFT.
+3. **SSS**: correlate symbol 2 against the 336 SSS candidates → N~ID~^(1)^ → PCI.
+4. **PBCH DMRS**: its positions follow PCI mod 4. Test the 8 DMRS sequences → SSB index (and half-frame bit).
+5. **PBCH**: equalize with the DMRS, descramble, polar-decode, check the CRC → MIB.
+
+::: {.box .field}
+[Why it matters for RF]{.box-title}
+Steps 1–4 work at negative SNR: correlation over 127 subcarriers gives about 21 dB of processing gain. A UE can therefore detect a cell and report its RSRP well below the SINR needed to decode data.
+:::
+
+::: {.notes}
+ShareTechnote's "DSP - SSB detection" page walks through this pipeline on a recorded signal (30.72 MS/s, 106 PRB, 15 kHz). 10·lg(127) ≈ 21 dB is the coherent correlation gain of a 127-length sequence.
+:::
+
+## SSB configuration in RRC {#ssb-rrc}
+
+::: {.compact}
+| Parameter | Where | Meaning |
+|---|---|---|
+| `absoluteFrequencySSB` | ServingCellConfigCommon / MeasObjectNR | ARFCN of SSB subcarrier 0 of RB 10 |
+| `ssbSubcarrierSpacing` | idem | 15, 30, 120 or 240 kHz |
+| `ssb-PositionsInBurst` | SIB1 / ServingCellConfigCommon | which candidate SSBs are sent |
+| `ssb-periodicityServingCell` | idem | 5 … 160 ms |
+| `ss-PBCH-BlockPower` | SIB1 | SSS EPRE, used for pathloss |
+| `smtc` | MeasObjectNR | when to look for SSBs of a frequency |
+:::
+
+- The **cell-defining SSB** must be on the sync raster (a GSCN). Rel-17 adds **NCD-SSBs** (non-cell-defining) so that, for example, RedCap UEs can measure in a BWP that does not contain the cell-defining SSB.
+
 # Practice
 
 ## Exercises {#ex}
@@ -170,6 +215,11 @@ Answers in the speaker notes.
 - [ShareTechnote · SS block](https://www.sharetechnote.com/html/5G/5G_SS_Block.html){target="_blank"}
 - [ShareTechnote · PBCH](https://sharetechnote.com/html/5G/5G_PBCH.html){target="_blank"}
 - [ShareTechnote · Cell search](https://www.sharetechnote.com/html/5G/5G_CellSearch.html){target="_blank"}
+- [ShareTechnote · SSB detection (DSP)](https://www.sharetechnote.com/html/5G/5G_PHY_DSP_SSB.html){target="_blank"}
+- [ShareTechnote · PBCH DMRS](https://www.sharetechnote.com/html/5G/5G_PBCH_DMRS.html){target="_blank"}
+- [ShareTechnote · PBCH decoding process](https://www.sharetechnote.com/html/5G/5G_PBCH_Decoding.html){target="_blank"}
+- [ShareTechnote · NCD-SSB](https://www.sharetechnote.com/html/5G/5G_NCD_SSB.html){target="_blank"}
+- [ShareTechnote · Matlab 5G: SS/PBCH block](https://www.sharetechnote.com/html/lte_toolbox/Matlab_LteToolbox_5G_SS_PBCH.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

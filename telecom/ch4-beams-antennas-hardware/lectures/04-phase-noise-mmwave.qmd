@@ -41,6 +41,13 @@ Phase noise is why FR2 uses wide subcarrier spacing (120 kHz) and a dedicated tr
 :::
 :::
 
+## What phase noise does to a constellation {#pn-const}
+
+![](../figures/pn-constellation.svg){width="86%"}
+
+- Left: every point turns by the same angle (CPE) and is also blurred (ICI).
+- Right: after measuring and undoing the common rotation with PT-RS, only the blur is left.
+
 # Intermediate · how it works
 
 ## Phase noise: CPE and ICI {#pn-model}
@@ -64,6 +71,13 @@ $$
 ::: {.notes}
 Derive J0 as the average of e^{jφ} over the symbol: low-frequency phase noise (inside the subcarrier spacing) is common to all subcarriers, hence CPE. High-frequency phase noise produces J_n ≠ 0 for n ≠ 0, i.e. ICI. Doubling SCS halves T_u, which moves more of the phase-noise spectrum into the 'common' part. This is the physics behind 120 kHz in FR2, not latency.
 :::
+
+## Why it is worse at 28 GHz {#pn-freq}
+
+![](../figures/pn-psd.svg){width="84%"}
+
+- Multiplying a reference up to the carrier multiplies its phase noise: **+20·lg(f₂/f₁)**. From 3.5 to 28 GHz: **+18 dB**.
+- Phase noise at offsets **below** the subcarrier spacing mostly turns into CPE (correctable); noise **above** it turns into ICI (not correctable). Wider SCS (120 kHz) pushes more noise into the correctable part.
 
 # Advanced · expert depth
 
@@ -111,6 +125,22 @@ TS 38.214 Table 5.1.6.3-1 · TS 38.211 §7.4.1.2
 ShareTechnote's DL resource grid simulator lets you toggle PT-RS densities and see the RE pattern. In FR1 PT-RS is usually disabled: phase noise at 3.5 GHz with 30 kHz SCS rarely limits 256QAM. In FR2 it is effectively mandatory for 64QAM and above.
 :::
 
+## PT-RS configuration {#ptrs-config}
+
+- **Time density** $L_{PT\text{-}RS}$ ∈ {1, 2, 4} symbols, from the scheduled MCS against `ptrs-MCS1…3`. Below ptrs-MCS1: no PT-RS (low-order modulation tolerates CPE).
+- **Frequency density** $K_{PT\text{-}RS}$ ∈ {2, 4} RBs, from the scheduled bandwidth (default 2).
+- Each PT-RS port is tied to one DMRS port; an RNTI-based offset keeps different UEs' PT-RS on different subcarriers.
+- Dense in time, sparse in frequency: the **opposite** of DMRS, because phase noise changes fast but is the same over the whole carrier.
+
+::: {.box .field}
+[Trade-off]{.box-title}
+L = 1, K = 2 costs about 3.6 % of the PDSCH REs (half an RE per RB in about 12 symbols), K = 4 about 1.8 %. Leave PT-RS on in FR2 at 64QAM and above; switching it off to gain REs usually loses more through EVM.
+:::
+
+::: {.notes}
+From ShareTechnote's DL PT-RS page: PT-RS is absent below ptrs-MCS1; L defaults to 1 and K to 2 when not configured; epre-Ratio sets PT-RS power relative to PDSCH.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -136,6 +166,9 @@ Answers in the speaker notes.
 - **3GPP** TS 38.214 §5.1.6.3 (PT-RS density)
 - [ShareTechnote · Reference signals (incl. PT-RS)](https://www.sharetechnote.com/html/5G/5G_Phy_ReferenceSignal.html){target="_blank"}
 - [ShareTechnote · DL resource grid simulator](http://sharetechnote.com/html/WebProgramming/Websim_ResourceGridDl5G.html){target="_blank"}
+- [ShareTechnote · PT-RS (downlink)](https://www.sharetechnote.com/html/5G/5G_PTRS_DL.html){target="_blank"}
+- [ShareTechnote · UE mmWave](https://www.sharetechnote.com/html/5G/5G_UE_mmWave.html){target="_blank"}
+- [ShareTechnote · Numerology](https://www.sharetechnote.com/html/5G/5G_FrameStructure.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

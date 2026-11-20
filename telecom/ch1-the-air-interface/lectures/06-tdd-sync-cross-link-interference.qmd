@@ -60,6 +60,34 @@ TS 38.133 §7.4 · ITU-T G.8271 / G.8271.1 / G.8275.1
 Make the arithmetic concrete: a 1e-9 frequency error accumulates 1 µs of time error in 1000 s (17 minutes). A good OCXO might be 1e-10 after aging compensation → 1.5 µs in 4 hours. This is why loss-of-GNSS alarms must trigger action within hours, not days.
 :::
 
+## How fast a site drifts without GNSS {#drift}
+
+![](../figures/sync-drift.svg){width="78%"}
+
+- Time error grows linearly with the oscillator's frequency offset: $\Delta t = (\Delta f/f)\cdot t$.
+- A cheap oscillator leaves the ±1.5 µs budget within minutes, a good OCXO within hours, rubidium within days.
+- This is why GNSS-loss alarms on TDD sites need action the same day.
+
+## The timing chain {#timing-chain}
+
+::: {.columns}
+::: {.column}
+**GNSS at every site**
+
+- A GNSS receiver disciplines the local oscillator.
+- Simple, accurate, but exposed to jamming, antenna faults and indoor sites without sky view.
+:::
+::: {.column}
+**PTP over the transport network**
+
+- A grandmaster (with GNSS) distributes time with IEEE 1588 PTP.
+- Full timing support (ITU-T G.8275.1): every switch in the path is a boundary clock, keeping the error within budget.
+- Partial support (G.8275.2) is possible with tighter limits on network asymmetry.
+:::
+:::
+
+- Most networks combine both: GNSS where possible, PTP as backup or for indoor/small cells, holdover oscillators for the gaps.
+
 # Advanced · expert depth
 
 ## Worked example: gNB-to-gNB interference if sync fails {#cli-budget}
@@ -113,6 +141,39 @@ $$
 This is the classic TD-LTE problem seen in China and the Netherlands, carried over to NR. The slope comes from distance: farther aggressors arrive later and are weaker, so the first UL symbols collect the most energy. Mitigation before RIM: extend the GP (more F symbols), or blank the first UL symbols at affected sites.
 :::
 
+## Ducting: delay against the guard period {#ducting-chart}
+
+![](../figures/ducting-delay.svg){width="92%"}
+
+- 15 km of delay (50 µs) stays inside a 71 µs guard period. 300 km (about 1 ms) lands squarely on the victim's uplink.
+- Under ducting, signals from hundreds of km away can arrive with little loss, so the slope of interference across the UL symbols points to distant aggressors.
+
+## Remote interference management (Rel-16) {#rim}
+
+- Handled **between gNBs only**: the UE is not involved.
+- gNBs are grouped into **victim** and **aggressor** sets (set IDs).
+- **RIM-RS**: a new gNB-transmitted reference signal, periodic, at most 32 resources per 10 ms, with time/frequency/sequence derived from the set ID.
+- **Wireless framework**: an aggressor that hears a victim's RIM-RS mitigates (fewer DL symbols, lower power) and answers with its own RIM-RS. The victim stops when it no longer hears aggressors.
+- **Backhaul framework**: the aggressor reports "RS detected" / "RS disappeared" to the victim through the core network (AMF, TS 38.413).
+
+::: {.notes}
+Summary based on ShareTechnote's CLI/RIM page. Typical mitigation is muting the last DL symbols before the guard period (effectively lengthening the GP) during ducting events, which are often seasonal and at night.
+:::
+
+## CLI in dynamic TDD (Rel-16) and what comes next {#cli}
+
+- Neighbouring cells with **different** DL/UL patterns create cross-link interference. gNBs can exchange intended TDD configurations over Xn/F1.
+- UEs can measure UE-to-UE CLI:
+  - **SRS-RSRP** (reported 0–98): power of a specific aggressor UE's SRS.
+  - **CLI-RSSI** (reported 0–76): total power in a configured time/frequency window.
+- A CLI measurement object holds up to 32 SRS resources and 64 RSSI windows; event **I1** triggers when interference exceeds a threshold.
+- gNB-to-gNB CLI is not measured over the air in Rel-16: coordination only.
+- **Rel-19 sub-band full duplex** builds on this: L1 CLI reporting, intra-cell CLI and gNB-to-gNB CLI information exchange.
+
+::: {.notes}
+From ShareTechnote's CLI/RIM page. CLI measurement is an optional UE capability, and supported resource counts are usually below the ASN.1 maxima.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -139,6 +200,10 @@ Answers in the speaker notes.
 - **3GPP** ITU-T G.8271, G.8271.1, G.8275.1
 - [ShareTechnote · tdd-UL-DL-ConfigurationCommon](https://www.sharetechnote.com/html/5G/5G_tdd_UL_DL_configurationCommon.html){target="_blank"}
 - [ShareTechnote · UL timing](https://www.sharetechnote.com/html/5G/5G_UL_Timing.html){target="_blank"}
+- [ShareTechnote · CLI / RIM](https://www.sharetechnote.com/html/5G/5G_RIM.html){target="_blank"}
+- [ShareTechnote · Synchronization](https://www.sharetechnote.com/html/5G/5G_Phy_Synchronization.html){target="_blank"}
+- [ShareTechnote · SBFD (sub-band full duplex)](https://www.sharetechnote.com/html/5G/5G_SBFD.html){target="_blank"}
+- [ShareTechnote · Xn interface](https://www.sharetechnote.com/html/5G/5G_RAN_Xn.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="628.2pt" height="173.662125pt" viewBox="0 0 628.2 173.662125" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-20T22:26:55.094640</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 173.662125 
+L 628.2 173.662125 
+L 628.2 0 
+L 0 0 
+L 0 173.662125 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 14.725517 151.199819 
+L 81.984828 151.199819 
+Q 85.747586 151.199819 85.747586 144.416572 
+L 85.747586 52.842737 
+Q 85.747586 46.05949 81.984828 46.05949 
+L 14.725517 46.05949 
+Q 10.962759 46.05949 10.962759 52.842737 
+L 10.962759 144.416572 
+Q 10.962759 151.199819 14.725517 151.199819 
+z
+" clip-path="url(#peed23b6bab)" style="fill: #fde68a; stroke: #b45309; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 101.73931 151.199819 
+L 168.998621 151.199819 
+Q 172.761379 151.199819 172.761379 144.416572 
+L 172.761379 52.842737 
+Q 172.761379 46.05949 168.998621 46.05949 
+L 101.73931 46.05949 
+Q 97.976552 46.05949 97.976552 52.842737 
+L 97.976552 144.416572 
+Q 97.976552 151.199819 101.73931 151.199819 
+z
+" clip-path="url(#peed23b6bab)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 188.753103 151.199819 
+L 256.012414 151.199819 
+Q 259.775172 151.199819 259.775172 144.416572 
+L 259.775172 52.842737 
+Q 259.775172 46.05949 256.012414 46.05949 
+L 188.753103 46.05949 
+Q 184.990345 46.05949 184.990345 52.842737 
+L 184.990345 144.416572 
+Q 184.990345 151.199819 188.753103 151.199819 
+z
+" clip-path="url(#peed23b6bab)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 275.766897 151.199819 
+L 343.026207 151.199819 
+Q 346.788966 151.199819 346.788966 144.416572 
+L 346.788966 52.842737 
+Q 346.788966 46.05949 343.026207 46.05949 
+L 275.766897 46.05949 
+Q 272.004138 46.05949 272.004138 52.842737 
+L 272.004138 144.416572 
+Q 272.004138 151.199819 275.766897 151.199819 
+z
+" clip-path="url(#peed23b6bab)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 362.78069 151.199819 
+L 430.04 151.199819 
+Q 433.802759 151.199819 433.802759 144.416572 
+L 433.802759 52.842737 
+Q 433.802759 46.05949 430.04 46.05949 
+L 362.78069 46.05949 
+Q 359.017931 46.05949 359.017931 52.842737 
+L 359.017931 144.416572 
+Q 359.017931 151.199819 362.78069 151.199819 
+z
+" clip-path="url(#peed23b6bab)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 449.794483 151.199819 
+L 517.053793 151.199819 
+Q 520.816552 151.199819 520.816552 144.416572 
+L 520.816552 52.842737 
+Q 520.816552 46.05949 517.053793 46.05949 
+L 449.794483 46.05949 
+Q 446.031724 46.05949 446.031724 52.842737 
+L 446.031724 144.416572 
+Q 446.031724 151.199819 449.794483 151.199819 
+z
+" clip-path="url(#peed23b6bab)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 536.808276 151.199819 
+L 604.067586 151.199819 
+Q 607.830345 151.199819 607.830345 144.416572 
+L 607.830345 52.842737 
+Q 607.830345 46.05949 604.067586 46.05949 
+L 536.808276 46.05949 
+Q 533.045517 46.05949 533.045517 52.842737 
+L 533.045517 144.416572 
+Q 533.045517 151.199819 536.808276 151.199819 
+z
+" clip-path="url(#peed23b6bab)" style="fill: #fdf1e8; stroke: #c2410c; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(39.596618 95.396129)">MIB</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(32.129469 106.798727)">24 bits</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(105.828419 83.994274)">+ 8 PHY bits</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(109.799864 95.396129)">(SFN LSBs,</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(109.407247 106.798727)">half-frame,</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(109.719708 118.201324)">SSB index)</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 86.808388 98.629654 
+Q 91.86212 98.629654 95.462407 98.629654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 90.662407 96.229654 
+L 95.462407 98.629654 
+L 90.662407 101.029654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(199.641391 95.396129)">+ 24 CRC</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(200.667095 106.798727)">= 56 bits</text>
+   </g>
+   <g id="patch_10">
+    <path d="M 173.822181 98.629654 
+Q 178.875913 98.629654 182.4762 98.629654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 177.6762 96.229654 
+L 182.4762 98.629654 
+L 177.6762 101.029654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(284.325458 89.695201)">polar code</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(277.726669 101.097799)">+ rate match</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(284.6587 112.500397)">→ 864 bits</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 260.835975 98.629654 
+Q 265.889706 98.629654 269.489993 98.629654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 264.689993 96.229654 
+L 269.489993 98.629654 
+L 264.689993 101.029654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(370.153235 89.695201)">scrambling</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(365.98511 101.097799)">(cell ID, SFN,</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(370.761087 112.500397)">SSB index)</text>
+   </g>
+   <g id="patch_12">
+    <path d="M 347.849768 98.629654 
+Q 352.903499 98.629654 356.503786 98.629654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 351.703786 96.229654 
+L 356.503786 98.629654 
+L 351.703786 101.029654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(470.690427 95.396129)">QPSK</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(453.219333 106.798727)">432 symbols</text>
+   </g>
+   <g id="patch_13">
+    <path d="M 434.863561 98.629654 
+Q 439.917292 98.629654 443.51758 98.629654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 438.71758 96.229654 
+L 443.51758 98.629654 
+L 438.71758 101.029654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(548.298478 95.396871)">map with</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(535.503908 106.798727)">144 DMRS REs</text>
+   </g>
+   <g id="patch_14">
+    <path d="M 521.877354 98.629654 
+Q 526.931085 98.629654 530.531373 98.629654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 525.731373 96.229654 
+L 530.531373 98.629654 
+L 525.731373 101.029654 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d2433" x="7.2" y="16.318125" transform="rotate(-0 7.2 16.318125)">PBCH: from 24 MIB bits to 432 QPSK symbols in each SSB</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="peed23b6bab">
+   <rect x="7.2" y="22.318125" width="613.8" height="144.144"/>
+  </clipPath>
+ </defs>
+</svg>

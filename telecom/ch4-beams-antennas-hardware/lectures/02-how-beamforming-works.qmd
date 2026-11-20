@@ -38,6 +38,13 @@ Elements half a wavelength apart (d = λ/2) need a phase step of $\Delta\varphi=
 | Hybrid | digital across sub-arrays, analog inside | the middle ground |
 :::
 
+## Beams you can see {#polar}
+
+![](../figures/polar-beams.svg){width="96%"}
+
+- Same 8 elements, different phases: the main beam moves to 30°.
+- 32 elements: a much narrower beam, so more gain in that direction and less interference elsewhere.
+
 # Intermediate · how it works
 
 ## Array factor, beamwidth and grating lobes {#af}
@@ -74,6 +81,14 @@ $$
 With d = λ and θ0 = 30°, a grating lobe appears at sin θ = sin 30° − 1 = −0.5 → θ = −30°, as in the figure. Vertical element spacing in many AAUs is larger than λ/2 because each 'element' is a sub-array of 2–3 radiators: vertical steering range is then deliberately limited to a few degrees to avoid grating lobes.
 :::
 
+## Three ways to build it {#architectures}
+
+![](../figures/bf-architectures.svg){width="98%"}
+
+- **Analog**: one RF chain, phase shifters per element. Cheap, low power, but one beam at a time over the whole band (typical in FR2 UEs and many FR2 gNBs).
+- **Digital**: one chain per element. Different beams per RB and per user (MU-MIMO), at the cost of power and processing (FR1 massive MIMO).
+- **Hybrid**: a few chains, each driving an analog sub-array. The usual compromise at mmWave.
+
 # Advanced · expert depth
 
 ## Beamwidth and grating lobes in numbers {#bw-numbers}
@@ -95,6 +110,28 @@ $$
 
 ::: {.notes}
 HPBW values: 101.5°/N at broadside, divided by cos θ0 when steered (cos 45° = 0.707). Grating-lobe limits: 1/(1 + sin 60°) = 0.536; 1/(1 + sin 45°) = 0.586.
+:::
+
+## Grating lobes in a chart {#grating}
+
+![](../figures/grating-lobes.svg){width="84%"}
+
+- A grating lobe appears when $d/\lambda\ge 1/(1+|\sin\theta_0|)$. At 40° steering: spacing above **0.61 λ**.
+- So arrays that must steer widely use about **λ/2**. Arrays that steer little (vertical, ±10°) may use wider spacing to get more gain per chain.
+
+## Beam squint and wideband arrays {#squint}
+
+- Phase shifters give the right phase only at **one frequency**. Across a wide band, the beam points slightly differently at each subcarrier:
+
+$$
+\sin\theta(f)=\frac{f_0}{f}\sin\theta_0
+$$
+
+- 400 MHz at 28 GHz, steered 45°: the beam moves about **±0.4°** across the band. With 1–2° beams this costs a fraction of a dB at the band edges.
+- **True time delay** (TTD) elements remove squint but are larger and costlier; digital beamforming applies the right phase per subcarrier.
+
+::: {.notes}
+Fractional bandwidth 400/28000 = 1.4 %; d(theta) ≈ tan(45°) × 0.7 % ≈ 0.007 rad ≈ 0.4°. Squint grows with steering angle and fractional bandwidth; it matters more for FR2-2 (2 GHz channels) and for very large arrays.
 :::
 
 # Practice
@@ -122,6 +159,9 @@ Answers in the speaker notes.
 - **3GPP** TS 38.214 §5.2.2.2 (codebooks)
 - [ShareTechnote · CSI-RS codebook](https://mail.sharetechnote.com/html/5G/5G_CSI_RS_Codebook.html){target="_blank"}
 - [ShareTechnote · Beam management](https://www.sharetechnote.com/html/5G/5G_Phy_BeamManagement.html){target="_blank"}
+- [ShareTechnote · Beamforming (LTE handbook)](https://www.sharetechnote.com/html/Handbook_LTE_BeamForming.html){target="_blank"}
+- [ShareTechnote · Massive MIMO](https://www.sharetechnote.com/html/5G/5G_MassiveMIMO_Definition.html){target="_blank"}
+- [ShareTechnote · UE mmWave](https://www.sharetechnote.com/html/5G/5G_UE_mmWave.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

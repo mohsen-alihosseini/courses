@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="628.2pt" height="184.750125pt" viewBox="0 0 628.2 184.750125" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-20T22:37:27.645143</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 184.750125 
+L 628.2 184.750125 
+L 628.2 0 
+L 0 0 
+L 0 184.750125 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 16.128 132.015405 
+L 126.612 132.015405 
+Q 131.076 132.015405 131.076 127.875885 
+L 131.076 66.817965 
+Q 131.076 62.678445 126.612 62.678445 
+L 16.128 62.678445 
+Q 11.664 62.678445 11.664 66.817965 
+L 11.664 127.875885 
+Q 11.664 132.015405 16.128 132.015405 
+z
+" clip-path="url(#p81713bfacd)" style="fill: #fde68a; stroke: #b45309; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 177.948 132.015405 
+L 288.432 132.015405 
+Q 292.896 132.015405 292.896 127.875885 
+L 292.896 66.817965 
+Q 292.896 62.678445 288.432 62.678445 
+L 177.948 62.678445 
+Q 173.484 62.678445 173.484 66.817965 
+L 173.484 127.875885 
+Q 173.484 132.015405 177.948 132.015405 
+z
+" clip-path="url(#p81713bfacd)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 339.768 132.015405 
+L 450.252 132.015405 
+Q 454.716 132.015405 454.716 127.875885 
+L 454.716 66.817965 
+Q 454.716 62.678445 450.252 62.678445 
+L 339.768 62.678445 
+Q 335.304 62.678445 335.304 66.817965 
+L 335.304 127.875885 
+Q 335.304 132.015405 339.768 132.015405 
+z
+" clip-path="url(#p81713bfacd)" style="fill: #eef1fb; stroke: #3b5bdb; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 501.588 132.015405 
+L 612.072 132.015405 
+Q 616.536 132.015405 616.536 127.875885 
+L 616.536 66.817965 
+Q 616.536 62.678445 612.072 62.678445 
+L 501.588 62.678445 
+Q 497.124 62.678445 497.124 66.817965 
+L 497.124 127.875885 
+Q 497.124 132.015405 501.588 132.015405 
+z
+" clip-path="url(#p81713bfacd)" style="fill: #fdf1e8; stroke: #c2410c; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(55.270469 94.113771)">SSB #i</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(45.242031 105.516368)">wide beam</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(223.972773 94.1134)">TRS</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(184.736289 105.515997)">(CSI-RS for tracking)</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(379.24668 94.1134)">CSI-RS</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(358.66582 105.515997)">for CSI / beams</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(519.057109 94.113771)">PDCCH / PDSCH</text>
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #1d2433" transform="translate(542.758125 105.515626)">DMRS</text>
+   </g>
+   <g id="patch_6">
+    <path d="M 131.962588 97.346925 
+Q 152.280678 97.346925 171.145325 97.346925 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 166.345325 94.946925 
+L 171.145325 97.346925 
+L 166.345325 99.746925 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #5c6370" x="152.28" y="55.951725" transform="rotate(-0 152.28 55.951725)">Type C + D</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 293.782588 97.346925 
+Q 314.100678 97.346925 332.965325 97.346925 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 328.165325 94.946925 
+L 332.965325 97.346925 
+L 328.165325 99.746925 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #5c6370" x="314.1" y="55.951725" transform="rotate(-0 314.1 55.951725)">Type A + D</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 455.602588 97.346925 
+Q 475.920678 97.346925 494.785325 97.346925 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+    <path d="M 489.985325 94.946925 
+L 494.785325 97.346925 
+L 489.985325 99.746925 
+" style="fill: none; stroke: #5c6370; stroke-width: 1.3; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #5c6370" x="475.92" y="55.951725" transform="rotate(-0 475.92 55.951725)">Type A + D</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #5c6370" x="12.78" y="159.439725" transform="rotate(-0 12.78 159.439725)">Type A: Doppler shift + spread, average delay, delay spread · Type C: Doppler shift, average delay · Type D: receive beam</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d2433" x="7.2" y="16.318125" transform="rotate(-0 7.2 16.318125)">QCL chain: each signal borrows timing, frequency and beam from the one before</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p81713bfacd">
+   <rect x="7.2" y="22.318125" width="613.8" height="155.232"/>
+  </clipPath>
+ </defs>
+</svg>

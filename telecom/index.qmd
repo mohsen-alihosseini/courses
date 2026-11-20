@@ -6,7 +6,7 @@ order: 3
 toc: false
 listing:
   id: courses
-  contents: "*/index.qmd"
+  contents: "ch*/index.qmd"
   type: grid
   grid-columns: 2
   sort: "order"

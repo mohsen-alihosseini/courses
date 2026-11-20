@@ -38,6 +38,14 @@ Plan coverage from the uplink. The downlink almost always reaches farther.
 - **Fewer resource blocks per edge user**: the same power over less bandwidth gives more power per Hz.
 - **Higher-power phones**: power class 2 (26 dBm, 0.4 W) in some bands.
 
+## Where the uplink runs out {#ul-dl-chart}
+
+![](../figures/ul-dl-sinr.svg){width="80%"}
+
+- The gNB has 80 W, the phone 0.2 W: about **26 dB** less power in the uplink.
+- The phone wins back much of it by sending in **few PRBs**: all its power in a narrow band gives a high SINR per RE.
+- But few PRBs means a low data rate: at the cell edge the uplink is slow before it fails.
+
 # Intermediate · how it works
 
 ## The asymmetry: where the uplink ends, RSRP still looks fine {#dl-vs-ul}
@@ -80,6 +88,46 @@ Same location (PL + margins = 119.9 dB), 200 W carrier, 17.8 dBm per RE:
 
 ::: {.notes}
 The 9 dB difference between SSB and traffic beam gain is typical for 64T64R with a wide broadcast beam; vendors differ. This slide is the quantitative version of the LinkedIn Episode 15 message. A good exercise: find the SS-RSRP at which your own network's UL BLER exceeds 10 % from drive-test data, and compare it with the planning threshold.
+:::
+
+## Supplementary uplink (SUL) {#sul}
+
+- A cell keeps its DL (for example n78, 3.5 GHz) and adds a **second, lower UL carrier** (for example n80 at 1.8 GHz or n83 at 700 MHz).
+- The UE uses **one uplink at a time**; PUCCH is configured on only one of them.
+- Selection: if the measured RSRP is **below** `rsrp-ThresholdSSB-SUL`, the UE starts random access on SUL; otherwise on the normal UL. Later grants carry a 1-bit UL/SUL indicator.
+
+::: {.columns}
+::: {.column}
+**SUL**
+
+- switched, one carrier at a time
+- uplink-only bands, all below 2 GHz
+:::
+::: {.column}
+**UL carrier aggregation**
+
+- simultaneous transmission
+- needs paired or second TDD carrier and power sharing
+:::
+:::
+
+::: {.notes}
+From ShareTechnote's SUL page: SUL bands n80–n86 (and later n89, n97–n99) have no downlink; the configuration is broadcast in SIB1 (supplementaryUplink in ServingCellConfigCommon). Coexistence with LTE on the same uplink band needs care.
+:::
+
+## Power headroom: how much is left {#phr}
+
+$$
+PH = P_{CMAX} - P_{PUSCH,\text{required}}
+$$
+
+- The UE reports PH in a MAC CE (when PL changes by more than a threshold, periodically, or on activation).
+- **Positive PH**: the scheduler may give more PRBs or a higher MCS.
+- **Negative PH**: the UE is already at P~CMAX~ and the requested power is not reached. More PRBs would only lower the SINR per PRB.
+
+::: {.box .field}
+[KPI tip]{.box-title}
+The share of PHR reports ≤ 0 dB per cell is a direct **uplink coverage** indicator. Compare it with the RSRP distribution: high PHR-negative share with fair RSRP means UL-limited cells.
 :::
 
 # Advanced · expert depth
@@ -141,6 +189,32 @@ With α = 0.8, a UE 20 dB farther away arrives 4 dB weaker per PRB. Uplink noise
 Practical tuning loop: measure UL IoT per cell (busy hour) and UL BLER/MCS distributions. If IoT is low and edge MCS is poor, raise P0 or α. If IoT is high everywhere in a cluster, lower P0 first, then α. Always change one cluster at a time and compare neighbouring clusters as control.
 :::
 
+## α and P0 in a picture {#alpha-chart}
+
+![](../figures/alpha-pc.svg){width="96%"}
+
+- α = 1 keeps every UE at the same received level until it hits 23 dBm.
+- α < 1 lets near UEs arrive louder (more throughput) and far UEs quieter (less interference to neighbours). P0 is raised to keep the cell-edge level.
+
+## Worked example: all uplink channels {#pc-example}
+
+ss-PBCH-BlockPower = 8 dBm, measured SS-RSRP = −74 dBm → **PL = 82 dB**. μ = 1.
+
+::: {.compact}
+| Channel | Formula | Result |
+|---|---|---|
+| PRACH | target −110 dBm + PL | −28 dBm |
+| PUCCH format 1 | P0 −90 + 10·lg(2·1) + PL | −5 dBm |
+| PUSCH, 29 PRB, α = 1 | −90 + 10·lg(2·29) + 82 | ≈ 9.6 dBm |
+| PUSCH, 29 PRB, at PL 115 dB | −90 + 17.6 + 115 | 42.6 → capped at 23 dBm |
+:::
+
+TPC (accumulated): field 0, 1, 2, 3 → −1, 0, +1, +3 dB. The closed loop corrects what the open-loop estimate misses (fading, antenna, body loss).
+
+::: {.notes}
+Numbers follow ShareTechnote's power control page (its worked example with PL = 82 dB). Absolute TPC mode maps 0–3 to −4, −1, +1, +4 dB. 10·lg(2^μ·M_RB) is the bandwidth term in 15 kHz-equivalent PRBs.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -167,6 +241,9 @@ Answers in the speaker notes.
 - **3GPP** TS 38.101-1 §6.2 (UE output power)
 - [ShareTechnote · Power control](https://www.sharetechnote.com/html/5G/5G_PowerControl.html){target="_blank"}
 - [ShareTechnote · RSRP / RSRQ / SINR definitions](https://www.sharetechnote.com/html/5G/5G_PowerDefinition.html){target="_blank"}
+- [ShareTechnote · SUL](https://www.sharetechnote.com/html/5G/5G_SUL.html){target="_blank"}
+- [ShareTechnote · Power class](https://www.sharetechnote.com/html/5G/5G_PowerClass.html){target="_blank"}
+- [ShareTechnote · Coverage enhancement](https://www.sharetechnote.com/html/5G/5G_CE.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

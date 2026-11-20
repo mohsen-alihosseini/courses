@@ -46,6 +46,15 @@ An RB is always 12 subcarriers, so its width grows with the subcarrier spacing:
 
 A 100 MHz carrier at 30 kHz uses 273 × 360 kHz = 98.3 MHz: **98 % of the channel**, against 90 % for LTE. The rest is guard band at the edges.
 
+## What fills the grid {#grid-fill}
+
+![](../figures/resource-grid.svg){width="76%"}
+
+- **CORESET** (yellow): the first 1–3 symbols carry control (PDCCH): who gets which resources.
+- **DMRS** (orange): reference symbols so the phone can estimate the channel for demodulation.
+- **CSI-RS / PT-RS**: occasional REs for channel measurement and phase tracking.
+- **PDSCH** (blue): everything else carries user data.
+
 # Intermediate · how it works
 
 ## Transmission bandwidth and guard bands {#max-rb}
@@ -81,6 +90,33 @@ TS 38.101-1 Table 5.3.2-1, §5.3.3
 ::: {.notes}
 The −SCS/2 term accounts for the half-subcarrier asymmetry: NR has no reserved DC subcarrier, so the RB grid is shifted by half a subcarrier relative to the channel centre. Ask students to compute 60 kHz at 100 MHz: (100000 − 135·720)/2 − 30 = 1210 kHz. Larger SCS uses the band less efficiently at a given bandwidth.
 :::
+
+## Control channel units: REG, CCE, CORESET {#cce}
+
+::: {.compact}
+| Unit | Size | Note |
+|---|---|---|
+| RE | 1 subcarrier × 1 symbol | smallest unit |
+| REG | 12 REs (1 RB × 1 symbol) | 3 of them carry PDCCH DMRS |
+| REG bundle | 2, 3 or 6 REGs | mapping / precoding unit |
+| CCE | 6 REGs = 72 REs | building block of a PDCCH |
+| Aggregation level | 1, 2, 4, 8, 16 CCEs | higher = more robust |
+| CORESET | 1–3 symbols, 6-RB groups | up to 12 per cell (Rel-15) |
+:::
+
+- With QPSK and DMRS removed, one CCE carries about 108 bits: AL 16 carries about 1728.
+- Cell-edge UEs need high aggregation levels: a small CORESET runs out of room before the data channel does.
+
+::: {.notes}
+Numbers from ShareTechnote's resource allocation unit page: 54 usable REs per CCE (72 minus DMRS) × 2 bits = 108 bits. To fit one AL16 DCI in a 1-symbol CORESET you need 16 CCEs = 96 RBs; with 2 symbols, 48 RBs.
+:::
+
+## Where everything sits on the carrier {#layout}
+
+![](../figures/carrier-layout.svg){width="92%"}
+
+- Point A anchors every numerology's RB grid. The carrier starts at offsetToCarrier, the BWP at its own start RB.
+- The SSB sits on the sync raster, so it is generally **not** aligned with the RB grid: $k_{SSB}$ fixes the leftover offset.
 
 # Advanced · expert depth
 
@@ -212,6 +248,55 @@ TS 38.211 §5.3.1, §5.4
 The phase-compensation term in §5.4 matters for RF engineers doing IQ captures: if your analyzer does not apply it, constellations rotate symbol to symbol by a deterministic amount. Commercial NR demodulators (VSA, Keysight/R&S) apply it automatically when the carrier frequency f0 is entered correctly. A wrong f0 shows up as a symbol-dependent phase error that looks like phase noise but is perfectly periodic.
 :::
 
+## Peak throughput straight from the grid {#peak}
+
+TS 38.306 gives the maximum data rate a UE must support:
+
+$$
+R_{\max}=10^{-6}\sum_{j}\;v_j\,Q_{m,j}\,f_j\,R_{\max}^{code}\,\frac{12\,N_{PRB,j}}{T_s^{\mu}}\,(1-OH_j),\qquad T_s^{\mu}=\frac{10^{-3}}{14\cdot 2^{\mu}}
+$$
+
+::: {.columns}
+::: {.column}
+::: {.small}
+- $v$: MIMO layers, $Q_m$: bits per symbol (8 for 256QAM), $f$: scaling factor (1 if not reported)
+- $R^{code}_{\max}=948/1024\approx 0.926$
+- $OH$: 0.14 FR1 DL, 0.18 FR2 DL, 0.08 FR1 UL, 0.10 FR2 UL
+- n78, 100 MHz, 4 layers, 256QAM → **≈ 2337 Mbps**
+:::
+:::
+::: {.column}
+![](../figures/peak-rate.svg){width="100%"}
+:::
+:::
+
+::: {.notes}
+Steps for the n78 case (ShareTechnote's worked example): 273 × 12 = 3276 subcarriers × 28,000 symbols/s = 91.7 M REs/s; × 4 layers × 8 bits = 2.935 Gbit/s; × 0.926 × 0.86 = 2.337 Gbit/s. In TDD multiply by the DL share (about 0.74 for DDDSU): ≈ 1.7 Gbit/s is the realistic ceiling of a single n78 carrier.
+:::
+
+## Handing out RBs: allocation types 0 and 1 {#ra-types}
+
+::: {.columns}
+::: {.column}
+**Type 0: bitmap of RB groups**
+
+- The BWP is cut into resource block groups (RBGs) of 2, 4, 8 or 16 RBs, depending on BWP size and configuration.
+- One bit per RBG: allocations can be scattered (frequency-selective scheduling).
+- Field size = number of RBGs in the BWP.
+:::
+::: {.column}
+**Type 1: one contiguous block**
+
+- Start RB and length packed into one value, the RIV.
+- Field size $\lceil \log_2(N(N+1)/2)\rceil$ bits: 16 bits for a 273-RB BWP.
+- Always used for DCI fallback formats (0_0, 1_0) and for uplink with DFT-s-OFDM.
+:::
+:::
+
+::: {.notes}
+ShareTechnote's resource allocation type page shows the field-size formulas and RIV decoding examples. 273·274/2 = 37,401 → log2 = 15.2 → 16 bits.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -239,6 +324,11 @@ Answers in the speaker notes.
 - [ShareTechnote · Resource block indexing / Point A](https://www.sharetechnote.com/html/5G/5G_ResourceBlockIndexing.html){target="_blank"}
 - [ShareTechnote · FR / bandwidth, ARFCN and GSCN](https://www.sharetechnote.com/html/5G/5G_FR_Bandwidth.html){target="_blank"}
 - [ShareTechnote · DL resource grid simulator](http://sharetechnote.com/html/WebProgramming/Websim_ResourceGridDl5G.html){target="_blank"}
+- [ShareTechnote · Resource grid](https://www.sharetechnote.com/html/5G/5G_ResourceGrid.html){target="_blank"}
+- [ShareTechnote · Resource allocation units (REG, CCE, CORESET)](https://www.sharetechnote.com/html/5G/5G_ResourceAllocationUnit.html){target="_blank"}
+- [ShareTechnote · Resource allocation type 0 / 1](https://www.sharetechnote.com/html/5G/5G_ResourceAllocationType.html){target="_blank"}
+- [ShareTechnote · Max throughput estimation](https://www.sharetechnote.com/html/5G/5G_MaxThroughputEstimation.html){target="_blank"}
+- [ShareTechnote · MCS / TBS / code rate](https://www.sharetechnote.com/html/5G/5G_MCS_TBS_CodeRate.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

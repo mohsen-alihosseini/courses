@@ -33,6 +33,18 @@ One metric shows a symptom. Two metrics together point to a cause.
 | Good RSRP, SINR capped near 15–20 dB in one area | long echoes (delay spread, Chapter 1) |
 :::
 
+## The method in seven steps {#dt-method}
+
+![](../figures/dt-flow.svg){width="98%"}
+
+Do not start with throughput. A low throughput is a symptom; the cause is almost always found one or two steps earlier.
+
+## The two-metric scatter {#scatter}
+
+![](../figures/rsrp-sinr-scatter.svg){width="80%"}
+
+Plot every sample as RSRP against SINR. The quadrant tells you the kind of problem before you look at a map.
+
 # Intermediate · how it works
 
 ## Measurement events {#events-table}
@@ -92,6 +104,28 @@ TS 38.331 §5.5.3.2 · QuantityConfig
 Effective memory ≈ 1/a samples. With an L1 measurement period around 200 ms (DRX or relaxed measurement), k = 8 gives ~800 ms of smoothing: plus a 320 ms TTT, the handover decision lags the radio by more than a second. At 120 km/h that is 33 m: fine in a macro cell, too slow at a street corner in FR2.
 :::
 
+## Layer-3 filtering in a chart {#l3-chart}
+
+![](../figures/l3-filter.svg){width="80%"}
+
+- A larger k smooths fading but **delays** the reaction: with 40 ms samples, k = 12 needs several hundred ms to follow a drop.
+- Too much filtering + long TTT = late handover (Section 6, "too late").
+
+## A3 in RRC: decoding an example {#a3-decode}
+
+::: {.compact}
+| Field | Value in RRC | Meaning |
+|---|---|---|
+| a3-Offset | 6 | 3 dB (units of 0.5 dB) |
+| hysteresis | 2 | 1 dB (units of 0.5 dB) |
+| timeToTrigger | ms320 | condition must hold 320 ms |
+| reportInterval / reportAmount | ms120 / r1 | one report |
+| rsType | ssb | measure SS-RSRP |
+| filterCoefficientRSRP | fc4 | k = 4 |
+:::
+
+Entering: $M_n + O_{fn} + O_{cn} - Hys > M_p + O_{fp} + O_{cp} + Off$. With no other offsets, the neighbour must be **4 dB** better (3 + 1) for 320 ms.
+
 # Advanced · expert depth
 
 ## Handover failures and how to read them {#mro}
@@ -121,6 +155,33 @@ TS 38.300 §15.5 (MRO) · TS 38.331 RLF-Report
 The RLF report (and from Rel-16 the successful HO report) lets the network classify these cases automatically: it contains the last measurement results and the cell where the UE re-established. SON MRO algorithms use exactly these counters to adjust CIO pairwise.
 :::
 
+## Conditional handover (CHO) {#cho}
+
+1. The source prepares **one or more target cells** in advance and sends the UE their configuration plus a condition (for example CondEvent A3 or A5).
+2. The UE keeps measuring. When the condition is met for a candidate, it **executes immediately**: RACH to that target, no waiting for a command.
+3. The target confirms, the core switches the path, the source releases.
+
+- Removes the "too late" failure caused by a report or command lost at the degrading cell edge: useful for trains, highways, FR2 blockage.
+- Costs: resources reserved in several candidates, more preparation signalling.
+
+::: {.notes}
+From ShareTechnote's CHO page (Rel-16). Two trigger events can be combined (condHandoverTwoTriggerEvents). For NTN, conditions based on location (D1) or time (T1) were added in Rel-17.
+:::
+
+## Throughput: what the scheduler did {#tput-chain}
+
+$$
+\text{DL rate}\approx \underbrace{\tfrac{\text{grants}}{\text{s}}}_{\text{scheduling}}\times\underbrace{\tfrac{\text{RB}}{\text{grant}}}_{\text{load}}\times\underbrace{\text{bits/RB}}_{\text{MCS, rank}}\times(1-\text{BLER})
+$$
+
+- In a field test documented on ShareTechnote, two sectors had the **same MCS and BLER**, yet one had far lower throughput: it received **fewer grants per second**. The radio was fine; the scheduling was not.
+- Rank stuck at 3 of 4 points to the channel or to one weak UE receive branch: log **per-antenna RSRP**.
+
+::: {.box .field}
+[Rule]{.box-title}
+Check MCS and BLER first. If they match the SINR, look at grants/s and RBs per slot before touching the antennas.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -147,6 +208,10 @@ Answers in the speaker notes.
 - **3GPP** TS 38.215 §5.1
 - [ShareTechnote · Measurement report](https://www.sharetechnote.com/html/5G/5G_MeasurementReport.html){target="_blank"}
 - [ShareTechnote · RSRP / RSRQ / SINR definitions](https://www.sharetechnote.com/html/5G/5G_PowerDefinition.html){target="_blank"}
+- [ShareTechnote · Field test (drive-test analysis)](https://www.sharetechnote.com/html/5G/5G_FieldTest.html){target="_blank"}
+- [ShareTechnote · Handover](https://www.sharetechnote.com/html/5G/5G_Handover.html){target="_blank"}
+- [ShareTechnote · Conditional handover](https://www.sharetechnote.com/html/5G/5G_CHO.html){target="_blank"}
+- [ShareTechnote · MDT](https://www.sharetechnote.com/html/5G/5G_MDT.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::

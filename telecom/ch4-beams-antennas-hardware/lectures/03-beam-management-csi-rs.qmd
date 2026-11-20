@@ -21,6 +21,14 @@ Talking with a narrow beam is like using a torch in the dark: you must point it 
 At mmWave, keeping the beam aligned is as important as staying on the right cell.
 :::
 
+## P1, P2, P3 in pictures {#p123-pic}
+
+![](../figures/p1-p2-p3.svg){width="98%"}
+
+- **P1**: wide beams (often the SSBs) find the right direction.
+- **P2**: narrow CSI-RS beams inside it find the best fine beam.
+- **P3**: the gNB repeats one beam so the UE can choose its own receive beam.
+
 # Intermediate · how it works
 
 ## P1, P2, P3 and how they are really configured {#p123}
@@ -71,6 +79,21 @@ TS 38.211 §7.4.1.5 · TS 38.214 §5.2 · TS 38.331 CSI-MeasConfig
 ::: {.notes}
 ShareTechnote's CSI framework page explains how these RRC objects point at each other, and why one framework covers beam management, tracking loops and closed-loop MIMO. Start any CSI troubleshooting from the report configuration: a UE reporting CQI on the wrong resource set is a configuration problem, not a radio one.
 :::
+
+## How the specification really does it {#p123-spec}
+
+- The names P1/P2/P3 come from the study phase (TR 38.802); the TS only knows **CSI-RS resource sets** with `repetition`:
+  - `repetition off`: each resource may be a different gNB beam → P1/P2, UE reports the best (CRI + L1-RSRP).
+  - `repetition on`: all resources use the same gNB beam → P3, the UE refines its RX beam and reports nothing.
+- Reports: up to 4 beams per report (`nrofReportedRS`), the strongest absolute (7 bits), the others **differential** (4 bits, 2 dB steps).
+- Rel-16 adds **L1-SINR** reporting, which includes interference when choosing beams.
+
+## QCL: borrowing what was measured {#qcl}
+
+![](../figures/qcl-chain.svg){width="96%"}
+
+- A TCI state says "receive this signal **as if** it came like that one", so the UE reuses timing, Doppler and receive beam instead of estimating them again.
+- Up to **128** TCI states per BWP for PDSCH (64 per CORESET); a MAC CE activates up to **8**; a **3-bit** DCI field picks one.
 
 # Advanced · expert depth
 
@@ -153,6 +176,31 @@ TS 38.214 §5.1.5 · TS 38.213 §6 · TS 38.321 §5.17 · TS 38.133 §8.5
 A TCI state says: 'receive this PDSCH as you would receive reference signal X'. Type D tells an FR2 UE which RX beam to use. If a TCI activation MAC CE is lost or late, the UE listens with the wrong beam: throughput collapses while RSRP on the old beam still looks fine. ShareTechnote's QCL page shows RRC examples where PDCCH TCI states point at NZP-CSI-RS resources.
 :::
 
+## Beam failure recovery {#bfr}
+
+![](../figures/bfr-flow.svg){width="96%"}
+
+- Detection: the PDCCH beam's reference signals fall below a quality threshold (hypothetical PDCCH BLER) `beamFailureInstanceMaxCount` times before a timer expires.
+- Recovery uses a **contention-free PRACH** linked to the new beam, so the gNB learns the beam from the preamble itself. Faster than RLF and re-establishment.
+
+## Type I vs Type II CSI {#type1-type2}
+
+::: {.compact}
+| | Type I single-panel | Type II (Rel-15) | eType II (Rel-16) |
+|---|---|---|---|
+| Idea | pick **one** DFT beam + co-phase | **combine** up to 4 beams with amplitude + phase | combine beams over angle **and delay** |
+| Layers | up to 8 | up to 2 | up to 4 |
+| Feedback | tens of bits | hundreds of bits | compressed (frequency-domain DFT) |
+| Use | SU-MIMO, FDD/TDD | MU-MIMO in FDD | MU-MIMO with less overhead |
+:::
+
+- Ports = 2·N1·N2 (two polarisations), oversampling O1 = 4 (O2 = 4 if N2 > 1): a 32-port panel (N1 = 8, N2 = 2) has 32 × 8 = 256 candidate beams for Type I.
+- Rel-18/19 add **Doppler-domain** CSI for moving users and coherent joint transmission (CJT) from several TRPs.
+
+::: {.notes}
+Summarized from ShareTechnote's CSI-RS codebook and Release 19 pages. Type II's amplitude reporting is what makes MU-MIMO pairing possible in FDD, where SRS reciprocity is not available.
+:::
+
 # Practice
 
 ## Exercises {#ex}
@@ -182,6 +230,8 @@ Answers in the speaker notes.
 - [ShareTechnote · CSI framework](https://www.sharetechnote.com/html/5G/5G_CSI_Framework.html){target="_blank"}
 - [ShareTechnote · QCL / TCI](https://www.sharetechnote.com/html/5G/5G_QCL.html){target="_blank"}
 - [ShareTechnote · CSI-RS codebook](https://mail.sharetechnote.com/html/5G/5G_CSI_RS_Codebook.html){target="_blank"}
+- [ShareTechnote · CSI-RS codebook](https://www.sharetechnote.com/html/5G/5G_CSI_RS_Codebook.html){target="_blank"}
+- [ShareTechnote · Beam failure recovery](https://www.sharetechnote.com/html/5G/5G_BeamFailureRecovery.html){target="_blank"}
 - C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
 - E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
 :::
