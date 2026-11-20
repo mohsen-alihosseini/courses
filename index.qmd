@@ -36,5 +36,14 @@ leave either view.
     </div>
   </a>
 
+  <a class="subject-card" href="telecom/index.html">
+    <img src="telecom/thumbnail.svg" alt="">
+    <div class="subject-body">
+      <h3>Telecom</h3>
+      <p>Mobile radio and RF engineering: the 5G NR air interface from the 3GPP specifications to the field.</p>
+      <span class="subject-count">1 course</span>
+    </div>
+  </a>
+
 </div>
 ```

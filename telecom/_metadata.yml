@@ -1,0 +1,9 @@
+# Settings for every page in telecom/ (the other subjects are not affected).
+# The site-wide footer text in _quarto.yml is replaced here so these pages credit
+# Atefeh Arani instead. Only the footer text of these pages changes.
+include-in-header:
+  text: |
+    <style>
+    .nav-footer-center > * { display: none; }
+    .nav-footer-center::after { content: "Notes by Atefeh Arani · built with Quarto"; }
+    </style>

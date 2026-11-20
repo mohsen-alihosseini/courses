@@ -1,0 +1,24 @@
+---
+title: "Telecom"
+description: "Mobile radio and RF engineering: the 5G NR air interface from the 3GPP specifications to the field."
+image: thumbnail.svg
+order: 3
+toc: false
+listing:
+  id: courses
+  contents: "*/index.qmd"
+  type: grid
+  grid-columns: 2
+  sort: "order"
+  fields: [image, title, description, categories]
+  image-height: 160px
+  categories: true
+---
+
+[← All subjects](../index.qmd)
+
+Telecommunications courses, starting with an advanced course on the 5G NR air
+interface for RF engineers.
+
+::: {#courses}
+:::
