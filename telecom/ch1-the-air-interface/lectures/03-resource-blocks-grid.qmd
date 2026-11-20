@@ -1,0 +1,244 @@
+---
+title: "Resource Blocks & the Grid"
+subtitle: "Chapter 1 · Section 3 · 12 subcarriers, endless possibilities"
+---
+
+# Beginner · the idea
+
+## The grid is a spreadsheet {#spreadsheet}
+
+{{< include /_macros.qmd >}}
+
+Think of the radio channel as a big spreadsheet:
+
+- **Columns** are time: one column per OFDM symbol (14 per slot).
+- **Rows** are frequency: one row per subcarrier.
+- One cell = one **resource element (RE)**: the smallest piece the network can fill.
+- 12 rows together = one **resource block (RB)**: the unit the scheduler hands out.
+
+::: {.kpis}
+::: {.kpi}
+[1 RE]{.kpi-val}[1 subcarrier × 1 symbol]{.kpi-label}
+:::
+::: {.kpi}
+[1 RB]{.kpi-val}[12 subcarriers]{.kpi-label}
+:::
+::: {.kpi}
+[168]{.kpi-val}[REs in one RB over one slot]{.kpi-label}
+:::
+:::
+
+::: {.notes}
+Every bit a user receives sits in some of these cells. Reference signals, control channels and data all share the same grid. ShareTechnote's resource grid simulator is a good way to see this live.
+:::
+
+## How wide is one resource block? {#rb-width}
+
+An RB is always 12 subcarriers, so its width grows with the subcarrier spacing:
+
+::: {.compact}
+| SCS | RB width | Example channel | RBs |
+|---|---|---|---|
+| 15 kHz | 180 kHz | 20 MHz | 106 |
+| 30 kHz | 360 kHz | 100 MHz | 273 |
+| 120 kHz | 1.44 MHz | 400 MHz (FR2) | 264 |
+:::
+
+A 100 MHz carrier at 30 kHz uses 273 × 360 kHz = 98.3 MHz: **98 % of the channel**, against 90 % for LTE. The rest is guard band at the edges.
+
+# Intermediate · how it works
+
+## Transmission bandwidth and guard bands {#max-rb}
+
+::: {.compact}
+| SCS | 20 MHz | 50 MHz | 100 MHz | Min. guard @100 MHz |
+|---|---|---|---|---|
+| 15 kHz | 106 | 270 | n/a | n/a |
+| 30 kHz | 51 | 133 | 273 | 845 kHz |
+| 60 kHz | 24 | 65 | 135 | 1210 kHz |
+:::
+
+Minimum guard band, per side (TS 38.101-1 §5.3.3):
+
+$$
+G_{\min}=\frac{BW_{\text{Channel}}\cdot 1000\ \text{kHz}-N_{RB}\cdot 12\cdot \text{SCS}}{2}-\frac{\text{SCS}}{2}
+$$
+
+Check: $(100\,000-273\cdot 360)/2-15=845$ kHz. Spectrum utilization is $273\cdot 360/100\,000 = 98.3\%$, against 90 % for LTE at 20 MHz.
+
+::: {.box .warn}
+
+[RF consequence]{.box-title}A 845 kHz guard band at the edge of a 100 MHz carrier means the transmit filter and DPD must hold ACLR and the operating-band unwanted emission mask with almost no transition band. Wideband AAUs often back off edge PRBs in practice.
+
+:::
+
+::: {.spec}
+
+TS 38.101-1 Table 5.3.2-1, §5.3.3
+
+:::
+
+::: {.notes}
+The −SCS/2 term accounts for the half-subcarrier asymmetry: NR has no reserved DC subcarrier, so the RB grid is shifted by half a subcarrier relative to the channel centre. Ask students to compute 60 kHz at 100 MHz: (100000 − 135·720)/2 − 30 = 1210 kHz. Larger SCS uses the band less efficiently at a given bandwidth.
+:::
+
+# Advanced · expert depth
+
+## Global frequency raster and NR-ARFCN {#arfcn}
+
+$$
+F_{REF}=F_{REF\text{-}Offs}+\Delta F_{Global}\left(N_{REF}-N_{REF\text{-}Offs}\right)
+$$
+
+::: {.compact}
+| Range | ΔF<sub>Global</sub> | F<sub>REF-Offs</sub> | N<sub>REF-Offs</sub> | N<sub>REF</sub> range |
+|---|---|---|---|---|
+| 0–3000 MHz | 5 kHz | 0 MHz | 0 | 0–599999 |
+| 3000–24250 MHz | 15 kHz | 3000 MHz | 600000 | 600000–2016666 |
+| 24250–100000 MHz | 60 kHz | 24250.08 MHz | 2016667 | 2016667–3279165 |
+:::
+
+::: {.box}
+
+[Example (n78)]{.box-title} absoluteFrequencyPointA = 632016 → $3000+0.015\,(632016-600000)=3480.24$ MHz.\
+ absoluteFrequencySSB = 632256 → 3483.84 MHz: 240 raster steps × 15 kHz = 3.6 MHz above Point A.
+
+:::
+
+The **channel raster** (where a carrier may sit) is a band-specific subset: 100 kHz, 15 kHz or 30 kHz steps.
+
+::: {.spec}
+
+TS 38.104 §5.4.2 · TS 38.101-1 §5.4.2
+
+:::
+
+::: {.notes}
+The example values are from ShareTechnote's BWP page (n78, 20 MHz Amarisoft configuration). Note that absoluteFrequencySSB is not the SSB centre: it is subcarrier 0 of RB 10 of the SSB, i.e. the SSB centre for an even subcarrier count. Many planning tools get this half-subcarrier convention wrong when converting between GSCN and ARFCN.
+:::
+
+## Synchronization raster (GSCN) {#gscn}
+
+::: {.compact}
+| Range | SSB frequency SS<sub>REF</sub> | GSCN |
+|---|---|---|
+| 0–3000 MHz | $N\cdot 1200\ \text{kHz}+M\cdot 50\ \text{kHz}$, $N=1{:}2499,\ M\in\{1,3,5\}$ | $3N+(M-3)/2$ |
+| 3000–24250 MHz | $3000\ \text{MHz}+N\cdot 1.44\ \text{MHz}$, $N=0{:}14756$ | $7499+N$ |
+| 24250–100000 MHz | $24250.08\ \text{MHz}+N\cdot 17.28\ \text{MHz}$, $N=0{:}4383$ | $22256+N$ |
+:::
+
+- The cell-defining SSB must sit on the sync raster. Secondary SSBs (for example for measurement) may sit off-raster.
+- Step sizes trade search time against placement freedom: 1.2 MHz below 3 GHz, 1.44 MHz in mid-band, 17.28 MHz in FR2.
+- Bands restrict GSCN further (Table 5.4.3.3-1), for example n78: 7711–8051 in steps of 1.
+
+::: {.spec}
+
+TS 38.104 §5.4.3
+
+:::
+
+::: {.notes}
+Search-time arithmetic: n78 spans 3300–3800 MHz = 341 GSCN candidates. With a 20 ms SSB period assumed during initial search and at least one period per candidate, a brute-force scan is about 7 s per band before any parallelism, which is why UEs use stored frequency lists and why operators should keep the cell-defining SSB on a predictable GSCN across sites.
+:::
+
+## Point A, CRB, PRB and k<sub>SSB</sub> {#pointa}
+
+::: {.columns}
+
+::: {.column}
+
+- **Point A**: subcarrier 0 of common RB 0, the same for every numerology on the carrier.
+- **CRB** $n_{CRB}$: counted from Point A, per numerology.
+- **offsetToCarrier**: first usable CRB of the carrier, per SCS.
+- **PRB**: $n_{CRB}=n_{PRB}+N^{\text{start}}_{BWP}$.
+- **k<sub>SSB</sub>** (MIB + PBCH bit): SSB subcarrier offset from the CRB grid, 0–23 (FR1) or 0–11 (FR2).
+- **offsetToPointA** (SIB1): CRB offset of the SSB, in 15 kHz RBs (FR1) or 60 kHz RBs (FR2).
+
+:::
+
+::: {.column}
+
+::: {.box}
+
+[Point A from SIB1 (FR1)]{.box-title} 
+
+$$
+F_{A}=F_{SSB,RB0}-k_{SSB}\cdot 15\,\text{kHz}-\text{offsetToPointA}\cdot 12\cdot 15\,\text{kHz}
+$$
+
+ where $F_{SSB,RB0}$ is subcarrier 0 of SSB RB 0.
+
+:::
+
+::: {.small}
+
+The SSB need not be aligned to the carrier's PRB grid. k<sub>SSB</sub> absorbs the misalignment between sync raster and channel raster.
+
+:::
+
+:::
+
+:::
+
+::: {.spec}
+
+TS 38.211 §4.4.3–4.4.4 · TS 38.213 §4.1 · TS 38.331 FrequencyInfoDL
+
+:::
+
+::: {.notes}
+This is the three-step procedure ShareTechnote gives for SA: convert the SSB ARFCN to MHz, move down 10 SSB RBs to get subcarrier 0 of SSB RB 0, then subtract k_SSB subcarriers and offsetToPointA RBs. Common field error: using the SSB SCS instead of 15 kHz for k_SSB in FR1. In FR1, k_SSB and offsetToPointA are always in 15 kHz units regardless of subCarrierSpacingCommon.
+:::
+
+## The baseband OFDM signal in TS 38.211 {#ofdm-signal}
+
+For antenna port $p$, numerology $\mu$, symbol $l$ starting at $t^{\mu}_{\text{start},l}$:
+
+$$
+s_l^{(p,\mu)}(t)=\sum_{k=0}^{N^{\mu}_{\text{grid}}N^{RB}_{sc}-1} a_{k,l}^{(p,\mu)}\, e^{\,j2\pi\left(k+k_0^{\mu}-N^{\mu}_{\text{grid}}N^{RB}_{sc}/2\right)\Delta f\,\left(t-N^{\mu}_{CP,l}T_c-t^{\mu}_{\text{start},l}\right)}
+$$
+
+- $k_0^{\mu}$ aligns grids of different numerologies on the same carrier (mixed numerology).
+- No DC subcarrier is reserved, unlike LTE. The UE reports where its LO sits, and the gNB can avoid or tolerate it.
+- Upconversion adds a per-symbol phase term $e^{-j2\pi f_0 (t_{\text{start},l}+N_{CP,l}T_c)}$ (§5.4), so phase stays deterministic across symbols.
+
+::: {.spec}
+
+TS 38.211 §5.3.1, §5.4
+
+:::
+
+::: {.notes}
+The phase-compensation term in §5.4 matters for RF engineers doing IQ captures: if your analyzer does not apply it, constellations rotate symbol to symbol by a deterministic amount. Commercial NR demodulators (VSA, Keysight/R&S) apply it automatically when the carrier frequency f0 is entered correctly. A wrong f0 shows up as a symbol-dependent phase error that looks like phase noise but is perfectly periodic.
+:::
+
+# Practice
+
+## Exercises {#ex}
+
+1. How many REs are in a 273-RB carrier during one slot?
+2. Compute the minimum guard band for 40 MHz at 30 kHz (N~RB~ = 106).
+3. absoluteFrequencyPointA = 650000 with 273 RBs at 30 kHz and offsetToCarrier 0. Where is the carrier centre?
+
+::: {.aside-note}
+Answers in the speaker notes.
+:::
+
+::: {.notes}
+1. 273 × 12 × 14 = 45,864 REs per slot.
+2. (40000 − 106·360)/2 − 15 = 920 − 15 = 905 kHz.
+3. Point A = 3000 + 0.015 × 50000 = 3750.00 MHz; carrier width 98.28 MHz → centre ≈ 3799.14 MHz.
+:::
+
+## References {#refs}
+
+::: {.refs}
+- **3GPP** TS 38.211 §4.4 (resource grid, Point A, CRB/PRB), §5.3.1
+- **3GPP** TS 38.101-1 §5.3.2–5.3.3 (transmission bandwidth, guard band)
+- **3GPP** TS 38.104 §5.4.2–5.4.3 (NR-ARFCN, GSCN)
+- [ShareTechnote · Resource block indexing / Point A](https://www.sharetechnote.com/html/5G/5G_ResourceBlockIndexing.html){target="_blank"}
+- [ShareTechnote · FR / bandwidth, ARFCN and GSCN](https://www.sharetechnote.com/html/5G/5G_FR_Bandwidth.html){target="_blank"}
+- [ShareTechnote · DL resource grid simulator](http://sharetechnote.com/html/WebProgramming/Websim_ResourceGridDl5G.html){target="_blank"}
+- C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
+- E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
+:::

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" width="480" height="270">
+  <rect width="480" height="270" fill="#eef1fb"/>
+  <text x="36" y="58" font-family="Georgia, serif" font-size="18" fill="#5c6370">Chapter 3</text>
+  <text x="36" y="92" font-family="Georgia, serif" font-size="28" fill="#1d2433">Measuring the Radio</text>
+  <g transform="translate(0,0)"><line x1="40" y1="230" x2="440" y2="230" stroke="#5c6370" stroke-width="1.2"/><line x1="40" y1="230" x2="40" y2="125" stroke="#5c6370" stroke-width="1.2"/><polyline points="40,140 90,150 140,158 190,170 240,176 290,190 340,196 390,210 440,214" fill="none" stroke="#3b5bdb" stroke-width="3"/><polyline points="40,212 90,205 140,200 190,186 240,180 290,170 340,160 390,152 440,146" fill="none" stroke="#c2410c" stroke-width="3"/><text x="300" y="250" font-family="Georgia, serif" font-size="14" fill="#5c6370">RSRP · SINR · link budget</text></g>
+</svg>

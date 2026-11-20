@@ -1,0 +1,102 @@
+---
+title: "5G-Advanced & 6G for RF Engineers"
+subtitle: "Chapter 4 · Section 6 · What's next for RF engineers"
+---
+
+# Beginner · the idea
+
+## What changes, what stays {#changes-stays}
+
+{{< include /_macros.qmd >}}
+
+::: {.columns}
+::: {.column}
+**What changes**
+
+- new spectrum: 7–24 GHz ("upper mid-band")
+- downlink and uplink at the same time on one TDD carrier
+- AI helping to predict beams and channels
+- the network sensing its surroundings like a radar
+- satellites as part of the network
+:::
+::: {.column}
+**What stays**
+
+- link budgets and propagation
+- cyclic prefix, Doppler and phase noise
+- synchronization
+- antenna and beam physics
+- amplifier linearity
+:::
+:::
+
+::: {.box}
+[The one idea of this section]{.box-title}
+Master the fundamentals of this course and every new release becomes an extension, not a restart.
+:::
+
+# Intermediate · how it works
+
+## What 5G-Advanced changes for RF engineers {#outlook}
+
+::: {.compact}
+| Topic | Release | RF impact |
+|---|---|---|
+| Network energy saving | Rel-18 | cell/antenna muting, PA efficiency at low load |
+| Sub-band full duplex (SBFD) | Rel-18 study, Rel-19 | DL and UL in one TDD carrier: self- and cross-link interference |
+| AI/ML for beam management and CSI | Rel-18 study, Rel-19 | beam prediction from partial measurements (set A/B) |
+| NTN (satellite) | Rel-17 onward | Doppler, long delay, new link budgets |
+| Upper mid-band (7–24 GHz) | 6G studies, Rel-20 | new arrays, propagation, coexistence |
+:::
+
+::: {.small}
+
+The fundamentals of this course (CP and Doppler, sync, link budget, beam gain, linearity) carry over unchanged.
+
+:::
+
+::: {.notes}
+ShareTechnote has pages on AI/ML beam management that describe the Set A (observed) and Set B (predicted) framework from the Rel-18 study and Rel-19 RRC parameters. Release timing changes; check 3GPP's release planning page for the current freeze dates.
+:::
+
+# Advanced · expert depth
+
+## Course map: one number per section {#course-map}
+
+::: {.compact}
+| Chapter | Numbers to remember |
+|---|---|
+| 1 · Air interface | T~c~ = 0.509 ns; CP 4.69 µs × 2^−μ^; 845 kHz guard at 100 MHz/30 kHz; 2 GP symbols ≈ 10.7 km; ≤ 3 µs sync |
+| 2 · Finding the network | 240 × 4 SSB REs; PCI = 3N~ID~^(1)^ + N~ID~^(2)^; R ≈ c·min(CP, GT)/2; 6.67 µs per km |
+| 3 · Measuring the radio | RSRP = per RE; RSRQ ≤ −10.8 dB at full load; UL ends where RSRP still looks good; ≈ 39 dB/decade urban NLOS |
+| 4 · Beams and hardware | EIRP = P~PA~ + 20·lg N + G~e~; HPBW ≈ 101.5°/N; +20·lg N phase noise; PAPR ≈ 12 dB; EVM adds in RSS |
+:::
+
+# Practice
+
+## Reflection questions {#ex}
+
+1. Sub-band full duplex puts downlink and uplink on one TDD carrier at the same time. Which topics from Chapter 1 (sync, cross-link interference) become harder, and why?
+2. At 7–24 GHz, which effects from this course grow and which shrink compared with 3.5 GHz?
+3. Pick one cell you know. Which single section of this course would most improve its performance if applied?
+
+::: {.aside-note}
+Open questions: discuss them in the comments of the series, or with your team.
+:::
+
+::: {.notes}
+1. SBFD makes cross-link interference intra-cell and inter-cell at once: the gNB's own transmitter leaks into its receiver (self-interference, needing tens of dB of isolation and cancellation), and neighbours' DL lands on UL sub-bands at all times, not only at pattern mismatches.
+2. Grows: free-space loss, O2I penetration, phase noise, Doppler per km/h. Shrinks: antenna size per gain (more elements per panel), CP needs (smaller cells, narrower beams).
+3. Open answer.
+:::
+
+## References {#refs}
+
+::: {.refs}
+- **3GPP** 3GPP Rel-18 to Rel-21 work plan (3gpp.org)
+- **3GPP** TS 38.300 (overall description)
+- [ShareTechnote · Beam management](https://www.sharetechnote.com/html/5G/5G_Phy_BeamManagement.html){target="_blank"}
+- [ShareTechnote · CSI framework](https://www.sharetechnote.com/html/5G/5G_CSI_Framework.html){target="_blank"}
+- C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
+- E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
+:::

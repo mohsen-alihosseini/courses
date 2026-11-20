@@ -1,4 +1,4 @@
-"""Regenerates the figures of telecom/5g-nr-for-rf-engineers (run from the repository root).
+"""Regenerates the figures of the Telecom chapters (run from the repository root).
 
     python scripts/make_5g_figures.py
 """
@@ -9,8 +9,13 @@ matplotlib.use("svg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
-OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join("telecom", "5g-nr-for-rf-engineers", "figures")
-os.makedirs(OUT, exist_ok=True)
+BASE = sys.argv[1] if len(sys.argv) > 1 else "telecom"
+CHAPTER_OF = {
+    "numerology-slots.svg": "ch1-the-air-interface", "tdd-dddsu.svg": "ch1-the-air-interface",
+    "doppler-ici.svg": "ch1-the-air-interface", "ssb-map.svg": "ch2-finding-the-network",
+    "prach-format0.svg": "ch2-finding-the-network", "event-a3.svg": "ch3-measuring-the-radio",
+    "uma-pathloss.svg": "ch3-measuring-the-radio", "array-factor.svg": "ch4-beams-antennas-hardware",
+}
 INK, MUTED, LINE, ACC, ACC2, TEAL, SOFT = "#1d2433", "#5c6370", "#e3e1da", "#3b5bdb", "#c2410c", "#0f766e", "#eef1fb"
 plt.rcParams.update({
     "font.family": "DejaVu Sans", "font.size": 12, "axes.edgecolor": MUTED, "axes.labelcolor": INK,
@@ -20,7 +25,9 @@ plt.rcParams.update({
 })
 
 def save(fig, name):
-    fig.savefig(os.path.join(OUT, name), bbox_inches="tight", transparent=True)
+    out = os.path.join(BASE, CHAPTER_OF[name], "figures")
+    os.makedirs(out, exist_ok=True)
+    fig.savefig(os.path.join(out, name), bbox_inches="tight", transparent=True)
     plt.close(fig)
 
 # 1. Slots per 1 ms subframe for each numerology, with CP share
@@ -155,7 +162,7 @@ def fig_pathloss():
         los = 28.0 + 22 * np.log10(d3) + 20 * np.log10(fc)
         nl = 13.54 + 39.08 * np.log10(d3) + 20 * np.log10(fc) - 0.6 * (hUT - 1.5)
         ax.plot(d, np.maximum(los, nl), color=col, lw=2, label=f"UMa NLOS, {fc:g} GHz")
-    ax.axhline(119.9, color=MUTED, ls="--", lw=1.2); ax.text(2900, 121.5, "MAPL 119.9 dB (UL budget, Lecture 7)", color=MUTED, fontsize=10)
+    ax.axhline(119.9, color=MUTED, ls="--", lw=1.2); ax.text(2900, 121.5, "MAPL 119.9 dB (UL budget, Ch. 3 Sec. 4)", color=MUTED, fontsize=10)
     ax.set_xlabel("2D distance (m), hBS 25 m, hUT 1.5 m"); ax.set_ylabel("path loss (dB)")
     ax.legend(loc="lower right"); ax.set_ylim(70, 195)
     ax.set_title("TR 38.901 UMa: PL = max(PL_LOS, PL′_NLOS), no shadowing, no O2I", color=INK, fontsize=12, loc="left")

@@ -1,6 +1,6 @@
 ---
 title: "Telecom"
-description: "Mobile radio and RF engineering: the 5G NR air interface from the 3GPP specifications to the field."
+description: "5G NR for RF engineers in four chapters, from beginner to expert: the air interface, finding the network, measuring the radio, and beams, antennas and hardware."
 image: thumbnail.svg
 order: 3
 toc: false
@@ -17,8 +17,11 @@ listing:
 
 [← All subjects](../index.qmd)
 
-Telecommunications courses, starting with an advanced course on the 5G NR air
-interface for RF engineers.
+*5G NR for RF Engineers*, following the *5G Under the Hood* series: four
+chapters of six sections each. Every section starts with the basic idea in
+plain words and goes step by step to the 3GPP detail and field practice, so
+it works for beginners and for experienced RF engineers alike. Take the
+chapters in order: each builds on the one before.
 
 ::: {#courses}
 :::

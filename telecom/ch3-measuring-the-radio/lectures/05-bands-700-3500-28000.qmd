@@ -1,0 +1,104 @@
+---
+title: "700 MHz vs 3.5 GHz vs 28 GHz"
+subtitle: "Chapter 3 · Section 5 · Every band a trade-off"
+---
+
+# Beginner · the idea
+
+## Long waves travel, short waves carry {#waves}
+
+{{< include /_macros.qmd >}}
+
+- **Low band (700 MHz)**: long waves, travel far and through walls. Little spectrum, so limited speed.
+- **Mid band (3.5 GHz)**: the balance. Up to 100 MHz per carrier: the 5G capacity layer.
+- **High band (26/28 GHz, mmWave)**: huge bandwidth (up to 400 MHz per carrier), but short range and easily blocked.
+
+::: {.box}
+[The one idea of this section]{.box-title}
+No band does everything. Networks stack layers: low band for coverage, mid band for capacity, mmWave for hotspots.
+:::
+
+## The numbers side by side {#bands-table}
+
+::: {.compact}
+| Band | Typical bandwidth | Wavelength | Free-space loss at 1 km | Role |
+|---|---|---|---|---|
+| 700 MHz | 10–20 MHz | 43 cm | 89.3 dB | wide area, deep indoor |
+| 3.5 GHz | up to 100 MHz | 8.6 cm | 103.3 dB | capacity layer |
+| 26/28 GHz | up to 400 MHz | 1.1 cm | 121.4 dB | hotspots, fixed wireless |
+:::
+
+$$
+\text{FSPL [dB]}=20\lg d_{\text{km}}+20\lg f_{\text{MHz}}+32.44
+$$
+
+# Intermediate · how it works
+
+## What really changes with frequency {#what-changes}
+
+::: {.compact}
+| Effect | 700 MHz | 3.5 GHz | 28 GHz |
+|---|---|---|---|
+| O2I loss, low-loss building | 10.2 dB | 12.7 dB | 17.8 dB |
+| O2I loss, high-loss (IRR glass) | 17.7 dB | 26.8 dB | 37.9 dB |
+| Indoor UL range, same budget* | ≈ 613 m | ≈ 278 m | small cell only |
+| Phase noise vs 3.5 GHz (same reference) | −14 dB | 0 | +18 dB |
+:::
+
+- Free-space loss grows 20 dB per decade of frequency, but a fixed antenna area holds more elements at short wavelengths and wins much of it back as array gain.
+- The real mmWave limits are **penetration** and **blockage** by bodies, vehicles and foliage.
+
+::: {.aside-note}
+*From Section 4's uplink budget with low-loss buildings (15 dBi gNB antenna at 700 MHz). TR 38.901 O2I models.
+:::
+
+# Advanced · expert depth
+
+## Aperture: why mmWave is not hopeless {#aperture}
+
+For a fixed antenna area $A$, the gain of an aperture antenna is
+
+$$
+G=\frac{4\pi A\,\eta}{\lambda^2}
+$$
+
+- Going from 3.5 to 28 GHz shortens λ by 8×, so the **same panel** has $20\lg 8=18$ dB more gain, on each end of the link.
+- With arrays at both gNB and UE, the 18 dB extra free-space loss can be more than compensated in line of sight.
+- What arrays cannot fix: a wall with 38 dB of IRR-glass loss, or a hand over the phone's antenna module.
+
+::: {.box .field}
+[Planning consequence]{.box-title}
+mmWave coverage is a line-of-sight problem, not a path-loss problem: plan it street by street, with blockage in mind.
+:::
+
+::: {.notes}
+Aperture gain relation: G = 4πAη/λ². For A and η constant, G ∝ f². The free-space loss between isotropic antennas grows as f², so with a fixed aperture on one end the link loss is frequency-independent, and with fixed apertures on both ends it improves with frequency. This is the classic Friis argument for mmWave, and it holds only in line of sight.
+:::
+
+# Practice
+
+## Exercises {#ex}
+
+1. Compute FSPL at 2 km for 700 MHz and 28 GHz.
+2. Repeat Section 4's uplink budget at 700 MHz with a 15 dBi antenna and low-loss buildings. Compare with 3.5 GHz.
+3. How much more gain does the same panel area give at 28 GHz than at 3.5 GHz?
+
+::: {.aside-note}
+Answers in the speaker notes.
+:::
+
+::: {.notes}
+1. 700 MHz: 6.0 + 56.9 + 32.44 = 95.3 dB; 28 GHz: 6.0 + 88.9 + 32.44 = 127.4 dB.
+2. MAPL ≈ 119.4 dB; lg d = (119.4 − 13.54 + 3.10)/39.08 = 2.787 → ≈ 613 m, about 2.2× the 3.5 GHz range.
+3. 20·lg(28/3.5) = 18 dB.
+:::
+
+## References {#refs}
+
+::: {.refs}
+- **3GPP** TR 38.901 §7.4 (path loss, O2I)
+- **3GPP** TS 38.101-1 / 38.101-2 (bands, channel bandwidths)
+- [ShareTechnote · FR / bandwidth, ARFCN and GSCN](https://www.sharetechnote.com/html/5G/5G_FR_Bandwidth.html){target="_blank"}
+- C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
+- E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
+:::

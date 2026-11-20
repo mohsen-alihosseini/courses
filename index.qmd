@@ -40,8 +40,8 @@ leave either view.
     <img src="telecom/thumbnail.svg" alt="">
     <div class="subject-body">
       <h3>Telecom</h3>
-      <p>Mobile radio and RF engineering: the 5G NR air interface from the 3GPP specifications to the field.</p>
-      <span class="subject-count">1 course</span>
+      <p>5G NR for RF engineers, from beginner to expert: air interface, finding the network, measuring the radio, beams and hardware.</p>
+      <span class="subject-count">4 chapters</span>
     </div>
   </a>
 

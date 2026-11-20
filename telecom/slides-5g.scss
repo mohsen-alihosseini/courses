@@ -1,0 +1,36 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+// Extra slide styles used only by the 5G NR for RF Engineers decks.
+// The decks are dense (equations + tables), so text runs slightly smaller.
+.reveal .slides section.slide { font-size: 0.86em; }
+.reveal .slides li { margin: 0.12em 0; }
+
+// Box variants: warning (orange) and field practice (teal)
+.box.warn { border-left-color: #c2410c; background: #fdf1e8; }
+.box.warn .box-title { color: #c2410c; }
+.box.field { border-left-color: #0f766e; background: #e9f6f4; }
+.box.field .box-title { color: #0f766e; }
+
+// Spec clause under a slide, and smaller text blocks
+.spec { font: 600 0.7em "JetBrains Mono", ui-monospace, monospace; color: #5c6370; }
+.small { font-size: 0.78em; }
+.tiny { font-size: 0.66em; }
+.refs { font-size: 0.62em; line-height: 1.35; }
+.refs li { margin: 0.18em 0; }
+
+// Dense tables
+.compact table { font-size: 0.62em; }
+
+// Row of key numbers
+.kpis { display: flex; gap: 0.6em; margin: 0.4em 0; }
+.kpi {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e3e1da;
+  border-radius: 8px;
+  padding: 0.35em 0.6em;
+}
+.kpi > p { margin: 0; }
+.kpi .kpi-val { display: block; font: 600 1.15em "JetBrains Mono", ui-monospace, monospace; color: #3b5bdb; }
+.kpi .kpi-label { display: block; font-size: 0.72em; color: #5c6370; }

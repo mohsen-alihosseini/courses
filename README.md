@@ -18,8 +18,11 @@ Home (index.qmd)
 │   └── Foundations of Quantum Error Correction .. 4 decks
 ├── Math (math/)
 │   └── Mathematics for Machine Learning ......... chapters 2–12 (complete)
-└── Telecom (telecom/)
-    └── 5G NR for RF Engineers ................... 8 decks
+└── Telecom (telecom/) — 5G NR for RF Engineers
+    ├── Chapter 1 · The Air Interface ............ 6 sections
+    ├── Chapter 2 · Finding the Network .......... 6 sections
+    ├── Chapter 3 · Measuring the Radio .......... 6 sections
+    └── Chapter 4 · Beams, Antennas & Hardware ... 6 sections
 ```
 
 ## Folder structure
@@ -34,7 +37,7 @@ study-courses/
 │   └── slides.scss             look of the slide decks
 ├── scripts/
 │   ├── make_figures.py         regenerates the figures made for this site
-│   └── make_5g_figures.py      regenerates the 5G course figures
+│   └── make_5g_figures.py      regenerates the Telecom chapter figures
 ├── quantum/                    subject: Quantum
 │   ├── index.qmd               subject page: lists its courses automatically
 │   ├── thumbnail.svg           card image on the home page
@@ -75,15 +78,15 @@ study-courses/
 │           ├── 10-principal-component-analysis.qmd
 │           ├── 11-gaussian-mixture-models.qmd
 │           └── 12-support-vector-machines.qmd
-├── telecom/                    subject: Telecom
+├── telecom/                    subject: Telecom (5G NR for RF Engineers)
 │   ├── index.qmd
 │   ├── thumbnail.svg
-│   └── 5g-nr-for-rf-engineers/
-│       ├── index.qmd
-│       ├── thumbnail.svg
-│       ├── slides-5g.scss      extra slide styles used only by this course
-│       ├── figures/            made by scripts/make_5g_figures.py
-│       └── lectures/           01-numerology-timing-grid … 08-mimo-beams-tx-impairments
+│   ├── _metadata.yml           footer credit for the Telecom pages
+│   ├── slides-5g.scss          extra slide styles used only by the Telecom decks
+│   ├── ch1-the-air-interface/          sections 01-frame-structure-numerology … 06-tdd-sync-cross-link-interference
+│   ├── ch2-finding-the-network/        sections 01-ss-pbch-block … 06-power-on-to-first-byte
+│   ├── ch3-measuring-the-radio/        sections 01-what-rsrp-measures … 06-reading-a-drive-test
+│   └── ch4-beams-antennas-hardware/    sections 01-massive-mimo-64t64r … 06-5g-advanced-and-6g
 └── .github/workflows/publish.yml   builds and publishes on every push
 ```
 
@@ -179,7 +182,8 @@ cover image (`book_cover.jpg`, `cover-card.jpg`) is © Cambridge University
 Press and is shown only to identify the book.
 
 **Telecom** (`telecom/`): *5G NR for RF Engineers* is original material by
-Atefeh Arani. Equations and parameter values come from the 3GPP specifications
+Atefeh Arani, in four chapters of six sections following the *5G Under the
+Hood* series; each section goes from a beginner explanation to expert depth. Equations and parameter values come from the 3GPP specifications
 cited on each slide (TS 38.101-1, 38.104, 38.133, 38.211–38.215, 38.300,
 38.304, 38.321, 38.331, TR 38.901). [ShareTechnote](https://www.sharetechnote.com/),
 *5G New Radio in Bullets* (C. Johnson, 2019) and *5G NR* (Dahlman, Parkvall,

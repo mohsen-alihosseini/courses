@@ -1,0 +1,131 @@
+---
+title: "SSB Beam Sweeping"
+subtitle: "Chapter 2 · Section 3 · A lighthouse made of beams"
+---
+
+# Beginner · the idea
+
+## A lighthouse that turns {#turning}
+
+{{< include /_macros.qmd >}}
+
+At mmWave a single wide beam is too weak to reach far. So the cell sends its SSB many times, each time in a different direction, like a turning lighthouse.
+
+- Each repetition has an **SSB index**: one index = one beam direction.
+- The phone notes which flash is brightest.
+- It replies at the moment reserved for that beam, so the network learns the best beam without asking.
+
+::: {.kpis}
+::: {.kpi}
+[4 / 8]{.kpi-val}[beams below / above 3 GHz (FR1)]{.kpi-label}
+:::
+::: {.kpi}
+[64]{.kpi-val}[beams in FR2 mmWave]{.kpi-label}
+:::
+::: {.kpi}
+[5 ms]{.kpi-val}[a whole sweep fits in half a frame]{.kpi-label}
+:::
+:::
+
+# Intermediate · how it works
+
+## Candidate SSB positions in a 5 ms half-frame {#cases}
+
+::: {.compact}
+| Case | SCS | First symbols | n | L<sub>max</sub> |
+|---|---|---|---|---|
+| A | 15 kHz | {2, 8} + 14n | 0,1 (≤ 3 GHz) · 0–3 (> 3 GHz) | 4 / 8 |
+| B | 30 kHz | {4, 8, 16, 20} + 28n | 0 (≤ 3 GHz) · 0,1 (> 3 GHz) | 4 / 8 |
+| C | 30 kHz | {2, 8} + 14n | 0,1 · 0–3 (split 3 GHz paired, 1.88 GHz unpaired) | 4 / 8 |
+| D | 120 kHz | {4, 8, 16, 20} + 28n | 0–3, 5–8, 10–13, 15–18 | 64 |
+| E | 240 kHz | {8, 12, 16, 20, 32, 36, 40, 44} + 56n | 0–3, 5–8 | 64 |
+:::
+
+::: {.small}
+
+- Cases F, G (480/960 kHz) added for FR2-2 in Rel-17.
+- Symbols 0–1 and 12–13 of each slot are avoided so PDCCH and UL/guard can coexist with SSBs.
+- `ssb-PositionsInBurst` (4-, 8- or 64-bit bitmap) says which candidates are actually transmitted.
+
+:::
+
+::: {.spec}
+
+TS 38.213 §4.1
+
+:::
+
+::: {.notes}
+Worked example for n78 Case C, unpaired, Lmax 8: first symbols 2, 8, 16, 22, 30, 36, 44, 50 → slots 0–3 of the half-frame at 30 kHz, two SSBs per slot at symbols 2–5 and 8–11. All 8 SSBs are sent within 2 ms, leaving 3 ms of the half-frame free. With a 20 ms period, SSB overhead on those slots is high but on the carrier as a whole it is about (8·4 symbols · 20 RBs)/(40 slots·14 symbols·273 RBs) ≈ 0.4 %.
+:::
+
+# Advanced · expert depth
+
+## Periodicity, SMTC and measurement windows {#smtc}
+
+- `ssb-periodicityServingCell`: 5, 10, 20, 40, 80, 160 ms. Idle UEs assume 20 ms during initial search.
+- **SMTC** (SSB-based measurement timing configuration): period 5–160 ms, offset, duration 1–5 ms. The UE only looks for neighbour SSBs inside this window.
+- Inter-frequency measurements may need **measurement gaps** (for example 6 ms every 40 ms) unless the UE can measure without gaps.
+
+::: {.box .warn}
+
+[Classic misconfiguration]{.box-title}Neighbour cells with different SSB timing (or different SMTC offset) than the serving cell's SMTC: the UE never detects them, so no handover is triggered and calls drop at the cell edge. Always check SMTC alignment after changing the SSB period or frame timing of a cluster.
+
+:::
+
+::: {.spec}
+
+TS 38.331 SSB-MTC, MeasObjectNR · TS 38.133 §9
+
+:::
+
+::: {.notes}
+ShareTechnote's measurement examples show smtc1 { periodicityAndOffset sf20: 0, duration sf1 }. With a 1 ms duration and 30 kHz Case C (8 SSBs over 2 ms), the UE sees only the first 4 candidates. Fine if all neighbours use the same pattern, wrong if a neighbour sends its strongest beam in candidate 6.
+:::
+
+## How many beams? Overhead vs gain {#beam-count}
+
+::: {.compact}
+| Case | Beams | SSB symbols per 20 ms | Share of symbol time | Share of resources |
+|---|---|---|---|---|
+| n78, Case C, 30 kHz | 8 | 32 of 560 | 5.7 % | ≈ 0.4 % (273 RBs) |
+| FR2, Case D, 120 kHz | 64 | 256 of 2240 | 11.4 % | ≈ 0.9 % (264 RBs) |
+:::
+
+- With **digital** beamforming (FR1 massive MIMO) the rest of the band carries data during SSB symbols: only the resource share matters.
+- With **analog** beams (FR2), the panel points one way at a time: during the sweep it cannot serve users elsewhere, so the **time share** is what counts.
+- More beams: narrower, more gain, better coverage. Fewer beams: less overhead, faster acquisition. Choose from site geometry.
+
+::: {.notes}
+Calculation: n78 Case C 8 SSBs × 4 symbols = 32 symbols per 20 ms; 20 ms at 30 kHz = 40 slots × 14 = 560 symbols → 5.7 %; resource share 32·20/(560·273) ≈ 0.42 %. FR2: 64 × 4 = 256 symbols; 160 slots × 14 = 2240 → 11.4 %; 256·20/(2240·264) ≈ 0.87 %.
+:::
+
+# Practice
+
+## Exercises {#ex}
+
+1. List the first symbols of all SSB candidates for Case B above 3 GHz and the slots they occupy at 30 kHz.
+2. An SMTC lasts 1 ms with offset 0. A neighbour sends Case C SSBs (8 beams over 2 ms). Which beams can the UE see?
+3. Why might an operator send only 4 of 8 possible SSB beams in a suburban n78 cell?
+
+::: {.aside-note}
+Answers in the speaker notes.
+:::
+
+::: {.notes}
+1. 4, 8, 16, 20, 32, 36, 44, 48 → slot 0: symbols 4, 8; slot 1: 2, 6; slot 2: 4, 8; slot 3: 2, 6.
+2. Only the candidates in the first 1 ms (2 slots at 30 kHz): beams 0–3.
+3. Lower overhead and faster acquisition when the coverage area does not need 8 directions; also simpler RACH-occasion mapping.
+:::
+
+## References {#refs}
+
+::: {.refs}
+- **3GPP** TS 38.213 §4.1 (SSB candidate positions)
+- **3GPP** TS 38.331 SSB-MTC, ssb-PositionsInBurst
+- **3GPP** TS 38.133 §9
+- [ShareTechnote · SS block](https://www.sharetechnote.com/html/5G/5G_SS_Block.html){target="_blank"}
+- [ShareTechnote · Synchronization (SSB cases)](https://www.sharetechnote.com/html/5G/5G_Phy_Synchronization.html){target="_blank"}
+- C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
+- E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
+:::

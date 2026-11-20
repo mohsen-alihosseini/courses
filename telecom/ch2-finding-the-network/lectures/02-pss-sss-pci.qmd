@@ -1,0 +1,144 @@
+---
+title: "PSS, SSS & PCI"
+subtitle: "Chapter 2 · Section 2 · 1008 identities, found in milliseconds"
+---
+
+# Beginner · the idea
+
+## 1008 house numbers {#house-numbers}
+
+{{< include /_macros.qmd >}}
+
+Every cell has a **physical cell ID (PCI)**, like a house number. The phone finds it in two steps:
+
+1. **PSS** says which of **3** streets: $N_{ID}^{(2)}\in\{0,1,2\}$.
+2. **SSS** says which of **336** houses on that street: $N_{ID}^{(1)}$.
+
+$$
+\text{PCI}=3\,N_{ID}^{(1)}+N_{ID}^{(2)}\quad\Rightarrow\quad 0\ \dots\ 1007
+$$
+
+::: {.box}
+[The one idea of this section]{.box-title}
+Two neighbouring cells with the same PCI look identical to a phone. PCI planning prevents that.
+:::
+
+## Planning rules in plain words {#pci-simple}
+
+- **No collision**: two neighbours must never have the same PCI.
+- **No confusion**: one cell must never have two neighbours with the same PCI, or handovers go to the wrong cell.
+- **Different PSS for strong overlaps**: neighbours with the same PCI mod 3 use the same PSS sequence, which makes detection slower.
+- 1008 PCIs is twice LTE's 504, but dense cities still reuse them. Plan the reuse distance.
+
+# Intermediate · how it works
+
+## PSS and SSS sequences {#pss-sss}
+
+::: {.columns}
+
+::: {.column}
+
+**PSS**: one m-sequence, three cyclic shifts
+
+$$
+d_{PSS}(n)=1-2x(m),\ \ m=(n+43N_{ID}^{(2)})\bmod 127
+$$
+
+$x(i+7)=(x(i+4)+x(i))\bmod 2$, initial state $[x(6)\dots x(0)]=[1\,1\,1\,0\,1\,1\,0]$.
+
+:::
+
+::: {.column}
+
+**SSS**: product of two m-sequences
+
+$$
+d_{SSS}(n)=[1-2x_0((n+m_0)\bmod 127)]\,[1-2x_1((n+m_1)\bmod 127)]
+$$
+
+$m_0=15\lfloor N_{ID}^{(1)}/112\rfloor+5N_{ID}^{(2)}$, $m_1=N_{ID}^{(1)}\bmod 112$.
+
+:::
+
+:::
+
+$$
+N_{ID}^{cell}=3N_{ID}^{(1)}+N_{ID}^{(2)},\quad N_{ID}^{(1)}\in\{0,\dots,335\},\ N_{ID}^{(2)}\in\{0,1,2\}\ \Rightarrow\ 1008\ \text{PCIs}
+$$
+
+::: {.box}
+
+[Why m-sequences, not Zadoff-Chu (LTE)?]{.box-title}BPSK ±1 values allow real-valued correlation, and m-sequences avoid the timing–frequency-offset ambiguity of ZC sequences, which matters with the large initial CFO of mmWave oscillators.
+
+:::
+
+::: {.spec}
+
+TS 38.211 §7.4.2.2–7.4.2.3
+
+:::
+
+::: {.notes}
+A ZC sequence with frequency offset produces a correlation peak shifted in time (the ambiguity between timing and CFO), which can mislead initial timing. m-sequences have a sharp autocorrelation that degrades gracefully with CFO. ShareTechnote's PSS page compares the NR m-sequence with the LTE ZC PSS and includes a PCI ↔ PSS/SSS converter.
+:::
+
+# Advanced · expert depth
+
+## PCI planning rules for NR {#pci-plan}
+
+::: {.compact}
+| Rule | Reason |
+|---|---|
+| No collision: neighbours never share a PCI | UE cannot separate the two cells |
+| No confusion: no cell has two neighbours with the same PCI | handover target ambiguous |
+| Avoid equal PCI mod 3 between strong overlapping cells | same PSS sequence: slower, less reliable detection |
+| Avoid equal PCI mod 4 between strong overlapping cells | PBCH DMRS on the same subcarriers: PBCH SINR drops |
+| Check PCI mod 30 for UL DMRS (transform precoding, default IDs) | same base-sequence group in neighbouring cells |
+:::
+
+::: {.small}
+
+With 1008 PCIs, reuse distance is rarely the limit. Mod-3/mod-4 clashes are, especially at sector boundaries of the same site.
+
+:::
+
+::: {.spec}
+
+TS 38.211 §7.4.1.4, §7.4.2, §6.4.1.1.1.2
+
+:::
+
+::: {.notes}
+A simple same-site scheme: give the three sectors of a site PCIs 3k, 3k+1, 3k+2 (different mod 3), and check mod 4 is also different between adjacent sectors of neighbouring sites. Note that NR has no always-on CRS, so the LTE-era mod-6 CRS shift rule does not exist in NR.
+:::
+
+# Practice
+
+## Exercises {#ex}
+
+1. A UE detects $N_{ID}^{(2)}=2$ and $N_{ID}^{(1)}=170$. Compute the PCI, the PSS cyclic shift and the SSS $m_0, m_1$.
+2. Sectors of one site have PCIs 300, 301, 302. Check mod 3 and mod 4. Is the plan good?
+3. Why do NR PCI plans have no "mod 6" rule like LTE?
+
+::: {.aside-note}
+Answers in the speaker notes.
+:::
+
+::: {.notes}
+1. PCI = 512; PSS shift = 86; m0 = 15·1 + 10 = 25; m1 = 170 mod 112 = 58.
+2. mod 3: 0, 1, 2 (all different, good). mod 4: 0, 1, 2 (all different, good).
+3. The LTE mod-6 rule came from the always-on CRS frequency shift; NR has no CRS.
+:::
+
+## References {#refs}
+
+::: {.refs}
+- **3GPP** TS 38.211 §7.4.2.2–7.4.2.3 (PSS, SSS)
+- **3GPP** TS 38.211 §7.4.1.4 (PBCH DMRS)
+- **3GPP** TS 38.213 §4.1
+- [ShareTechnote · PSS](https://sharetechnote.com/html/5G/5G_PSS.html){target="_blank"}
+- [ShareTechnote · SSS](https://sharetechnote.com/html/5G/5G_SSS.html){target="_blank"}
+- [ShareTechnote · Cell search](https://www.sharetechnote.com/html/5G/5G_CellSearch.html){target="_blank"}
+- C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
+- E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
+:::

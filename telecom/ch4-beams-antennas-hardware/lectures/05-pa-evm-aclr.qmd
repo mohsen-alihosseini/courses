@@ -1,0 +1,145 @@
+---
+title: "PA, EVM & ACLR"
+subtitle: "Chapter 4 · Section 5 · The transmitter report card"
+---
+
+# Beginner · the idea
+
+## A loudspeaker pushed too hard {#loudspeaker}
+
+{{< include /_macros.qmd >}}
+
+Turn a loudspeaker to the maximum and the music distorts. A radio's **power amplifier (PA)** does the same.
+
+- **EVM** (error vector magnitude): how far the transmitted points are from where they should be. It measures **how clean** your own signal is.
+- **ACLR** (adjacent channel leakage ratio): how much power leaks into the neighbour's channel. It measures **how polite** you are to others.
+- OFDM has high peaks, so the PA must work below its maximum (back-off), which wastes energy.
+
+::: {.box}
+[The one idea of this section]{.box-title}
+Linearity and efficiency fight each other. Modern radios use clever signal processing (CFR, DPD) to get both.
+:::
+
+## The limits in one view {#limits-simple}
+
+::: {.compact}
+| Modulation | Base station EVM limit |
+|---|---|
+| QPSK | 17.5 % |
+| 16QAM | 12.5 % |
+| 64QAM | 8 % |
+| 256QAM | 3.5 % |
+| 1024QAM (Rel-17) | 2.5 % |
+:::
+
+Leakage: base station ACLR ≥ 45 dB (FR1); phone ACLR ≥ 30 dB. Higher modulation needs a cleaner transmitter, and the radio's own EVM becomes the limit before the channel does.
+
+# Intermediate · how it works
+
+## EVM and ACLR limits {#evm-aclr}
+
+::: {.columns}
+
+::: {.column}
+
+**BS EVM limits** (TS 38.104 §6.5.2)
+
+::: {.compact}
+|  |  |
+|---|---|
+| QPSK | 17.5 % |
+| 16QAM | 12.5 % |
+| 64QAM | 8 % |
+| 256QAM | 3.5 % |
+| 1024QAM (Rel-17) | 2.5 % |
+:::
+
+:::
+
+::: {.column}
+
+**ACLR**
+
+::: {.small}
+
+- BS (FR1): ≥ 45 dB (TS 38.104 §6.6.3)
+- UE NR ACLR: ≥ 30 dB (TS 38.101-1 §6.5.2.4)
+- Third-order products rise ≈ 3 dB per 1 dB of output increase near compression, so ACLR worsens ≈ 2 dB per dB of reduced back-off.
+
+:::
+
+:::
+
+:::
+
+::: {.box}
+
+[EVM budget (RSS)]{.box-title}$\text{EVM}_{tot}=\sqrt{\sum_i \text{EVM}_i^2}$: PA after DPD 2 %, phase noise 1 %, filters/IQ 1 % → 2.45 %. Passes 256QAM with margin, but only just meets 1024QAM's 2.5 %: every block of the chain must improve to support it.
+
+:::
+
+::: {.notes}
+EVM adds in RMS because the contributions are independent. This explains why 1024QAM in FR1 is mainly a small-cell / high-SINR feature: the radio's own EVM floor, not the channel, becomes the limit. The 2 dB/dB ACLR slope follows from IM3 rising at 3 dB/dB while the carrier rises at 1 dB/dB.
+:::
+
+# Advanced · expert depth
+
+## PAPR, back-off and DPD {#papr}
+
+OFDM with $N$ active subcarriers (Nyquist sampling, Gaussian approximation):
+
+$$
+\Pr(\text{PAPR}>\gamma)\approx 1-\left(1-e^{-\gamma}\right)^{N}
+$$
+
+::: {.small}
+
+For $N=3276$ (100 MHz at 30 kHz): PAPR ≈ 12.4 dB at $10^{-4}$. Oversampled real signals are slightly higher.
+
+:::
+
+::: {.compact}
+| Technique | What it does | Cost |
+|---|---|---|
+| Back-off | operate the PA below compression | efficiency drops several points per dB |
+| CFR | clip and filter peaks to 7–8 dB PAPR | adds EVM, must respect ACLR |
+| DPD | pre-invert PA non-linearity and memory | feedback receiver, compute, adaptation |
+:::
+
+::: {.box .field}
+
+[Uplink]{.box-title}DFT-s-OFDM (transform precoding) gives the UE a lower PAPR for single-layer PUSCH: about 2–3 dB more usable power at the cell edge. Enabling it for edge UEs is a coverage tool.
+
+:::
+
+::: {.notes}
+Derivation of the 12.4 dB: set 1 − (1 − e^{−γ})^N = 1e-4 → e^{−γ} ≈ 1e-4/3276 = 3.05e-8 → γ = 17.3 (linear) → 12.4 dB. This is why a radio rated for 200 W average needs PA headroom far beyond 200 W without CFR and DPD.
+:::
+
+# Practice
+
+## Exercises {#ex}
+
+1. A radio has PA EVM 2.8 % after DPD, 1 % phase noise and 1 % filter/IQ EVM. Can it meet 256QAM? 1024QAM?
+2. Estimate the PAPR exceeded with probability 10⁻⁴ for 1272 active subcarriers.
+3. Why does ACLR worsen by about 2 dB for each dB of reduced back-off near compression?
+
+::: {.aside-note}
+Answers in the speaker notes.
+:::
+
+::: {.notes}
+1. sqrt(2.8² + 1 + 1) = 3.14 % → passes 256QAM (3.5 %), fails 1024QAM (2.5 %).
+2. e^(−γ) ≈ 1e-4/1272 = 7.9e-8 → γ = 16.4 → ≈ 12.1 dB.
+3. Third-order intermodulation rises about 3 dB per dB of output, the carrier 1 dB per dB, so their ratio worsens by about 2 dB per dB.
+:::
+
+## References {#refs}
+
+::: {.refs}
+- **3GPP** TS 38.104 §6.5.2 (EVM), §6.6.3 (ACLR)
+- **3GPP** TS 38.101-1 §6.4 (UE EVM), §6.5.2.4 (UE ACLR)
+- [ShareTechnote · Reference signals (incl. PT-RS)](https://www.sharetechnote.com/html/5G/5G_Phy_ReferenceSignal.html){target="_blank"}
+- C. Johnson, *5G New Radio in Bullets*, independently published, 2019 (ISBN 978-1077484351)
+- E. Dahlman, S. Parkvall, J. Sköld, *5G NR: The Next Generation Wireless Access Technology*, 2nd ed., Academic Press, 2020
+:::

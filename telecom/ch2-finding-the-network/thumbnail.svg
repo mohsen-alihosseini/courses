@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" width="480" height="270">
+  <rect width="480" height="270" fill="#eef1fb"/>
+  <text x="36" y="58" font-family="Georgia, serif" font-size="18" fill="#5c6370">Chapter 2</text>
+  <text x="36" y="92" font-family="Georgia, serif" font-size="28" fill="#1d2433">Finding the Network</text>
+  <g><path d="M150 205 L351.0 115.5 L368.8 182.0 Z" fill="#3b5bdb" fill-opacity="0.15" stroke="#3b5bdb" stroke-width="1"/><path d="M150 205 L367.3 170.6 L367.3 239.4 Z" fill="#3b5bdb" fill-opacity="0.45" stroke="#3b5bdb" stroke-width="1"/><path d="M150 205 L368.8 228.0 L351.0 294.5 Z" fill="#3b5bdb" fill-opacity="0.15" stroke="#3b5bdb" stroke-width="1"/><path d="M150 205 L355.4 283.8 L321.0 343.5 Z" fill="#3b5bdb" fill-opacity="0.15" stroke="#3b5bdb" stroke-width="1"/><path d="M150 262 L150 211" stroke="#1d2433" stroke-width="3"/><circle cx="150" cy="205" r="7" fill="#3b5bdb"/><rect x="392" y="190" width="16" height="28" rx="4" fill="#ffffff" stroke="#1d2433" stroke-width="2"/></g>
+</svg>
